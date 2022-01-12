@@ -7,7 +7,8 @@ class Animator {
         height,
         frameCount,
         frameDuration,
-        framePadding,
+        framePaddingLeft,
+        framePaddingRight,
         reverse,
         loop
     ) {
@@ -19,7 +20,8 @@ class Animator {
             width,
             frameCount,
             frameDuration,
-            framePadding,
+            framePaddingLeft,
+            framePaddingRight,
             reverse,
             loop,
         });
@@ -44,21 +46,26 @@ class Animator {
 
         ctx.drawImage(
             this.spritesheet,
-            this.xStart + frame * (this.width + this.framePadding),
-            this.yStart, //source from sheet
-            this.width,
+            this.xStart + frame * this.width + this.framePaddingLeft,
+            this.yStart,
+            this.width - this.framePaddingRight,
             this.height,
             x,
             y,
-            this.width * scale,
+            (this.width - this.framePaddingRight) * scale,
             this.height * scale
         );
 
         // debug parameter
         // PARAMS.debug
         if (params.DEBUG) {
-            ctx.strokeStyle = "White";
-            ctx.strokeRect(x, y, this.width * scale, this.height * scale);
+            ctx.strokeStyle = "red";
+            ctx.strokeRect(
+                x,
+                y,
+                (this.width - this.framePaddingLeft - this.framePaddingRight) * scale,
+                this.height * scale
+            );
         }
     }
 

@@ -14,10 +14,8 @@ class GameEngine {
         // Information on the input
         this.click = null;
         this.mouse = null;
-        this.keys = {};
 
-        this.isAudioPlaying = false;
-        this.userInput = false;
+        this.keys = {};
 
         // THE KILL SWITCH
         this.running = false;
@@ -58,11 +56,11 @@ class GameEngine {
         // key listeners
         window.addEventListener("keydown", (e) => {
             this.keys[e.key] = true;
-            this.userInput = true;
+            console.log(this.keys);
         });
         window.addEventListener("keyup", (e) => {
             this.keys[e.key] = false;
-            this.userInput = true;
+            console.log(this.keys);
         });
 
         // mouse listneers
@@ -105,14 +103,6 @@ class GameEngine {
         // Add new things
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
-
-        // play music if not already
-        if (!this.isAudioPlaying && this.userInput) {
-            this.isAudioPlaying = true;
-            ASSET_MANAGER.autoRepeat("./sfx/background.mp3");
-            ASSET_MANAGER.setVolume(0.25);
-            ASSET_MANAGER.playAudio("./sfx/background.mp3");
-        }
     }
 
     loop() {

@@ -13,10 +13,10 @@ class GameEngine {
 
         // Information on the input
         this.click = null;
-        this.left_click = false;
-        this.mouse = { x: 0, y: 0 };
-
         this.keys = {};
+
+        // information about pointer lock
+        this.locked = false;
 
         // THE KILL SWITCH
         this.running = false;
@@ -33,6 +33,7 @@ class GameEngine {
 
     init(ctx) {
         this.ctx = ctx;
+        this.mouse = { x: this.ctx.canvas.width / 2, y: this.ctx.canvas.height / 2 };
         this.startInput();
         this.timer = new Timer();
     }
@@ -54,22 +55,51 @@ class GameEngine {
             y: e.clientY - this.ctx.canvas.getBoundingClientRect().top,
         });
 
+        var self = this;
+
+        // on click, lock input
+        this.ctx.canvas.onclick = () => {
+            if (!self.locked) {
+                this.ctx.canvas.requestPointerLock();
+                this.mouse.x = this.ctx.canvas.width / 2;
+                this.mouse.y = this.ctx.canvas.height / 2;
+                self.locked = true;
+            }
+        };
+
+        document.addEventListener("pointerlockchange", lockChangeAlert, false);
+        document.addEventListener("mozpointerlockchange", lockChangeAlert, false);
+
+        function lockChangeAlert() {
+            if (
+                document.pointerLockElement === self.ctx.canvas ||
+                document.mozPointerLockElement === self.ctx.canvas
+            ) {
+                document.addEventListener("mousemove", updatePosition, false);
+            } else {
+                document.removeEventListener("mousemove", updatePosition, false);
+                self.locked = false;
+            }
+        }
+
+        function updatePosition(e) {
+            self.mouse.x = Math.min(
+                Math.max(0 + 5, (self.mouse.x += e.movementX)),
+                self.ctx.canvas.width - 5
+            );
+
+            self.mouse.y = Math.min(
+                Math.max(0 + 5, (self.mouse.y += e.movementY)),
+                self.ctx.canvas.height - 5
+            );
+        }
+
         // key listeners
         window.addEventListener("keydown", (e) => {
             this.keys[e.key] = true;
-            console.log(this.keys);
         });
         window.addEventListener("keyup", (e) => {
             this.keys[e.key] = false;
-            console.log(this.keys);
-        });
-
-        // mouse listneers
-        this.ctx.canvas.addEventListener("mousemove", (e) => {
-            if (this.options.debugging) {
-                console.log("MOUSE_MOVE", getXandY(e));
-            }
-            this.mouse = getXandY(e);
         });
 
         this.ctx.canvas.addEventListener("click", (e) => {

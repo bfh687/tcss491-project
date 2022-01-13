@@ -18,44 +18,44 @@ class Knight {
 
         // idle animations: left, right, up, down
         this.animations[0].push(
-            new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.16, 15, 15, false, true)
         );
         this.animations[0].push(
-            new Animator(this.spritesheet, 0, 64, 64, 64, 3, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 64, 64, 64, 3, 0.16, 15, 15, false, true)
         );
         this.animations[0].push(
-            new Animator(this.spritesheet, 0, 192, 64, 64, 3, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 192, 64, 64, 3, 0.16, 15, 15, false, true)
         );
         this.animations[0].push(
-            new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 15, 15, false, true)
         );
 
         // running animations: left, right, up, down
         this.animations[1].push(
-            new Animator(this.spritesheet, 0, 320, 64, 64, 10, 0.1, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 320, 64, 64, 10, 0.1, 15, 15, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 0, 256, 64, 64, 10, 0.1, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 256, 64, 64, 10, 0.1, 15, 15, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.1, 0, 0, false, true)
+            new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.1, 15, 15, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.1, 0, 0, false, true)
+            new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.1, 15, 15, false, true)
         );
 
         // attack animations: left, right, up, down
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.08, 0, 0, false, false)
+            new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.08, 15, 15, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.08, 0, 0, false, false)
+            new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.08, 15, 15, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.08, 0, 0, false, false)
+            new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.08, 15, 15, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.08, 0, 0, false, false)
+            new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.08, 15, 15, false, false)
         );
 
         // damaged animations: left, right, up, down
@@ -88,6 +88,10 @@ class Knight {
     }
 
     update() {
+        if (!this.game.locked) {
+            this.state = 0;
+            return;
+        }
         const speed = 300;
 
         var left = this.game.keys.a;
@@ -95,13 +99,22 @@ class Knight {
         var up = this.game.keys.w;
         var down = this.game.keys.s;
 
+        var dash = this.game.keys.e;
+
         var attack = this.game.keys.q;
         var sprint = this.game.keys.Shift;
 
-        if (up) this.direction = 2;
-        else if (down) this.direction = 3;
-        else if (left) this.direction = 0;
+        if (left) this.direction = 0;
         else if (right) this.direction = 1;
+        else if (up) this.direction = 2;
+        else if (down) this.direction = 3;
+
+        if (dash) {
+            console.log("INSIDE DASH " + this.x + " " + this.y);
+            this.x = this.game.mouse.x;
+            this.y = this.game.mouse.y;
+            console.log("INSIDE DASH2 " + this.x + " " + this.y);
+        }
 
         if (this.game.keys.q) {
             this.state = 2;

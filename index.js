@@ -10,6 +10,7 @@ ASSET_MANAGER.downloadAll(() => {
     ctx.imageSmoothingEnabled = false;
 
     // add entities here
+    engine.addEntity(new Cursor(engine));
     engine.addEntity(new Knight(engine, ctx.canvas.height / 2, ctx.canvas.height / 2));
 
     // initialize and start engine

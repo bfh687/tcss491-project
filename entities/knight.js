@@ -113,7 +113,7 @@ class Knight {
         }
 
         // speed variable
-        const speed = 350;
+        const speed = 250;
 
         // capture input booleans
         var left = this.game.keys.a;
@@ -160,6 +160,9 @@ class Knight {
         } else if (left || right || up || down) {
             this.state = 1;
 
+            var prev_x = this.x;
+            var prev_y = this.y;
+
             // horizontal movement
             if (left && !right) this.x -= speed * this.game.clockTick;
             else if (right && !left) this.x += speed * this.game.clockTick;
@@ -178,7 +181,7 @@ class Knight {
             ctx,
             this.x,
             this.y,
-            3
+            2.5
         );
     }
 

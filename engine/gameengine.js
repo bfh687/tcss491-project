@@ -12,7 +12,8 @@ class GameEngine {
         this.entitiesToAdd = [];
 
         // Information on the input
-        this.click = null;
+        this.click = false;
+        this.left_click = false;
         this.keys = {};
 
         // information about pointer lock
@@ -60,13 +61,16 @@ class GameEngine {
         // on click, lock input
         this.ctx.canvas.onclick = () => {
             if (!self.locked) {
-                this.ctx.canvas.requestPointerLock();
+                this.ctx.canvas.requestPointerLock({
+                    unadjustedMovement: true,
+                });
                 this.mouse.x = this.ctx.canvas.width / 2;
                 this.mouse.y = this.ctx.canvas.height / 2;
                 self.locked = true;
             }
         };
 
+        // handle locked cursor movement
         document.addEventListener("pointerlockchange", lockChangeAlert, false);
         document.addEventListener("mozpointerlockchange", lockChangeAlert, false);
 
@@ -102,12 +106,20 @@ class GameEngine {
             this.keys[e.key] = false;
         });
 
+        // click listeners
         this.ctx.canvas.addEventListener("click", (e) => {
             if (this.options.debugging) {
                 console.log("CLICK", getXandY(e));
             }
             this.click = getXandY(e);
+        });
+
+        this.ctx.canvas.addEventListener("mousedown", (e) => {
             this.left_click = true;
+        });
+
+        this.ctx.canvas.addEventListener("mouseup", (e) => {
+            this.left_click = false;
         });
     }
 

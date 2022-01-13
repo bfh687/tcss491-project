@@ -37,7 +37,7 @@ class Animator {
             if (this.loop) {
                 this.elapsedTime -= this.totalTime;
             } else {
-                this.elapsedTime = 0;
+                //this.elapsedTime = 0;
                 return;
             }
         }
@@ -76,6 +76,10 @@ class Animator {
 
     setFrameDuration(duration) {
         this.frameDuration = duration;
+    }
+
+    reset() {
+        this.elapsedTime = 0;
     }
 
     getWidth() {

@@ -11,7 +11,14 @@ class Knight {
         // directions: left (0), right (1), up (2), down (3)
         this.direction = 3;
 
-        this.dashCooldown = 1;
+        // information about dashing
+        this.isDashing = false;
+        this.dashCooldown = 5;
+        this.maxDashDistance = 300;
+
+        // information about attacking
+        this.isAttacking = false;
+        this.attackCooldown = 0.25;
     }
 
     loadAnimations() {
@@ -34,30 +41,30 @@ class Knight {
 
         // running animations: left, right, up, down
         this.animations[1].push(
-            new Animator(this.spritesheet, 0, 320, 64, 64, 10, 0.1, 15, 15, false, true)
+            new Animator(this.spritesheet, 0, 320, 64, 64, 10, 0.08, 15, 15, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 0, 256, 64, 64, 10, 0.1, 15, 15, false, true)
+            new Animator(this.spritesheet, 0, 256, 64, 64, 10, 0.08, 15, 15, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.1, 15, 15, false, true)
+            new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.08, 15, 15, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.1, 15, 15, false, true)
+            new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.08, 15, 15, false, true)
         );
 
         // attack animations: left, right, up, down
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.08, 15, 15, false, false)
+            new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.06, 15, 15, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.08, 15, 15, false, false)
+            new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.06, 15, 15, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.08, 15, 15, false, false)
+            new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.06, 15, 15, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.08, 15, 15, false, false)
+            new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.06, 15, 15, false, false)
         );
 
         // damaged animations: left, right, up, down
@@ -96,8 +103,17 @@ class Knight {
             return;
         }
 
+        // if attacking, dont allow other input
+        if (this.isAttacking && !this.animations[this.state][this.direction].isDone()) {
+            return;
+        } else if (this.isAttacking && this.animations[this.state][this.direction].isDone()) {
+            this.isAttacking = false;
+            this.animations[this.state][this.direction].reset();
+            this.state = 0;
+        }
+
         // speed variable
-        const speed = 300;
+        const speed = 350;
 
         // capture input booleans
         var left = this.game.keys.a;
@@ -107,7 +123,7 @@ class Knight {
 
         var dash = this.game.keys.e;
 
-        var attack = this.game.keys.q;
+        var attack = this.game.left_click;
         var sprint = this.game.keys.Shift;
 
         // set direction (priority based on direction pressed);
@@ -116,18 +132,30 @@ class Knight {
         else if (up) this.direction = 2;
         else if (down) this.direction = 3;
 
+        // update cooldowns
         if (this.dashCooldown > 0) this.dashCooldown -= this.game.clockTick;
+        if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
 
         if (dash && this.dashCooldown <= 0) {
-            this.x =
-                this.game.mouse.x -
-                (this.animations[this.state][this.direction].getWidth() * 3) / 2;
-            this.y =
-                this.game.mouse.y -
-                (this.animations[this.state][this.direction].getHeight() * 3) / 2;
-            this.dashCooldown = 1;
-        } else if (this.game.keys.q) {
+            var dist = Math.sqrt(
+                Math.pow(this.x - this.game.mouse.x, 2) + Math.pow(this.y - this.game.mouse.y, 2)
+            );
+
+            // or make it go fixed distance along the line?
+            if (dist < this.maxDashDistance) {
+                this.x =
+                    this.game.mouse.x -
+                    (this.animations[this.state][this.direction].getWidth() * 3) / 2;
+                this.y =
+                    this.game.mouse.y -
+                    (this.animations[this.state][this.direction].getHeight() * 3) / 2;
+
+                this.dashCooldown = 5;
+            }
+        } else if (attack && this.attackCooldown <= 0) {
             this.state = 2;
+            this.isAttacking = true;
+            this.attackCooldown = 0.25;
             this.calculateAttackDir();
         } else if (left || right || up || down) {
             this.state = 1;
@@ -155,7 +183,6 @@ class Knight {
     }
 
     calculateAttackDir() {
-        // calculate attack direction
         var player_x = this.x + (64 * 3) / 2;
         var player_y = this.y + (64 * 3) / 2;
 
@@ -181,7 +208,5 @@ class Knight {
                 return;
             }
         }
-
-        //negative positive, positive positive, positive negative, negative negative
     }
 }

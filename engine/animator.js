@@ -78,6 +78,14 @@ class Animator {
         this.frameDuration = duration;
     }
 
+    getWidth() {
+        return this.width - this.framePaddingLeft - this.framePaddingRight;
+    }
+
+    getHeight() {
+        return this.height;
+    }
+
     isDone() {
         return this.elapsedTime >= this.totalTime;
     }

@@ -10,6 +10,8 @@ class Knight {
 
         // directions: left (0), right (1), up (2), down (3)
         this.direction = 3;
+
+        this.dashCooldown = 1;
     }
 
     loadAnimations() {
@@ -88,12 +90,16 @@ class Knight {
     }
 
     update() {
+        // don't update if cursor isnt locked
         if (!this.game.locked) {
             this.state = 0;
             return;
         }
+
+        // speed variable
         const speed = 300;
 
+        // capture input booleans
         var left = this.game.keys.a;
         var right = this.game.keys.d;
         var up = this.game.keys.w;
@@ -104,19 +110,23 @@ class Knight {
         var attack = this.game.keys.q;
         var sprint = this.game.keys.Shift;
 
+        // set direction (priority based on direction pressed);
         if (left) this.direction = 0;
         else if (right) this.direction = 1;
         else if (up) this.direction = 2;
         else if (down) this.direction = 3;
 
-        if (dash) {
-            console.log("INSIDE DASH " + this.x + " " + this.y);
-            this.x = this.game.mouse.x;
-            this.y = this.game.mouse.y;
-            console.log("INSIDE DASH2 " + this.x + " " + this.y);
-        }
+        if (this.dashCooldown > 0) this.dashCooldown -= this.game.clockTick;
 
-        if (this.game.keys.q) {
+        if (dash && this.dashCooldown <= 0) {
+            this.x =
+                this.game.mouse.x -
+                (this.animations[this.state][this.direction].getWidth() * 3) / 2;
+            this.y =
+                this.game.mouse.y -
+                (this.animations[this.state][this.direction].getHeight() * 3) / 2;
+            this.dashCooldown = 1;
+        } else if (this.game.keys.q) {
             this.state = 2;
             this.calculateAttackDir();
         } else if (left || right || up || down) {

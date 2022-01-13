@@ -6,7 +6,7 @@ class Knight {
         this.loadAnimations();
 
         // states: idle (0), running (1), attack (2), damaged (3), crouch walking (4), sliding (5)
-        this.state = 4;
+        this.state = 0;
 
         // directions: left (0), right (1), up (2), down (3)
         this.direction = 3;
@@ -32,44 +32,44 @@ class Knight {
 
         // running animations: left, right, up, down
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 320, 64, 64, 10, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 320, 64, 64, 10, 0.1, 0, 0, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 256, 64, 64, 10, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 256, 64, 64, 10, 0.1, 0, 0, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.1, 0, 0, false, true)
         );
         this.animations[1].push(
-            new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.1, 0, 0, false, true)
         );
 
         // attack animations: left, right, up, down
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.08, 0, 0, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.08, 0, 0, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.08, 0, 0, false, false)
         );
         this.animations[2].push(
-            new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.16, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.08, 0, 0, false, false)
         );
 
         // damaged animations: left, right, up, down
         this.animations[3].push(
-            new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.08, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.1, 0, 0, false, true)
         );
         this.animations[3].push(
-            new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.08, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.1, 0, 0, false, true)
         );
         this.animations[3].push(
-            new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.08, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.1, 0, 0, false, true)
         );
         this.animations[3].push(
-            new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.08, 0, 0, false, true)
+            new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.1, 0, 0, false, true)
         );
 
         // death animations: left, right, up, down
@@ -88,48 +88,77 @@ class Knight {
     }
 
     update() {
-        const speed = 225;
+        const speed = 300;
 
         var left = this.game.keys.a;
         var right = this.game.keys.d;
         var up = this.game.keys.w;
         var down = this.game.keys.s;
-        var attack = this.game.keys.q;
 
-        if (left) this.direction = 0;
-        if (right) this.direction = 1;
+        var attack = this.game.keys.q;
+        var sprint = this.game.keys.Shift;
+
         if (up) this.direction = 2;
-        if (down) this.direction = 3;
+        else if (down) this.direction = 3;
+        else if (left) this.direction = 0;
+        else if (right) this.direction = 1;
+
+        if (this.game.keys.q) {
+            this.state = 2;
+            this.calculateAttackDir();
+        } else if (left || right || up || down) {
+            this.state = 1;
+
+            // horizontal movement
+            if (left && !right) this.x -= speed * this.game.clockTick;
+            else if (right && !left) this.x += speed * this.game.clockTick;
+
+            // vertical movement
+            if (up && !down) this.y -= speed * 0.75 * this.game.clockTick;
+            else if (!up && down) this.y += speed * 0.75 * this.game.clockTick;
+        } else {
+            this.state = 0;
+        }
     }
 
     draw(ctx) {
-        for (var i = 0; i < this.animations.length; i++) {
-            this.animations[i][this.direction].drawFrame(
-                this.game.clockTick,
-                ctx,
-                ctx.canvas.width / 2 - (64 * 5 * 3) / 2 + 64 * 3 * i,
-                this.y - (64 * 3) / 2,
-                3
-            );
+        this.animations[this.state][this.direction].drawFrame(
+            this.game.clockTick,
+            ctx,
+            this.x,
+            this.y,
+            3
+        );
+    }
+
+    calculateAttackDir() {
+        // calculate attack direction
+        var player_x = this.x + (64 * 3) / 2;
+        var player_y = this.y + (64 * 3) / 2;
+
+        var mouse_x = this.game.mouse.x;
+        var mouse_y = this.game.mouse.y;
+
+        var x_diff = player_x - mouse_x;
+        var y_diff = player_y - mouse_y;
+
+        if (Math.abs(x_diff) != Math.abs(y_diff)) {
+            if (x_diff > 0 && Math.abs(x_diff) > Math.abs(y_diff)) {
+                this.direction = 0;
+                return;
+            }
+            if (x_diff < 0 && Math.abs(x_diff) > Math.abs(y_diff)) {
+                this.direction = 1;
+                return;
+            } else if (y_diff > 0 && Math.abs(x_diff) < Math.abs(y_diff)) {
+                this.direction = 2;
+                return;
+            } else {
+                this.direction = 3;
+                return;
+            }
         }
 
-        var state_text = "";
-        if (this.direction == 0) state_text = "LEFT";
-        else if (this.direction == 1) state_text = "RIGHT";
-        else if (this.direction == 2) state_text = "UP";
-        else state_text = "DOWN";
-
-        ctx.fillStyle = "white";
-        ctx.font = "normal 20px Arial";
-        ctx.fillText(
-            state_text,
-            ctx.canvas.width / 2 - ctx.measureText(state_text).width / 2,
-            ctx.canvas.height / 2 + 64
-        );
-        ctx.fillText(
-            "Animation and User Input Demo",
-            ctx.canvas.width / 2 - ctx.measureText("Animation and User Input Demo").width / 2,
-            ctx.canvas.height / 2 + 96
-        );
+        //negative positive, positive positive, positive negative, negative negative
     }
 }

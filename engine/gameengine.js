@@ -13,7 +13,8 @@ class GameEngine {
 
         // Information on the input
         this.click = null;
-        this.mouse = null;
+        this.left_click = false;
+        this.mouse = { x: 0, y: 0 };
 
         this.keys = {};
 
@@ -76,7 +77,7 @@ class GameEngine {
                 console.log("CLICK", getXandY(e));
             }
             this.click = getXandY(e);
-            this.userInput = true;
+            this.left_click = true;
         });
     }
 

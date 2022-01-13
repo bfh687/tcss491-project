@@ -59,7 +59,7 @@ class Animator {
         // debug parameter
         // PARAMS.debug
         if (params.DEBUG) {
-            ctx.strokeStyle = "red";
+            ctx.strokeStyle = "white";
             ctx.strokeRect(
                 x,
                 y,
@@ -75,5 +75,9 @@ class Animator {
 
     isDone() {
         return this.elapsedTime >= this.totalTime;
+    }
+
+    reset() {
+        this.elapsedTime = 0;
     }
 }

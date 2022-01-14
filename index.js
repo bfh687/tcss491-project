@@ -1,8 +1,9 @@
 const engine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 
-// queue knight download
+// queue knight-related downloads
 ASSET_MANAGER.queueDownload("./sprites/knight.png");
+ASSET_MANAGER.queueDownload("./sprites/knight_dash.png");
 
 // queue tileset downloads
 ASSET_MANAGER.queueDownload("./sprites/map/grass_tileset.png");

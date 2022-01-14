@@ -10,6 +10,7 @@ class HUD {
 
         var dash_cooldown = (this.knight.dashCooldown / 5) * 100;
         var attack_cooldown = (this.knight.attackCooldown / 0.25) * 100;
+        var slide_cooldown = (this.knight.slideCooldown / 1.5) * 100;
 
         ctx.fillStyle = "white";
 
@@ -21,6 +22,11 @@ class HUD {
         if (attack_cooldown) {
             ctx.fillText("ATTACK", 20, 50);
             ctx.fillRect(20, 60, 100 - attack_cooldown, 10);
+        }
+
+        if (slide_cooldown) {
+            ctx.fillText("SLIDE", 20, 90);
+            ctx.fillRect(20, 100, 100 - slide_cooldown, 10);
         }
 
         ctx.restore();

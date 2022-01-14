@@ -1,11 +1,17 @@
 const engine = new GameEngine();
 const ASSET_MANAGER = new AssetManager();
 
-// queue knight-related downloads
+// sfx downloads
+ASSET_MANAGER.queueDownload("./sfx/sword_slash.mp3");
+
+// knight-related downloads
 ASSET_MANAGER.queueDownload("./sprites/knight.png");
 ASSET_MANAGER.queueDownload("./sprites/knight_dash.png");
 
-// queue tileset downloads
+// cursor downloads
+ASSET_MANAGER.queueDownload("./sprites/cursor.png");
+
+// tileset downloads
 ASSET_MANAGER.queueDownload("./sprites/map/grass_tileset.png");
 ASSET_MANAGER.queueDownload("./sprites/map/ground_tileset.png");
 ASSET_MANAGER.queueDownload("./sprites/map/wall_tileset.png");

@@ -2,7 +2,6 @@ class Map {
     constructor(game) {
         Object.assign(this, { game });
         this.spritesheet = [];
-
         this.loadAssets();
     }
 

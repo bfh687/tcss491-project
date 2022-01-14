@@ -1,6 +1,7 @@
 class Knight {
     constructor(game, x, y) {
         Object.assign(this, { game, x, y });
+        this.swordslash = ASSET_MANAGER.getAsset("./sfx/sword_slash.png");
         this.spritesheet = ASSET_MANAGER.getAsset("./sprites/knight.png");
         this.dash_spritesheet = ASSET_MANAGER.getAsset("./sprites/knight_dash.png");
         this.animations = [];
@@ -109,19 +110,19 @@ class Knight {
 
         // dash animations: front-left, front-right, back-left, back-right
         this.animations[5].push(
-            new Animator(this.dash_spritesheet, 0, 0, 64, 64, 9, 0.04, 15, 15, false, false)
+            new Animator(this.dash_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false)
         );
 
         this.animations[5].push(
-            new Animator(this.dash_spritesheet, 0, 64, 64, 64, 9, 0.04, 15, 15, false, false)
+            new Animator(this.dash_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false)
         );
 
         this.animations[5].push(
-            new Animator(this.dash_spritesheet, 0, 128, 64, 64, 9, 0.04, 15, 15, false, false)
+            new Animator(this.dash_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false)
         );
 
         this.animations[5].push(
-            new Animator(this.dash_spritesheet, 0, 196, 64, 64, 9, 0.04, 15, 15, false, false)
+            new Animator(this.dash_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false)
         );
     }
 
@@ -149,25 +150,33 @@ class Knight {
             this.animations[this.state][this.direction].currentFrame() > 5 &&
             this.game.keys.q
         ) {
+            ASSET_MANAGER.setVolume(0.25);
+            ASSET_MANAGER.playAudio("./sfx/sword_slash.mp3");
             this.isAttacking = true;
             this.attackCooldown = 0.25;
             this.isSliding = false;
             this.animations[this.state][this.direction].reset();
             this.state = 2;
-            this.calculateAttackDir();
+            //this.calculateAttackDir();
         }
 
         if (this.isSliding && !this.animations[this.state][this.direction].isDone()) {
             // if sliding, dont allow other input
             var i = this.animations[this.state][this.direction].currentFrame();
 
-            this.x += (7 - i) * 125 * this.game.clockTick * this.slideDirection.x;
-            this.y += (7 - i) * 125 * this.game.clockTick * this.slideDirection.y;
+            if (this.slideDirection.x != 0 && this.slideDirection.y != 0) {
+                this.x += (8 - i) * 177 * this.game.clockTick * this.slideDirection.x;
+                this.y += (8 - i) * 177 * this.game.clockTick * this.slideDirection.y;
+            } else {
+                this.x += (8 - i) * 250 * this.game.clockTick * this.slideDirection.x;
+                this.y += (8 - i) * 250 * this.game.clockTick * this.slideDirection.y;
+            }
 
             return;
         } else if (this.isSliding && this.animations[this.state][this.direction].isDone()) {
             this.isSliding = false;
             this.animations[this.state][this.direction].reset();
+            this.currSpeed = this.maxSpeed;
         }
 
         // if attacking, dont allow other input
@@ -175,15 +184,14 @@ class Knight {
             var curr_frame = this.animations[this.state][this.direction].currentFrame();
             if (curr_frame == 6) return;
             if (this.direction == 0) {
-                this.x -= (3 - (curr_frame % 3)) * this.game.clockTick * 20;
+                this.x -= (3 - (curr_frame % 3)) * this.game.clockTick * 8;
             } else if (this.direction == 1) {
-                this.x += (3 - (curr_frame % 3)) * this.game.clockTick * 20;
+                this.x += (3 - (curr_frame % 3)) * this.game.clockTick * 8;
             } else if (this.direction == 2) {
-                this.y -= (3 - (curr_frame % 3)) * this.game.clockTick * 15;
+                this.y -= (3 - (curr_frame % 3)) * this.game.clockTick * 5;
             } else {
-                this.y += (3 - (curr_frame % 3)) * this.game.clockTick * 15;
+                this.y += (3 - (curr_frame % 3)) * this.game.clockTick * 5;
             }
-
             return;
         } else if (this.isAttacking && this.animations[this.state][this.direction].isDone()) {
             this.isAttacking = false;
@@ -244,10 +252,12 @@ class Knight {
                 this.dashCooldown = 5;
             }
         } else if (attack && this.attackCooldown <= 0) {
+            ASSET_MANAGER.setVolume(0.25);
+            ASSET_MANAGER.playAudio("./sfx/sword_slash.mp3");
             this.state = 2;
             this.isAttacking = true;
             this.attackCooldown = 0.25;
-            this.calculateAttackDir();
+            //this.calculateAttackDir();
         } else if (left || right || up || down) {
             this.state = 1;
 

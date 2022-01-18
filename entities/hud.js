@@ -29,6 +29,11 @@ class HUD {
             ctx.fillRect(20, 100, 100 - slide_cooldown, 10);
         }
 
+        // fps counter
+        if (params.DEBUG) {
+            ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 130);
+        }
+
         ctx.restore();
     }
 }

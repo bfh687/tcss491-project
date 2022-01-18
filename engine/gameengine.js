@@ -149,6 +149,7 @@ class GameEngine {
     }
 
     loop() {
+        // HANDLE PAUSE
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();

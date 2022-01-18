@@ -8,6 +8,9 @@ ASSET_MANAGER.queueDownload("./sfx/sword_slash.mp3");
 ASSET_MANAGER.queueDownload("./sprites/knight.png");
 ASSET_MANAGER.queueDownload("./sprites/knight_dash.png");
 
+// enemy-related downloads
+ASSET_MANAGER.queueDownload("./sprites/skeleton.png");
+
 // cursor downloads
 ASSET_MANAGER.queueDownload("./sprites/cursor.png");
 
@@ -29,7 +32,9 @@ ASSET_MANAGER.downloadAll(() => {
     const knight = new Knight(engine, ctx.canvas.width / 2, ctx.canvas.height / 2);
     engine.addEntity(new HUD(engine, knight));
     engine.addEntity(new Cursor(engine));
+    engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2 + 100, ctx.canvas.height / 2));
     engine.addEntity(knight);
+
     engine.addEntity(new Map(engine));
 
     // initialize and start engine

@@ -7,8 +7,16 @@ class Knight {
         this.animations = [];
         this.loadAnimations();
 
+        // bounding box for collisions
+        this.boundingBox = new BoundingBox(this.x + 28, this.y + 48, 32, 64);
+        this.attackBoundingBox = null;
+
         // states: idle (0), running (1), attack (2), damaged (3), crouch walking (4), dashing (5)
         this.state = 0;
+
+        // information about player stats
+        this.attackDamage = 10;
+        this.health = 100;
 
         // directions: left (0), right (1), up (2), down (3)
         this.direction = 3;
@@ -112,15 +120,12 @@ class Knight {
         this.animations[5].push(
             new Animator(this.dash_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false)
         );
-
         this.animations[5].push(
             new Animator(this.dash_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false)
         );
-
         this.animations[5].push(
             new Animator(this.dash_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false)
         );
-
         this.animations[5].push(
             new Animator(this.dash_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false)
         );
@@ -139,11 +144,12 @@ class Knight {
         if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
 
         // reset for debugging
-        if (this.game.keys.r) {
+        if (this.game.keys.r && params.DEBUG) {
             this.x = this.game.ctx.canvas.width / 2;
             this.y = this.game.ctx.canvas.height / 2;
         }
 
+        // handle animation cancelling of sliding
         if (
             this.isSliding &&
             !this.animations[this.state][this.direction].isDone() &&
@@ -157,22 +163,23 @@ class Knight {
             this.isSliding = false;
             this.animations[this.state][this.direction].reset();
             this.state = 2;
-            //this.calculateAttackDir();
+            this.calculateAttackDir();
         }
 
+        // if sliding, update sliding position
         if (this.isSliding && !this.animations[this.state][this.direction].isDone()) {
-            // if sliding, dont allow other input
-            var i = this.animations[this.state][this.direction].currentFrame();
-
+            var current_frame = this.animations[this.state][this.direction].currentFrame();
             if (this.slideDirection.x != 0 && this.slideDirection.y != 0) {
-                this.x += (8 - i) * 177 * this.game.clockTick * this.slideDirection.x;
-                this.y += (8 - i) * 177 * this.game.clockTick * this.slideDirection.y;
+                this.x += (8 - current_frame) * 177 * this.game.clockTick * this.slideDirection.x;
+                this.y += (8 - current_frame) * 177 * this.game.clockTick * this.slideDirection.y;
             } else {
-                this.x += (8 - i) * 250 * this.game.clockTick * this.slideDirection.x;
-                this.y += (8 - i) * 250 * this.game.clockTick * this.slideDirection.y;
+                this.x += (8 - current_frame) * 250 * this.game.clockTick * this.slideDirection.x;
+                this.y += (8 - current_frame) * 250 * this.game.clockTick * this.slideDirection.y;
             }
-
+            this.updateBoundingBox();
             return;
+
+            // if done sliding, reset sliding animation
         } else if (this.isSliding && this.animations[this.state][this.direction].isDone()) {
             this.isSliding = false;
             this.animations[this.state][this.direction].reset();
@@ -184,19 +191,22 @@ class Knight {
             var curr_frame = this.animations[this.state][this.direction].currentFrame();
             if (curr_frame == 6) return;
             if (this.direction == 0) {
-                this.x -= (3 - (curr_frame % 3)) * this.game.clockTick * 8;
+                this.x -= Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 8;
             } else if (this.direction == 1) {
-                this.x += (3 - (curr_frame % 3)) * this.game.clockTick * 8;
+                this.x += Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 8;
             } else if (this.direction == 2) {
-                this.y -= (3 - (curr_frame % 3)) * this.game.clockTick * 5;
+                this.y -= Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 5;
             } else {
-                this.y += (3 - (curr_frame % 3)) * this.game.clockTick * 5;
+                this.y += Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 5;
             }
+            this.updateBoundingBox();
+            this.updateAttackBoundingBox(curr_frame);
             return;
         } else if (this.isAttacking && this.animations[this.state][this.direction].isDone()) {
             this.isAttacking = false;
             this.animations[this.state][this.direction].reset();
             this.state = 0;
+            this.attackBoundingBox = null;
         }
 
         // capture input booleans
@@ -217,8 +227,8 @@ class Knight {
         else if (up) this.direction = 2;
         else if (down) this.direction = 3;
 
+        // handle velocity + acceleration updates
         if (left || right || up || down) {
-            // update player speed
             this.currSpeed = Math.min(
                 this.maxSpeed,
                 this.currSpeed + this.speedAccel * this.game.clockTick
@@ -230,17 +240,19 @@ class Knight {
             );
         }
 
+        // if able to slide, slide
         if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
             this.calculateSlideDir(left, right, up, down);
             this.state = 5;
             this.isSliding = true;
             this.slideCooldown = 1.5;
-        } else if (dash && this.dashCooldown <= 0) {
+        }
+        // if able to dash, dash
+        else if (dash && this.dashCooldown <= 0) {
             var dist = Math.sqrt(
                 Math.pow(this.x - this.game.mouse.x, 2) + Math.pow(this.y - this.game.mouse.y, 2)
             );
 
-            // or make it go fixed distance along the line?
             if (dist < this.maxDashDistance) {
                 this.x =
                     this.game.mouse.x -
@@ -248,17 +260,20 @@ class Knight {
                 this.y =
                     this.game.mouse.y -
                     (this.animations[this.state][this.direction].getHeight() * 3) / 2;
-
                 this.dashCooldown = 5;
             }
-        } else if (attack && this.attackCooldown <= 0) {
+        }
+        // if able to attack, attack
+        else if (attack && this.attackCooldown <= 0) {
             ASSET_MANAGER.setVolume(0.25);
             ASSET_MANAGER.playAudio("./sfx/sword_slash.mp3");
             this.state = 2;
             this.isAttacking = true;
             this.attackCooldown = 0.25;
-            //this.calculateAttackDir();
-        } else if (left || right || up || down) {
+            this.calculateAttackDir();
+        }
+        // if movement input, move
+        else if (left || right || up || down) {
             this.state = 1;
 
             var prev_x = this.x;
@@ -271,27 +286,16 @@ class Knight {
             // vertical movement
             if (up && !down) this.y -= this.currSpeed * 0.75 * this.game.clockTick;
             else if (!up && down) this.y += this.currSpeed * 0.75 * this.game.clockTick;
-        } else {
+            this.updateBoundingBox();
+        }
+        // otherwise, player is idle
+        else {
             this.state = 0;
         }
     }
 
     draw(ctx) {
-        // handle pause menu
-
-        // draw dash circle
-        ctx.save();
-        ctx.strokeStyle = "white";
-        ctx.beginPath();
-        ctx.arc(
-            this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 + 12,
-            this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 + 12,
-            this.maxDashDistance,
-            0,
-            2 * Math.PI
-        );
-        ctx.stroke();
-        ctx.restore();
+        // TODO: handle pause menu
 
         // draw shadow
         ctx.save();
@@ -317,6 +321,65 @@ class Knight {
             this.y,
             2.5
         );
+
+        // draw hurt box
+        ctx.save();
+        ctx.strokeStyle = "white";
+        ctx.beginPath();
+        ctx.rect(
+            this.boundingBox.x,
+            this.boundingBox.y,
+            this.boundingBox.width,
+            this.boundingBox.height
+        );
+        ctx.stroke();
+
+        // draw hit box
+        if (this.attackBoundingBox) {
+            ctx.strokeStyle = "red";
+            ctx.beginPath();
+            ctx.rect(
+                this.attackBoundingBox.x,
+                this.attackBoundingBox.y,
+                this.attackBoundingBox.width,
+                this.attackBoundingBox.height
+            );
+            ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = "white";
+        ctx.font = "10px Arial";
+        ctx.fillText("Knight", this.x + 28, this.y + 29, 48);
+
+        ctx.fillStyle = "black";
+        ctx.fillRect(this.x + 29, this.y + 35, 32, 5);
+        ctx.fillStyle = "red";
+        ctx.fillRect(this.x + 28, this.y + 34, 32, 5);
+        ctx.fillStyle = "#32CD32";
+        ctx.fillRect(this.x + 28, this.y + 34, (this.health / 100) * 32, 5);
+        ctx.restore();
+    }
+
+    updateAttackBoundingBox(current_frame) {
+        if (true) {
+            if (this.direction == 0) {
+                this.attackBoundingBox = new BoundingBox(this.x + 0, this.y + 40, 48, 64);
+            } else if (this.direction == 1) {
+                this.attackBoundingBox = new BoundingBox(this.x + 48, this.y + 40, 48, 64);
+            } else if (this.direction == 2) {
+                this.attackBoundingBox = new BoundingBox(this.x + 10, this.y + 32, 64, 48);
+            } else {
+                this.attackBoundingBox = new BoundingBox(this.x + 14, this.y + 76, 68, 58);
+            }
+        } else {
+            this.attackBoundingBox = null;
+        }
+    }
+
+    updateBoundingBox() {
+        this.boundingBox = new BoundingBox(this.x + 28, this.y + 48, 32, 64);
     }
 
     calculateAttackDir() {
@@ -357,8 +420,6 @@ class Knight {
         else if (down) dir.y = 1;
 
         this.slideDirection = dir;
-
-        console.log(dir.x + " " + dir.y);
 
         if (dir.y == -1 && dir.x == 0) {
             this.direction = 2; // replace with up dash

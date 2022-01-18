@@ -16,14 +16,9 @@ class Cursor {
                 16,
                 this.game.mouse.x,
                 this.game.mouse.y,
-                16,
-                16
+                32,
+                32
             );
-
-            // ctx.beginPath();
-            // ctx.arc(this.game.mouse.x, this.game.mouse.y, 5, 0, 2 * Math.PI, false);
-            // ctx.fillStyle = "white";
-            // ctx.fill();
         }
     }
 }

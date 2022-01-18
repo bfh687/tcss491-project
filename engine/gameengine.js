@@ -146,10 +146,22 @@ class GameEngine {
         // Add new things
         this.entities = this.entities.concat(this.entitiesToAdd);
         this.entitiesToAdd = [];
+
+        // sort entities to give 3d look
+        this.entities.sort((e1, e2) => {
+            if (!e1.boundingBox && !e2.boundingBox) {
+                return e2.priority - e1.priority;
+            } else if (!e1.boundingBox) {
+                return e2.boundingBox - e1.priority;
+            } else if (!e2.boundingBox) {
+                return e2.priority - e1.boundingBox;
+            }
+            return e2.boundingBox.top - e1.boundingBox.top;
+        });
+        console.log(this.entities);
     }
 
     loop() {
-        // HANDLE PAUSE
         this.clockTick = this.timer.tick();
         this.update();
         this.draw();

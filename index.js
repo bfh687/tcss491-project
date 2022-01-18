@@ -28,13 +28,12 @@ ASSET_MANAGER.downloadAll(() => {
     const ctx = canvas.getContext("2d");
     ctx.imageSmoothingEnabled = false;
 
-    // add entities here
+    // add entities here, order matters for priority atm
     const knight = new Knight(engine, ctx.canvas.width / 2, ctx.canvas.height / 2);
     engine.addEntity(new HUD(engine, knight));
     engine.addEntity(new Cursor(engine));
     engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2 + 100, ctx.canvas.height / 2));
     engine.addEntity(knight);
-
     engine.addEntity(new Map(engine));
 
     // initialize and start engine

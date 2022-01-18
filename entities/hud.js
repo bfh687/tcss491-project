@@ -1,6 +1,7 @@
 class HUD {
     constructor(game, knight) {
         Object.assign(this, { game, knight });
+        this.priority = Number.MAX_VALUE;
     }
 
     update() {}

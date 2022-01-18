@@ -3,6 +3,7 @@ class Map {
         Object.assign(this, { game });
         this.spritesheet = [];
         this.loadAssets();
+        this.priority = Number.MIN_VALUE;
     }
 
     loadAssets() {

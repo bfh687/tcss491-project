@@ -149,9 +149,13 @@ class GameEngine {
 
         // sort entities to give 3d look
         this.entities.sort((e1, e2) => {
-            if (!e1.boundingBox && !e2.boundingBox) return 0;
-            else if (!e2.boundingBox) return -1;
-            else if (!e1.boundingBox) return 1;
+            if (!e1.boundingBox && !e2.boundingBox) {
+                return e2.priority - e1.priority;
+            } else if (!e1.boundingBox) {
+                return e2.boundingBox - e1.priority;
+            } else if (!e2.boundingBox) {
+                return e2.priority - e1.boundingBox;
+            }
             return e2.boundingBox.top - e1.boundingBox.top;
         });
         console.log(this.entities);

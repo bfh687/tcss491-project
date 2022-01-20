@@ -56,18 +56,6 @@ class Animator {
             (this.width - this.framePaddingRight) * scale,
             this.height * scale
         );
-
-        // debug parameter
-        // PARAMS.debug
-        if (params.DEBUG) {
-            ctx.strokeStyle = "white";
-            ctx.strokeRect(
-                x,
-                y,
-                (this.width - this.framePaddingLeft - this.framePaddingRight) * scale,
-                this.height * scale
-            );
-        }
     }
 
     currentFrame() {

@@ -158,7 +158,6 @@ class GameEngine {
             }
             return e2.boundingBox.top - e1.boundingBox.top;
         });
-        console.log(this.entities);
     }
 
     loop() {

@@ -6,7 +6,7 @@ class Skeleton {
         this.loadAnimations();
 
         // bounding box for collisions
-        this.boundingBox = new BoundingBox(this.x + 42, this.y + 31, 46, 65);
+        this.updateBoundingBox();
 
         // remove from world
         this.removeFromWorld = false;
@@ -177,6 +177,6 @@ class Skeleton {
     }
 
     updateBoundingBox() {
-        this.boundingBox = new BoundingBox(this.x + 42, this.y + 19 + 12, 46, 65);
+        this.boundingBox = new BoundingBox(this.x + 42, this.y + 64, 46, 32);
     }
 }

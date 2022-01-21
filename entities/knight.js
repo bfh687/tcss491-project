@@ -7,6 +7,11 @@ class Knight {
         this.animations = [];
         this.loadAnimations();
 
+        this.velocity = {
+            x: 0,
+            y: 0,
+        };
+
         // bounding box for collisions
         this.updateBoundingBox();
         this.attackBoundingBox = null;
@@ -35,11 +40,6 @@ class Knight {
         this.maxSpeed = 250;
         this.speedAccel = 350;
         this.minSpeed = 100;
-
-        this.velocity = {
-            x: 0,
-            y: 0,
-        };
     }
 
     loadAnimations() {
@@ -187,17 +187,6 @@ class Knight {
         // if attacking, dont allow other input
         if (this.isAttacking && !this.animations[this.state][this.direction].isDone()) {
             var curr_frame = this.animations[this.state][this.direction].currentFrame();
-            if (curr_frame == 6) return;
-            if (this.direction == 0) {
-                this.x -= Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 8;
-            } else if (this.direction == 1) {
-                this.x += Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 8;
-            } else if (this.direction == 2) {
-                this.y -= Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 5;
-            } else {
-                this.y += Math.pow(3 - (curr_frame % 3), 2) * this.game.clockTick * 5;
-            }
-            this.updateBoundingBox();
             this.updateAttackBoundingBox(curr_frame);
             return;
         }
@@ -275,39 +264,37 @@ class Knight {
 
     checkCollisions() {
         this.game.entities.forEach((entity) => {
-            if (
-                entity.boundingBox &&
-                entity instanceof Skeleton &&
-                this.boundingBox.collide(entity.boundingBox)
-            ) {
-                // approach from the top
-                if (this.lastBoundingBox.bottom <= entity.boundingBox.top) {
-                    console.log("collision from bottom of knight");
-                    this.y = entity.boundingBox.top - 112;
+            if (entity.boundingBox && entity instanceof Skeleton && entity.state != 4) {
+                var horizontalBox = new BoundingBox(
+                    this.x + 28 + this.velocity.x * this.game.clockTick,
+                    this.y + 94,
+                    29,
+                    24
+                );
+
+                var verticalBox = new BoundingBox(
+                    this.x + 28,
+                    this.y + 94 + this.velocity.y * this.game.clockTick,
+                    29,
+                    24
+                );
+
+                if (verticalBox.collide(entity.boundingBox)) {
+                    this.velocity.y = 0;
                 }
-                // approach from the left
-                else if (this.lastBoundingBox.right <= entity.boundingBox.left) {
-                    console.log("collision from right of knight");
-                    this.x = entity.boundingBox.left - 61;
+                if (horizontalBox.collide(entity.boundingBox)) {
+                    this.velocity.x = 0;
                 }
-                // approach from the right
-                else if (this.lastBoundingBox.left >= entity.boundingBox.right) {
-                    console.log("collision from left of knight");
-                    this.x = entity.boundingBox.right - 28;
-                }
-                // approach from the bottom
-                else if (this.lastBoundingBox.top >= entity.boundingBox.bottom) {
-                    console.log("collision from top of knight");
-                    this.y = entity.boundingBox.bottom - 79;
-                }
-                this.updateBoundingBox();
             }
         });
     }
 
-    draw(ctx) {
-        // TODO: handle pause menu
+    // updateBoundingBox() {
+    //     this.hurtBox = new BoundingBox(this.x + 28, this.y + 50, 29, 62);
+    //     this.boundingBox = new BoundingBox(this.x + 28, this.y + 94, 29, 24);
+    // }
 
+    draw(ctx) {
         // draw shadow
         ctx.save();
         ctx.globalAlpha = 0.3;
@@ -333,31 +320,14 @@ class Knight {
             2.5
         );
 
-        // draw hurt box
-        ctx.save();
-        ctx.strokeStyle = "white";
-        ctx.beginPath();
-        ctx.rect(
-            this.boundingBox.x,
-            this.boundingBox.y,
-            this.boundingBox.width,
-            this.boundingBox.height
-        );
-        ctx.stroke();
-
-        // draw hit box
-        if (this.attackBoundingBox) {
-            ctx.strokeStyle = "red";
-            ctx.beginPath();
-            ctx.rect(
-                this.attackBoundingBox.x,
-                this.attackBoundingBox.y,
-                this.attackBoundingBox.width,
-                this.attackBoundingBox.height
-            );
-            ctx.stroke();
+        // draw hurt box, hit box, and bounding box
+        if (params.DEBUG) {
+            drawBoundingBox(this.hurtBox, ctx, "red");
+            drawBoundingBox(this.boundingBox, ctx, "white");
+            if (this.attackBoundingBox) {
+                drawBoundingBox(this.attackBoundingBox, ctx, "red");
+            }
         }
-        ctx.restore();
 
         // draw health bar
         ctx.save();
@@ -374,8 +344,13 @@ class Knight {
         ctx.restore();
     }
 
+    updateBoundingBox() {
+        this.hurtBox = new BoundingBox(this.x + 28, this.y + 50, 29, 62);
+        this.boundingBox = new BoundingBox(this.x + 28, this.y + 94, 29, 24);
+    }
+
     updateAttackBoundingBox(current_frame) {
-        if (current_frame != 3 && current_frame != 4 && current_frame != 6) {
+        if (current_frame != 2 && current_frame != 3 && current_frame != 6) {
             if (this.direction == 0) {
                 this.attackBoundingBox = new BoundingBox(this.x + 0, this.y + 40, 48, 64);
             } else if (this.direction == 1) {
@@ -388,11 +363,6 @@ class Knight {
         } else {
             this.attackBoundingBox = null;
         }
-    }
-
-    updateBoundingBox() {
-        this.lastBoundingBox = this.boundingBox;
-        this.boundingBox = new BoundingBox(this.x + 28, this.y + 80, 32, 32);
     }
 
     calculateSlideDir(left, right, up, down) {

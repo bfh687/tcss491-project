@@ -5,17 +5,17 @@ class Skeleton {
         this.animations = [];
         this.loadAnimations();
 
+        // states: idle (0), walking (1), attack (2), damaged (3), dying (4)
+        this.state = 0;
+
+        // directions: left (0), right (1)
+        this.direction = 0;
+
         // bounding box for collisions
         this.updateBoundingBox();
 
         // remove from world
         this.removeFromWorld = false;
-
-        // states: idle (0), walking (1), attack (2), damaged (3), dying (4)
-        this.state = 0;
-
-        // directions: left (0), right (1)
-        this.direction = 1;
 
         // information about stats
         this.health = 100;
@@ -94,24 +94,26 @@ class Skeleton {
         }
 
         // if damaged animation is playing, let it play out, otherwise go back to idle
-        if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
+        else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
             return;
-        } else {
+        } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
             this.animations[this.state][this.direction].reset();
             this.state = 0;
         }
 
         // detect possible collisions
         this.game.entities.forEach((entity) => {
-            if (entity.attackBoundingBox) {
-                if (this.boundingBox.collide(entity.attackBoundingBox)) {
+            if (entity.attackBoundingBox && entity instanceof Knight) {
+                if (this.hurtBox.collide(entity.attackBoundingBox)) {
                     this.state = 3;
                     this.health -= entity.attackDamage;
 
                     // make enemy look at them
-                    if (entity.boundingBox.left > this.boundingBox.left) this.direction = 1;
+                    if (entity.boundingBox.left > this.hurtBox.left) this.direction = 1;
                     else this.direction = 0;
 
+                    // update bounding box and return
+                    this.updateBoundingBox();
                     return;
                 } else {
                     this.state = 0;
@@ -120,19 +122,26 @@ class Skeleton {
         });
     }
 
+    updateBoundingBox() {
+        // looking left
+        if (this.direction == 0) {
+            this.boundingBox = new BoundingBox(this.x + 54, this.y + 80, 32, 24);
+            this.hurtBox = new BoundingBox(this.x + 50, this.y + 32, 32, 66);
+        }
+        // looking right
+        else {
+            this.boundingBox = new BoundingBox(this.x + 42, this.y + 80, 32, 24);
+            this.hurtBox = new BoundingBox(this.x + 42, this.y + 32, 32, 66);
+        }
+    }
+
     draw(ctx) {
-        // draw hurt box
-        ctx.save();
-        ctx.strokeStyle = "white";
-        ctx.beginPath();
-        ctx.rect(
-            this.boundingBox.x,
-            this.boundingBox.y,
-            this.boundingBox.width,
-            this.boundingBox.height
-        );
-        ctx.stroke();
-        ctx.restore();
+        // draw hurt box and bounding box if parameter is on
+        if (params.DEBUG) {
+            drawBoundingBox(this.boundingBox, ctx, "white");
+            drawBoundingBox(this.hurtBox, ctx, "red");
+            if (this.hitBox) drawBoundingBox(this.hitBox, ctx, "red");
+        }
 
         // draw shadows if not dying
         if (this.state != 4) {
@@ -174,9 +183,5 @@ class Skeleton {
         ctx.fillStyle = "#32CD32";
         ctx.fillRect(this.x + 42, this.y + 16, (this.health / 100) * 46, 5);
         ctx.restore();
-    }
-
-    updateBoundingBox() {
-        this.boundingBox = new BoundingBox(this.x + 42, this.y + 64, 46, 32);
     }
 }

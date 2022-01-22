@@ -32,9 +32,10 @@ class Skeleton {
     this.stunDuration = 1;
 
     // information about skeleton movement
-    this.maxSpeed = 100;
+    this.aggroDist = 300;
+    this.maxSpeed = 125;
     this.speedAccel = 350;
-    this.minSpeed = 75;
+    this.minSpeed = 125;
     this.currSpeed = this.minSpeed;
   }
 
@@ -59,10 +60,10 @@ class Skeleton {
 
     // attack animations: left, right
     this.animations[2].push(
-      new Animator(this.spritesheet, 0, 64, 64, 64, 13, 0.09, 0, 0, false, true)
+      new Animator(this.spritesheet, 0, 64, 64, 64, 13, 0.09, 0, 0, false, false)
     );
     this.animations[2].push(
-      new Animator(this.spritesheet, 0, 396, 64, 64, 13, 0.09, 0, 0, false, true)
+      new Animator(this.spritesheet, 0, 396, 64, 64, 13, 0.09, 0, 0, false, false)
     );
 
     // damaged animations: left, right
@@ -88,6 +89,11 @@ class Skeleton {
       this.state = 4;
     }
 
+    // enraged !
+    if (this.health <= 40) {
+      this.currSpeed = 175;
+    }
+
     // if death animation is playing, let it play out, otherwise remove entity from world
     if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
       return;
@@ -104,6 +110,72 @@ class Skeleton {
       this.state = 0;
     }
 
+    // if attacking animation is playing, let it play out, otherwise go back to idle
+    else if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
+      return;
+    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
+      this.animations[this.state][this.direction].reset();
+      this.state = 0;
+    }
+
+    // attraction towards knight (player)
+    var knight;
+    for (var i = 0; i < this.game.entities.length; i++) {
+      if (this.game.entities[i] instanceof Knight) {
+        knight = this.game.entities[i];
+        break;
+      }
+    }
+
+    // should always be a player, double check just in case
+    if (knight) {
+      // calculate unit vector towards knight
+      var dist = getDistance(knight.x, knight.y, this.x, this.y);
+      // aggro distance
+      if (dist < this.aggroDist) {
+        var xVector = (knight.x - this.x) / dist;
+        var yVector = (knight.y - this.y) / dist;
+
+        if (xVector >= 0) this.direction = 1;
+        else this.direction = 0;
+
+        if (xVector != 0 && yVector != 0) {
+          this.state = 1;
+        } else {
+          this.state = 0;
+        }
+
+        var horizontalBox = new BoundingBox(
+          this.x + 54 + xVector * this.currSpeed * this.game.clockTick,
+          this.y + 80,
+          32,
+          24
+        );
+
+        var verticalBox = new BoundingBox(
+          this.x + 54,
+          this.y + 80 + yVector * this.currSpeed * this.game.clockTick,
+          32,
+          24
+        );
+
+        if (verticalBox.collide(knight.boundingBox)) {
+          yVector = 0;
+          this.state = 2;
+        }
+        if (horizontalBox.collide(knight.boundingBox)) {
+          xVector = 0;
+          this.state = 2;
+        }
+
+        // change 100 to be speed variable
+        this.x += xVector * this.currSpeed * this.game.clockTick;
+        this.y += yVector * this.currSpeed * this.game.clockTick;
+      } else {
+        this.state = 0;
+      }
+      this.updateBoundingBox();
+    }
     // detect possible collisions
     this.game.entities.forEach((entity) => {
       if (entity.attackBoundingBox && entity instanceof Knight) {

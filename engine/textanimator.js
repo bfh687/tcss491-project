@@ -19,8 +19,8 @@ class TextAnimator {
     if (this.isDone()) return;
     ctx.globalAlpha = this.alpha;
 
-    ctx.fillStyle = "red";
-    ctx.font = "20px Arial";
+    ctx.fillStyle = "white";
+    ctx.font = "15px Arial";
 
     this.y -= 20 * tick;
     ctx.fillText(this.amount, this.x, this.y, 48);

@@ -97,12 +97,20 @@ class Item {
   }
 
   animateRarity(item) {
-    let percent = this.items[item].dropChance;
-    const animator = new TextAnimator(this.x + 8, this.y - 32, percent + "%", 5);
-    if (percent >= 15) {
+    console.log(this.items[item]);
+    let string = "";
+    if (this.items[item].dropChance >= 15) {
+      string = "COMMON";
+    } else if (this.items[item].dropChance >= 5) {
+      string = "RARE";
+    } else {
+      string = "MYTHIC";
+    }
+    const animator = new TextAnimator(this.x, this.y - 32, string, 100);
+    if (this.items[item].dropChance >= 15) {
       animator.critColor("white");
-    } else if (percent >= 5) {
-      animator.critColor("purple");
+    } else if (this.items[item].dropChance >= 5) {
+      animator.critColor("cyan");
     } else {
       animator.critColor("orange");
     }
@@ -159,7 +167,6 @@ class Item {
   loadItems() {
     this.randomizeItems();
     this.shuffleArray(this.items);
-    console.log(this.items);
   }
 
   shuffleArray(arr) {

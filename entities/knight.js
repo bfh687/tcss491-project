@@ -214,7 +214,7 @@ class Knight {
     checkCollisions() {
         this.game.entities.forEach((entity) => {
             // prevent entity pass through
-            if (entity instanceof Skeleton && entity.state != 4) {
+            if ((entity instanceof Skeleton || entity instanceof Eyeball) && entity.state != 4) {
                 // future collision detection
                 var slideMultiplier = 1;
                 if (this.state == 5) slideMultiplier = 6;
@@ -255,6 +255,37 @@ class Knight {
                 if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
                     if (this.state != 2) {
                         this.state = 3;
+                    }
+                    this.health -= entity.attackDamage * this.game.clockTick;
+                    this.textAnimations.push(
+                        new TextAnimator(
+                            this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
+                            this.hurtBox.top,
+                            entity.attackDamage * this.game.clockTick,
+                            1
+                        )
+                    );
+                }
+            } else if (entity instanceof Eyeball) {
+                console.log(this.hitBox);
+                if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
+                    if (entity.state != 2) {
+                        entity.state = 4;
+                    }
+                    entity.health -= this.attackDamage * this.game.clockTick;
+                    entity.textAnimations.push(
+                        new TextAnimator(
+                            entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
+                            entity.hurtBox.top - 48,
+                            this.attackDamage * this.game.clockTick,
+                            1
+                        )
+                    );
+                }
+
+                if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+                    if (this.state != 2) {
+                        this.state = 4;
                     }
                     this.health -= entity.attackDamage * this.game.clockTick;
                     this.textAnimations.push(

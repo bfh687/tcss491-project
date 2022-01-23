@@ -16,6 +16,7 @@ ASSET_MANAGER.queueDownload("./sprites/cursor.png");
 
 // misc asset downloads
 ASSET_MANAGER.queueDownload("./sprites/items.png");
+ASSET_MANAGER.queueDownload("./sprites/geronimo's_goggles.png");
 
 // tileset downloads
 ASSET_MANAGER.queueDownload("./sprites/map/grass_tileset.png");

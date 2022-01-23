@@ -247,32 +247,26 @@ class Knight {
           }
           let rand = Math.floor(Math.random() * this.critChance);
           console.log("rand: " + rand);
-          if (rand === Math.floor(this.critChance / 2)) {
+          const animator = new TextAnimator(
+            entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
+            entity.hurtBox.top - 48,
+            (this.attackDamage * this.game.clockTick).toFixed(2),
+            1
+          );
+          if (rand === Math.floor(this.critChance / 2) && entity.state === 2) {
             this.attackDamage = this.attackDamage * this.critMultiplier;
             this.damageColor = "yellow";
+            animator.critColor(this.damageColor);
             console.log("CRIT!!!");
           }
 
           entity.health -= this.attackDamage * this.game.clockTick;
-          const animator = new TextAnimator(
-            entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
-            entity.hurtBox.top - 48,
-            this.attackDamage * this.game.clockTick,
-            1
-          );
-          animator.criticallyHit(this.damageColor);
-          entity.textAnimations.push(
-            new TextAnimator(
-              entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
-              entity.hurtBox.top - 48,
-              this.attackDamage * this.game.clockTick,
-              1
-            )
-          );
+
+          entity.textAnimations.push(animator);
           console.log(this.attackDamage);
           console.log(this.critChance);
           this.attackDamage = 100;
-          this.damageColor = "red";
+          //this.damageColor = "red";
         }
 
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
@@ -284,7 +278,7 @@ class Knight {
             new TextAnimator(
               this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
               this.hurtBox.top,
-              entity.attackDamage * this.game.clockTick,
+              (entity.attackDamage * this.game.clockTick).toFixed(2),
               1
             )
           );
@@ -332,7 +326,7 @@ class Knight {
     // loop through and print all damage animations
     for (var i = 0; i < this.textAnimations.length; i++) {
       if (!this.textAnimations[i].isDone()) {
-        this.textAnimations[i].criticallyHit(this.damageColor);
+        this.textAnimations[i].critColor(this.damageColor);
         this.textAnimations[i].drawText(this.game.clockTick, ctx);
       }
     }

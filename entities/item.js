@@ -1,7 +1,8 @@
 class Item {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/items.png");
+    this.items_spritesheet = ASSET_MANAGER.getAsset("./sprites/items.png");
+    this.goggles_spritesheet = ASSET_MANAGER.getAsset("./sprites/geronimo's_goggles.png");
 
     this.items = [];
     this.loadItems();
@@ -22,11 +23,71 @@ class Item {
 
     // max pull distance
     this.pullDist = 100;
+
+    // Items in items.png
+    this.shatterproofSkull = {
+      code: "Shatterproof Skull",
+      coords: [0, 0],
+      dropChance: 20, // 5% chance
+    };
+
+    this.boneThickener = {
+      code: "Bone Thickener",
+      coords: [32, 0],
+      dropChance: 5, // 20% chance
+    };
+
+    this.spareHeart = {
+      code: "Spare Heart",
+      coords: [64, 0],
+      dropChance: 10, // 10% chance
+    };
+
+    this.wing = {
+      code: "Wing",
+      coords: [96, 0],
+      dropChance: 10, // 10% chance
+    };
+
+    this.scale = {
+      code: "Scale",
+      coords: [128, 0],
+      dropChance: 10, // 10% chance
+    };
+
+    this.clover1 = {
+      code: "Clover 1",
+      coords: [0, 32],
+      dropChance: 5, // 20% chance
+    };
+
+    this.clover2 = {
+      code: "Clover 2",
+      coords: [32, 32],
+      dropChance: 25, // 4% chance
+    };
+
+    this.clover3 = {
+      code: "Clover 3",
+      coords: [64, 32],
+      dropChance: 50, // 2% chance
+    };
+
+    this.clover4 = {
+      code: "Clover 4",
+      coords: [96, 32],
+      dropChance: 100, // 1% chance
+    };
+
+    // Item from Geronimos Goggles
+    this.goggles = {
+      code: "Goggles",
+      coords: [0, 0],
+      dropChance: 15, // 6.67% chance
+    };
   }
 
-  loadItems() {
-    // load all items
-  }
+  loadItems() {}
 
   update() {
     this.elapsedTime += this.game.clockTick;
@@ -65,7 +126,17 @@ class Item {
   }
 
   draw(ctx) {
-    ctx.drawImage(this.spritesheet, 0, 0, 32, 32, this.x - 16, this.y - 24 + Math.sin(this.elapsedTime * 2) * 10, 32, 32);
+    ctx.drawImage(
+      this.items_spritesheet,
+      this.clover1.Coords[0],
+      this.clover1.Coords[1],
+      32,
+      32,
+      this.x - 16,
+      this.y - 24 + Math.sin(this.elapsedTime * 2) * 10,
+      32,
+      32
+    );
     drawBoundingBox(this.boundingBox, ctx, "yellow");
   }
 }

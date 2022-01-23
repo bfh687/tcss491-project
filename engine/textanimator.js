@@ -14,7 +14,7 @@ class TextAnimator {
     this.alpha = 1;
   }
 
-  criticallyHit(color) {
+  critColor(color) {
     this.damageColor = color;
   }
 

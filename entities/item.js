@@ -117,6 +117,10 @@ class Item {
     this.textAnimations.push(animator);
   }
 
+  getItem() {
+    return this.items[this.selectedItem];
+  }
+
   randomizeItems() {
     // insert skulls
     for (let i = 0; i < this.shatterproofSkull.dropChance; i++) {

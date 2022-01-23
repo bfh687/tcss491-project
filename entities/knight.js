@@ -14,6 +14,7 @@ class Knight {
     };
 
     this.textAnimations = [];
+    this.playerItems = [];
 
     // states: idle (0), running (1), attack (2), damaged (3), crouch walking (4), slideing (5)
     this.state = 0;
@@ -284,11 +285,25 @@ class Knight {
       if (entity instanceof Item) {
         if (this.hurtBox.collide(entity.boundingBox)) {
           entity.removeFromWorld = true;
-          this.critChance = 5;
+          const item = entity.getItem();
+          let contains = false;
+          for (let i = 0; i < this.playerItems.length; i++) {
+            if (item.code === this.playerItems[i].item.code) {
+              this.playerItems[i].count++;
+              contains = true;
+            }
+          }
+          if (!contains) {
+            const playerItem = { item: item, count: 1 };
+            this.playerItems.push(playerItem);
+          }
+          console.log(this.playerItems);
         }
       }
     });
   }
+
+  loadItemAbilities() {}
 
   draw(ctx) {
     // draw shadow

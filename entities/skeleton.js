@@ -94,8 +94,9 @@ class Skeleton {
       var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
       var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
 
-      if (Math.floor(Math.random() * 5) + 1 === 3) {
+      if (Math.floor(Math.random()) + 1 === 1) {
         const item = new Item(this.game, center_x, center_y);
+
         this.game.addEntity(item);
       }
 

@@ -34,7 +34,7 @@ ASSET_MANAGER.downloadAll(() => {
 
   // add entities here, order matters for priority atm
   const knight = new Knight(engine, ctx.canvas.width / 2, ctx.canvas.height / 2);
-  //engine.addEntity(new HUD(engine, knight));
+  // engine.addEntity(new HUD(engine, knight));
   engine.addEntity(new Cursor(engine));
   engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2 + 40, ctx.canvas.height / 2));
   engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2 + 80, ctx.canvas.height / 2));

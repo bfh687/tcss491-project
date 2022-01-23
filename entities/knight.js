@@ -209,7 +209,6 @@ class Knight {
     }
 
     this.checkCollisions();
-    console.log(this.damageColor);
     this.x += this.velocity.x * this.game.clockTick;
     this.y += this.velocity.y * 0.85 * this.game.clockTick;
     this.updateBoundingBox();
@@ -246,7 +245,6 @@ class Knight {
             entity.state = 3;
           }
           let rand = Math.floor(Math.random() * this.critChance);
-          console.log("rand: " + rand);
           const animator = new TextAnimator(
             entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
             entity.hurtBox.top - 48,
@@ -263,8 +261,6 @@ class Knight {
           entity.health -= this.attackDamage * this.game.clockTick;
 
           entity.textAnimations.push(animator);
-          console.log(this.attackDamage);
-          console.log(this.critChance);
           this.attackDamage = 100;
           //this.damageColor = "red";
         }

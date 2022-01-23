@@ -3,8 +3,78 @@ class Item {
     Object.assign(this, { game, x, y });
     this.items_spritesheet = ASSET_MANAGER.getAsset("./sprites/items.png");
     this.goggles_spritesheet = ASSET_MANAGER.getAsset("./sprites/geronimo's_goggles.png");
-
+    this.textAnimations = [];
     this.items = [];
+    // Items in items.png
+    this.shatterproofSkull = {
+      code: "Shatterproof Skull",
+      x: 0,
+      y: 0,
+      dropChance: 5, // 5% chance
+    };
+
+    this.boneThickener = {
+      code: "Bone Thickener",
+      x: 32,
+      y: 0,
+      dropChance: 20, // 20% chance
+    };
+
+    this.spareHeart = {
+      code: "Spare Heart",
+      x: 64,
+      y: 0,
+      dropChance: 10, // 10% chance
+    };
+
+    this.wing = {
+      code: "Wing",
+      x: 160,
+      y: 0,
+      dropChance: 15, // 15% chance
+    };
+
+    this.scale = {
+      code: "Scale",
+      x: 320,
+      y: 0,
+      dropChance: 20, // 20% chance
+    };
+
+    this.clover1 = {
+      code: "Clover 1",
+      x: 0,
+      y: 32,
+      dropChance: 23, // 23% chance
+    };
+
+    this.clover2 = {
+      code: "Clover 2",
+      x: 32,
+      y: 32,
+      dropChance: 4, // 4% chance
+    };
+
+    this.clover3 = {
+      code: "Clover 3",
+      x: 64,
+      y: 32,
+      dropChance: 2, // 2% chance
+    };
+
+    this.clover4 = {
+      code: "Clover 4",
+      x: 96,
+      y: 32,
+      dropChance: 1, // 1% chance
+    };
+
+    // Item from Geronimos Goggles
+    // this.goggles = {
+    //   code: "Goggles",
+    //   coords: [0, 0],
+    //   dropChance: 15, // 6.67% chance
+    // };
     this.loadItems();
 
     this.updateBoundingBox();
@@ -12,6 +82,7 @@ class Item {
     // select random item
     this.selectedItem = Math.floor(Math.random() * this.items.length);
 
+    this.animateRarity(this.selectedItem);
     // total time item has been on the map
     this.elapsedTime = 0;
 
@@ -23,71 +94,80 @@ class Item {
 
     // max pull distance
     this.pullDist = 100;
-
-    // Items in items.png
-    this.shatterproofSkull = {
-      code: "Shatterproof Skull",
-      coords: [0, 0],
-      dropChance: 20, // 5% chance
-    };
-
-    this.boneThickener = {
-      code: "Bone Thickener",
-      coords: [32, 0],
-      dropChance: 5, // 20% chance
-    };
-
-    this.spareHeart = {
-      code: "Spare Heart",
-      coords: [64, 0],
-      dropChance: 10, // 10% chance
-    };
-
-    this.wing = {
-      code: "Wing",
-      coords: [96, 0],
-      dropChance: 10, // 10% chance
-    };
-
-    this.scale = {
-      code: "Scale",
-      coords: [128, 0],
-      dropChance: 10, // 10% chance
-    };
-
-    this.clover1 = {
-      code: "Clover 1",
-      coords: [0, 32],
-      dropChance: 5, // 20% chance
-    };
-
-    this.clover2 = {
-      code: "Clover 2",
-      coords: [32, 32],
-      dropChance: 25, // 4% chance
-    };
-
-    this.clover3 = {
-      code: "Clover 3",
-      coords: [64, 32],
-      dropChance: 50, // 2% chance
-    };
-
-    this.clover4 = {
-      code: "Clover 4",
-      coords: [96, 32],
-      dropChance: 100, // 1% chance
-    };
-
-    // Item from Geronimos Goggles
-    this.goggles = {
-      code: "Goggles",
-      coords: [0, 0],
-      dropChance: 15, // 6.67% chance
-    };
   }
 
-  loadItems() {}
+  animateRarity(item) {
+    let percent = this.items[item].dropChance;
+    const animator = new TextAnimator(this.x + 8, this.y - 32, percent + "%", 5);
+    if (percent >= 15) {
+      animator.critColor("white");
+    } else if (percent >= 5) {
+      animator.critColor("purple");
+    } else {
+      animator.critColor("orange");
+    }
+    this.textAnimations.push(animator);
+  }
+
+  randomizeItems() {
+    // insert skulls
+    for (let i = 0; i < this.shatterproofSkull.dropChance; i++) {
+      this.items.push(this.shatterproofSkull);
+    }
+
+    // insert bones
+    for (let i = 0; i < this.boneThickener.dropChance; i++) {
+      this.items.push(this.boneThickener);
+    }
+
+    // insert hearts
+    for (let i = 0; i < this.spareHeart.dropChance; i++) {
+      this.items.push(this.spareHeart);
+    }
+
+    // insert wings
+    for (let i = 0; i < this.wing.dropChance; i++) {
+      this.items.push(this.wing);
+    }
+
+    // insert scales
+    for (let i = 0; i < this.scale.dropChance; i++) {
+      this.items.push(this.scale);
+    }
+
+    // insert clover 1
+    for (let i = 0; i < this.clover1.dropChance; i++) {
+      this.items.push(this.clover1);
+    }
+
+    // insert clover 2
+    for (let i = 0; i < this.clover2.dropChance; i++) {
+      this.items.push(this.clover2);
+    }
+
+    // insert clover 3
+    for (let i = 0; i < this.clover3.dropChance; i++) {
+      this.items.push(this.clover3);
+    }
+
+    // insert clover 4
+    for (let i = 0; i < this.clover4.dropChance; i++) {
+      this.items.push(this.clover4);
+    }
+  }
+
+  loadItems() {
+    this.randomizeItems();
+    this.shuffleArray(this.items);
+    console.log(this.items);
+  }
+
+  shuffleArray(arr) {
+    for (let i = arr.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [arr[i], arr[j]] = [arr[j], arr[i]];
+    }
+  }
 
   update() {
     this.elapsedTime += this.game.clockTick;
@@ -118,7 +198,12 @@ class Item {
 
     this.x += xVector * this.game.clockTick;
     this.y += yVector * this.game.clockTick;
+    //this.checkCollisions();
     this.updateBoundingBox();
+  }
+
+  checkCollisions() {
+    this.game.entities.forEach((entity) => {});
   }
 
   updateBoundingBox() {
@@ -128,8 +213,8 @@ class Item {
   draw(ctx) {
     ctx.drawImage(
       this.items_spritesheet,
-      this.clover1.Coords[0],
-      this.clover1.Coords[1],
+      this.items[this.selectedItem].x,
+      this.items[this.selectedItem].y,
       32,
       32,
       this.x - 16,
@@ -137,6 +222,13 @@ class Item {
       32,
       32
     );
+
     drawBoundingBox(this.boundingBox, ctx, "yellow");
+
+    for (var i = 0; i < this.textAnimations.length; i++) {
+      if (!this.textAnimations[i].isDone()) {
+        this.textAnimations[i].drawText(this.game.clockTick, ctx);
+      }
+    }
   }
 }

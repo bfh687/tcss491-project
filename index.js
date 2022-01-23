@@ -36,10 +36,15 @@ ASSET_MANAGER.downloadAll(() => {
     const knight = new Knight(engine, ctx.canvas.width / 2, ctx.canvas.height / 2);
     engine.addEntity(new HUD(engine, knight));
     engine.addEntity(new Cursor(engine));
-    //engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2 + 160, ctx.canvas.height / 2));
+    engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2, ctx.canvas.height / 2));
+    engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2, ctx.canvas.height / 2 + 100));
+    engine.addEntity(new Skeleton(engine, ctx.canvas.width / 2, ctx.canvas.height / 2 + 200));
     engine.addEntity(new Eyeball(engine, ctx.canvas.width / 2 + 160, ctx.canvas.height / 2));
+    engine.addEntity(new Eyeball(engine, ctx.canvas.width / 2 + 160, ctx.canvas.height / 2 + 50));
+    engine.addEntity(new Eyeball(engine, ctx.canvas.width / 2 + 160, ctx.canvas.height / 2 + 50));
+
     engine.addEntity(knight);
-    //engine.addEntity(new Map(engine));
+    engine.addEntity(new Map(engine));
 
     // initialize and start engine
     engine.init(ctx);

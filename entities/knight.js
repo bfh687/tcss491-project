@@ -84,12 +84,6 @@ class Knight {
     }
 
     update() {
-        // don't update if cursor isnt locked
-        if (!this.game.locked) {
-            this.state = 0;
-            return;
-        }
-
         // reset for debugging
         if (this.game.keys.r && params.DEBUG) {
             this.x = this.game.ctx.canvas.width / 2;
@@ -214,7 +208,7 @@ class Knight {
     checkCollisions() {
         this.game.entities.forEach((entity) => {
             // prevent entity pass through
-            if ((entity instanceof Skeleton || entity instanceof Eyeball) && entity.state != 4) {
+            if ((entity instanceof Skeleton || entity instanceof Eyeball) && entity.state != 4 && entity.state != 5) {
                 // future collision detection
                 var slideMultiplier = 1;
                 if (this.state == 5) slideMultiplier = 6;
@@ -267,7 +261,6 @@ class Knight {
                     );
                 }
             } else if (entity instanceof Eyeball) {
-                console.log(this.hitBox);
                 if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
                     if (entity.state != 2) {
                         entity.state = 4;
@@ -285,7 +278,7 @@ class Knight {
 
                 if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
                     if (this.state != 2) {
-                        this.state = 4;
+                        this.state = 3;
                     }
                     this.health -= entity.attackDamage * this.game.clockTick;
                     this.textAnimations.push(

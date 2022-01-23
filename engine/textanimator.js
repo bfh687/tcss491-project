@@ -1,36 +1,42 @@
 class TextAnimator {
-    constructor(xStart, yStart, amount, duration) {
-        Object.assign(this, {
-            xStart,
-            yStart,
-            amount,
-            duration,
-        });
+  constructor(xStart, yStart, amount, duration) {
+    Object.assign(this, {
+      xStart,
+      yStart,
+      amount,
+      duration,
+    });
 
-        this.x = xStart + (Math.random() * 30 - 30);
-        this.y = yStart;
-        this.alpha = 1;
-    }
+    this.damageColor = "red";
 
-    drawText(tick, ctx) {
-        this.alpha -= tick;
-        if (this.isDone()) return;
+    this.x = xStart + (Math.random() * 30 - 30);
+    this.y = yStart;
+    this.alpha = 1;
+  }
 
-        ctx.save();
+  criticallyHit(color) {
+    this.damageColor = color;
+  }
 
-        ctx.globalAlpha = this.alpha;
-        this.y -= 20 * tick;
+  drawText(tick, ctx) {
+    this.alpha -= tick;
+    if (this.isDone()) return;
 
-        ctx.font = "15px Arial";
-        ctx.fillStyle = "black";
-        ctx.fillText(this.amount, this.x + 1, this.y + 1, 48);
-        ctx.fillStyle = "red";
-        ctx.fillText(this.amount, this.x, this.y, 48);
+    ctx.save();
 
-        ctx.restore();
-    }
+    ctx.globalAlpha = this.alpha;
+    this.y -= 20 * tick;
 
-    isDone() {
-        return this.alpha <= 0;
-    }
+    ctx.font = "15px Arial";
+    ctx.fillStyle = "black";
+    ctx.fillText(this.amount, this.x + 1, this.y + 1, 48);
+    ctx.fillStyle = this.damageColor;
+    ctx.fillText(this.amount, this.x, this.y, 48);
+
+    ctx.restore();
+  }
+
+  isDone() {
+    return this.alpha <= 0;
+  }
 }

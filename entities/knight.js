@@ -77,10 +77,10 @@ class Knight {
         this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.2, 15, 15, false, false));
 
         // slide animations: front-left, front-right, back-left, back-right
-        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false));
-        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false));
-        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false));
-        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false));
+        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.02, 15, 15, false, false));
+        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.02, 15, 15, false, false));
+        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.02, 15, 15, false, false));
+        this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.02, 15, 15, false, false));
     }
 
     update() {
@@ -136,16 +136,10 @@ class Knight {
 
         // if sliding, update sliding position
         if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
-            var current_frame = this.animations[this.state][this.direction].currentFrame();
-            if (this.slideDirection.x != 0 && this.slideDirection.y != 0) {
-                this.x += (8 - current_frame) * 177 * this.game.clockTick * this.slideDirection.x;
-                this.y += (8 - current_frame) * 177 * this.game.clockTick * this.slideDirection.y;
-            } else {
-                this.x += (8 - current_frame) * 250 * this.game.clockTick * this.slideDirection.x;
-                this.y += (8 - current_frame) * 250 * this.game.clockTick * this.slideDirection.y;
-            }
-            this.updateBoundingBox();
             this.checkCollisions();
+            this.x += 6 * this.velocity.x * this.game.clockTick;
+            this.y += 6 * this.velocity.y * this.game.clockTick;
+            this.updateBoundingBox();
             return;
         }
         // if done sliding, reset sliding animation
@@ -222,8 +216,10 @@ class Knight {
             // prevent entity pass through
             if (entity instanceof Skeleton && entity.state != 4) {
                 // future collision detection
-                var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * this.game.clockTick, this.y + 94, 29, 24);
-                var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * this.game.clockTick, 29, 24);
+                var slideMultiplier = 1;
+                if (this.state == 5) slideMultiplier = 6;
+                var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+                var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
                 // check collisions
                 var flag = false;

@@ -7,19 +7,19 @@ class TextAnimator {
       duration,
     });
 
-    this.x = xStart + (Math.random() * 30 - 15);
+    this.x = xStart + (Math.random() * 30 - 30);
     this.y = yStart;
 
     this.alpha = 1;
   }
 
   drawText(tick, ctx) {
-    ctx.save();
     this.alpha -= tick;
     if (this.isDone()) return;
+    ctx.save();
     ctx.globalAlpha = this.alpha;
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = "red";
     ctx.font = "15px Arial";
 
     this.y -= 20 * tick;

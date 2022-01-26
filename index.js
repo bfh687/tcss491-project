@@ -39,6 +39,6 @@ ASSET_MANAGER.downloadAll(() => {
 
   // initialize scene manager
   new SceneManager(engine);
-
+  
   engine.start();
 });

@@ -8,7 +8,8 @@ class SceneManager {
         this.level = null;
 
         this.knight = new Knight(this.game, 2.5 * params.BITWIDTH, 0 * params.BITWIDTH);
-        this.loadLevel(levelOne, 2.5 * params.BLOCKWIDTH, 13 * params.BLOCKWIDTH, false, true);
+        // this.loadLevel(levelOne, 0 * params.BLOCKWIDTH, 0 * params.BLOCKWIDTH, false, true);
+        this.loadLevel(0, 0, false, true);
     };
 
     clearEntities() {
@@ -17,45 +18,37 @@ class SceneManager {
         });
     };
 
-    loadLevel(level, x, y, transition, title) {
-        this.title = title;
-        this.level = level;
+    loadLevel(x, y, transition, title) {
         this.clearEntities();
+        this.game.addEntity(new Knight(this.game, 2.5 * params.BITWIDTH, 0 * params.BITWIDTH));
+        this.game.addEntity(new Map(this.game, 0, 0));
+        this.title = title;
+        // this.level = level;
+        // this.clearEntities();
         this.x = 0;
+        console.log("In Load Level");
 
-        if (transition) {
-            this.game.addEntity(new TransitionScreen(this.game, level, x, y, title));
-        } else {
-            if (level.map) {
-                for (var i = 0; i < level.map.length; i++) {
-                    let map = level.map[i];
-                    this.game.addEntity(new Map(this.game, map.x * params.BLOCKWIDTH, map.y * params.BLOCKWIDTH, map.size * params.BLOCKWIDTH));
-                }
-            }
 
-            this.knight.x = x;
-            this.knight.y = y;
-            this.knight.removeFromWorld = false;
-            this.knight.velocity = { x: 0, y: 0 };
+        // if (transition) {
+        //     this.game.addEntity(new TransitionScreen(this.game, level, x, y, title));
+        // } else {
+        //     //  if (level.map) {
+        //     // //     // for (var i = 0; i < level.map.length; i++) {
+        //     // //         let map = level.map[i];
+        //     //          this.game.addEntity(new Map(this.game, 0 * params.BLOCKWIDTH, 0 * params.BLOCKWIDTH, 0 * params.BLOCKWIDTH));
+        //     // //     // }
+        //     //  }
 
-            var that = this;
-            var knight = false;
-            this.game.entities.forEach(function(entity) {
-                if(that.knight === entity) knight = true;
-            });
-            if(!knight) this.game.addEntity(this.knight);
-        };
-
-        this.knight.x = x;
-        this.knight.y = y;
-            // if (level.music && !this.title) {
-            //     ASSET_MANAGER.pauseBackgroundMusic();
-            //     ASSET_MANAGER.playAsset(level.music);
-            // }
+        //     this.knight.x = x;
+        //     this.knight.y = y;
+        //     this.knight.removeFromWorld = false;
+        //     this.knight.velocity = { x: 0, y: 0 };
+        // };
+        // this.knight.x = x;
+        // this.knight.y = y;
     };
 
     update() {
-
     };
 
     draw(ctx) {

@@ -1,22 +1,24 @@
-class Map {
-    constructor(game, x, y, w) {
-        Object.assign(this, { game, x, y, w });
-        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/grass_tileset.png");;
+class Map { 
+    constructor(game, x, y) {
+        Object.assign(this, { game, x, y });
 
-
-    }
+        this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/0000-Level_0.png");
+    };
 
     update() {
 
     };
 
     draw(ctx) {
-        let brickCount = this.w / params.BLOCKWIDTH;
-        for (var i = 0; i < brickCount; i++) {
-            ctx.drawImage(this.spritesheet,0,0, 16,16, this.x + i * params.BLOCKWIDTH - this.game.camera.x, this.y, params.BLOCKWIDTH, params.BLOCKWIDTH);
-            ctx.drawImage(this.spritesheet, 0,0,16,16, this.x + i * params.BLOCKWIDTH - this.game.camera.x, this.y + params.BLOCKWIDTH, params.BLOCKWIDTH, params.BLOCKWIDTH);
+        for (let i = 0; i < 78; i++) {
+            for (let j = 0; j < 57; j++) {
+                ctx.drawImage(this.spritesheet, 0, 0, 16 * (i), 16 * (j), 0, 0, params.BLOCKWIDTH * (25.6 * 2   ), params.BLOCKWIDTH * (18.5 * 2));
+            }
         }
     };
+};
+
+    // Previous Level
     // draw(ctx) {
     //     // draw border
     //     // top-left corner
@@ -504,4 +506,3 @@ class Map {
     //     //     86 * 1.3
     //     // );
     // }
-}

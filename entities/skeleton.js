@@ -267,15 +267,13 @@ class Skeleton {
       ctx.restore();
     }
 
-    // draw skeleton
-    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2);
+    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
 
     // draw hurt box and bounding box if parameter is on
     if (params.DEBUG) {
-      drawBoundingBox(this.boundingBox, ctx, "white");
-      drawBoundingBox(this.hurtBox, ctx, "red");
-      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, "blue");
-      drawHealthBar(ctx, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
+      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
+      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "blue");
     }
 
     // loop through and print all damage animations

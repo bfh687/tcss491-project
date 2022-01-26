@@ -111,65 +111,113 @@ class GameEngine {
 
         this.ctx.canvas.addEventListener("mousedown", (e) => {
             this.left_click = true;
+
         });
+        this.mouse.x = this.ctx.canvas.width / 2;
+        this.mouse.y = this.ctx.canvas.height / 2;
+        self.locked = true;
+      }
+    };
 
-        this.ctx.canvas.addEventListener("mouseup", (e) => {
-            this.left_click = false;
-        });
+    // handle locked cursor movement
+    document.addEventListener("pointerlockchange", lockChangeAlert, false);
+    document.addEventListener("mozpointerlockchange", lockChangeAlert, false);
+
+    function lockChangeAlert() {
+      if (document.pointerLockElement === self.ctx.canvas || document.mozPointerLockElement === self.ctx.canvas) {
+        document.addEventListener("mousemove", updatePosition, false);
+      } else {
+        document.removeEventListener("mousemove", updatePosition, false);
+        self.locked = false;
+      }
     }
 
-    addEntity(entity) {
-        this.entitiesToAdd.push(entity);
+    function updatePosition(e) {
+      self.mouse.x = Math.min(Math.max(0 + 5, (self.mouse.x += e.movementX)), self.ctx.canvas.width - 5);
+
+      self.mouse.y = Math.min(Math.max(0 + 5, (self.mouse.y += e.movementY)), self.ctx.canvas.height - 5);
     }
 
-    draw() {
-        // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
-        this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
-        // Draw latest things first
-        for (let i = this.entities.length - 1; i >= 0; i--) {
-            this.entities[i].draw(this.ctx, this);
-        }
+    // key listeners
+    window.addEventListener("keydown", (e) => {
+      this.keys[e.key] = true;
+      if (this.keys.c) params.DEBUG = !params.DEBUG;
+    });
+    window.addEventListener("keyup", (e) => {
+      this.keys[e.key] = false;
+    });
+
+    // click listeners
+    this.ctx.canvas.addEventListener("click", (e) => {
+      if (this.options.debugging) {
+        console.log("CLICK", getXandY(e));
+      }
+      this.click = getXandY(e);
+    });
+
+    this.ctx.canvas.addEventListener("mousedown", (e) => {
+      this.left_click = true;
+    });
+
+    this.ctx.canvas.addEventListener("mouseup", (e) => {
+      this.left_click = false;
+    });
+  }
+
+  addEntity(entity) {
+    this.entitiesToAdd.push(entity);
+  }
+
+  draw() {
+    // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
+    this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
+    // Draw latest things first
+    for (let i = this.entities.length - 1; i >= 0; i--) {
+      this.entities[i].draw(this.ctx, this);
     }
+  }
 
-    update() {
-        // Update Entities
-        this.entities.forEach((entity) => entity.update(this));
+  update() {
+    // Update Entities
+    this.entities.forEach((entity) => entity.update(this));
 
-        // Remove dead things
-        this.entities = this.entities.filter((entity) => !entity.removeFromWorld);
+    // Remove dead things
+    this.entities = this.entities.filter((entity) => !entity.removeFromWorld);
 
-        // Add new things
-        this.entities = this.entities.concat(this.entitiesToAdd);
-        this.entitiesToAdd = [];
+    // Add new things
+    this.entities = this.entities.concat(this.entitiesToAdd);
+    this.entitiesToAdd = [];
 
-        // sort entities to give 3d look
-        this.entities.sort((e1, e2) => {
-            if (!e1.boundingBox && !e2.boundingBox) {
-                return e2.priority - e1.priority;
-            } else if (!e1.boundingBox) {
-                return e2.boundingBox - e1.priority;
-            } else if (!e2.boundingBox) {
-                return e2.priority - e1.boundingBox;
-            }
-            return e2.boundingBox.top - e1.boundingBox.top;
-        });
-    }
+    // sort entities to give 3d look
+    this.entities.sort((e1, e2) => {
+      if (!e1.boundingBox && !e2.boundingBox) {
+        return e2.priority - e1.priority;
+      } else if (!e1.boundingBox) {
+        return e2.boundingBox - e1.priority;
+      } else if (!e2.boundingBox) {
+        return e2.priority - e1.boundingBox;
+      }
+      return e2.boundingBox.top - e1.boundingBox.top;
+    });
 
-    loop() {
-        this.clockTick = this.timer.tick();
-        this.update();
-        this.draw();
-    }
+    this.camera.update();
+  }
 
-    get ["deltaTime"]() {
-        return this.clockTick;
-    }
+  loop() {
+    this.clockTick = this.timer.tick();
+    this.update();
+    this.draw();
+  }
 
-    get ["width"]() {
-        return this.ctx?.canvas?.width || 0;
-    }
+  get ["deltaTime"]() {
+    return this.clockTick;
+  }
 
-    get ["height"]() {
-        return this.ctx?.canvas?.height || 0;
-    }
+  get ["width"]() {
+    return this.ctx?.canvas?.width || 0;
+  }
+
+  get ["height"]() {
+    return this.ctx?.canvas?.height || 0;
+  }
 }

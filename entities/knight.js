@@ -62,7 +62,7 @@ class Knight {
     this.animations[1].push(new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.08, 15, 15, false, true));
     this.animations[1].push(new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.08, 15, 15, false, true));
 
-    // attack animations: left, right, up, down .06
+    // attack animations: left, right, up, down
     this.animations[2].push(new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.06, 15, 15, false, false));
     this.animations[2].push(new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.06, 15, 15, false, false));
     this.animations[2].push(new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.06, 15, 15, false, false));
@@ -209,104 +209,16 @@ class Knight {
     this.updateBoundingBox();
   }
 
-  checkCollisions() {
-    this.game.entities.forEach((entity) => {
-      // prevent entity pass through
-      if (entity instanceof Skeleton && entity.state != 4) {
-        // future collision detection
-        var slideMultiplier = 1;
-        if (this.state == 5) slideMultiplier = 6;
-        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
-
-        // check collisions
-        var flag = false;
-        if (verticalBox.collide(entity.boundingBox)) {
-          this.velocity.y = 0;
-          entity.currSpeed = 0;
-          flag = true;
-        }
-        if (horizontalBox.collide(entity.boundingBox)) {
-          this.velocity.x = 0;
-          entity.currSpeed = 0;
-          flag = true;
-        }
-        if (!flag) entity.currSpeed = entity.minSpeed;
-      }
-
-      if (entity instanceof Skeleton) {
-        if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) {
-            entity.state = 3;
-          }
-          let rand = Math.floor(Math.random() * this.critChance);
-          const animator = new TextAnimator(
-            entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
-            entity.hurtBox.top - 48,
-            (this.attackDamage * this.game.clockTick).toFixed(2),
-            1
-          );
-          if (rand === Math.floor(this.critChance / 2) && entity.state === 2) {
-            this.attackDamage = this.attackDamage * this.critMultiplier;
-            this.damageColor = "yellow";
-            animator.critColor(this.damageColor);
-            console.log("CRIT!!!");
-          }
-
-          entity.health -= this.attackDamage * this.game.clockTick;
-
-          entity.textAnimations.push(animator);
-          this.attackDamage = 100;
-          //this.damageColor = "red";
-        }
-
-        if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
-          if (this.state != 2) {
-            this.state = 3;
-          }
-          this.health -= entity.attackDamage * this.game.clockTick;
-          this.textAnimations.push(
-            new TextAnimator(
-              this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
-              this.hurtBox.top,
-              (entity.attackDamage * this.game.clockTick).toFixed(2),
-              1
-            )
-          );
-        }
-      }
-
-      if (entity instanceof Item) {
-        if (this.hurtBox.collide(entity.boundingBox)) {
-          entity.removeFromWorld = true;
-          const item = entity.getItem();
-          let contains = false;
-          for (let i = 0; i < this.playerItems.length; i++) {
-            if (item.code === this.playerItems[i].item.code) {
-              this.playerItems[i].count++;
-              contains = true;
-            }
-          }
-          if (!contains) {
-            const playerItem = { item: item, count: 1 };
-            this.playerItems.push(playerItem);
-          }
-          console.log(this.playerItems);
-        }
-      }
-    });
-  }
-
   loadItemAbilities() {}
 
   draw(ctx) {
-    // draw shadow
+    //draw shadow
     ctx.save();
     ctx.globalAlpha = 0.3;
     ctx.beginPath();
     ctx.ellipse(
-      this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 + 12,
-      this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 + 12,
+      this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 + 12 - this.game.camera.x,
+      this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 + 12 - this.game.camera.y,
       25 / 2,
       50 / 2,
       Math.PI / 4,
@@ -317,14 +229,14 @@ class Knight {
     ctx.fill();
     ctx.restore();
 
-    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x, this.y, 2.5);
+    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
 
     // draw hurt box, hit box, and bounding box
     if (params.DEBUG) {
-      drawBoundingBox(this.hurtBox, ctx, "red");
-      drawBoundingBox(this.boundingBox, ctx, "white");
+      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
+      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
       if (this.hitBox) {
-        drawBoundingBox(this.hitBox, ctx, "blue");
+        drawBoundingBox(this.hitBox, ctx, this.game, "blue");
       }
     }
 
@@ -337,6 +249,7 @@ class Knight {
     }
 
     drawHealthBar(ctx, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    
   }
 
   checkCollisions() {

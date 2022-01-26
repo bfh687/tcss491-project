@@ -2,9 +2,12 @@ class HUD {
   constructor(game, knight) {
     Object.assign(this, { game, knight });
     this.priority = Number.MAX_VALUE;
+    this.time = 0;
   }
 
-  update() {}
+  update() {
+    this.time += this.game.clockTick;
+  }
 
   draw(ctx) {
     ctx.save();
@@ -25,9 +28,15 @@ class HUD {
     }
 
     // fps counter
-    if (params.DEBUG) {
-      ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 90);
-    }
+    ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 90);
+
+    var minutes = Math.floor(this.time / 60);
+    var seconds = Math.floor(this.time % 60);
+    var time = minutes + ":";
+    if (seconds < 10) time += "0";
+    time += seconds;
+
+    ctx.fillText("TIME: " + time, 20, 110);
 
     ctx.restore();
 
@@ -43,6 +52,5 @@ class HUD {
       if (count == 5) y_offset = 80;
       y_offset += 48;
     });
-    console.log(this.knight.playerItems);
   }
 }

@@ -6,13 +6,14 @@ class Item {
     this.textAnimations = [];
     this.items = [];
 
-    // Items in items.png
-    this.shatterproofSkull = {
-      code: "Shatterproof Skull",
-      x: 0,
-      y: 0,
-      dropChance: 5, // 5% chance
-    };
+    this.priority =
+      // Items in items.png
+      this.shatterproofSkull = {
+        code: "Shatterproof Skull",
+        x: 0,
+        y: 0,
+        dropChance: 5, // 5% chance
+      };
 
     this.boneThickener = {
       code: "Bone Thickener",
@@ -234,8 +235,9 @@ class Item {
       32,
       32
     );
-
-    drawBoundingBox(this.boundingBox, ctx, this.game, "yellow");
+    if (params.DEBUG) {
+      drawBoundingBox(this.boundingBox, ctx, this.game, "yellow");
+    }
 
     for (var i = 0; i < this.textAnimations.length; i++) {
       if (!this.textAnimations[i].isDone()) {

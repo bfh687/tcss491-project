@@ -7,22 +7,30 @@ class TextAnimator {
       duration,
     });
 
-    this.x = xStart + (Math.random() * 30 - 15);
-    this.y = yStart;
+    this.damageColor = "red";
 
+    this.x = xStart + (Math.random() * 30 - 30);
+    this.y = yStart;
     this.alpha = 1;
   }
 
+  critColor(color) {
+    this.damageColor = color;
+  }
+
   drawText(tick, ctx) {
-    ctx.save();
     this.alpha -= tick;
     if (this.isDone()) return;
+
+    ctx.save();
+
     ctx.globalAlpha = this.alpha;
-
-    ctx.fillStyle = "white";
-    ctx.font = "15px Arial";
-
     this.y -= 20 * tick;
+
+    ctx.font = "15px Arial";
+    ctx.fillStyle = "black";
+    ctx.fillText(this.amount, this.x + 1, this.y + 1, 48);
+    ctx.fillStyle = this.damageColor;
     ctx.fillText(this.amount, this.x, this.y, 48);
 
     ctx.restore();

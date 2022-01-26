@@ -34,7 +34,10 @@ class GameEngine {
 
   init(ctx) {
     this.ctx = ctx;
-    this.mouse = { x: this.ctx.canvas.width / 2, y: this.ctx.canvas.height / 2 };
+    this.mouse = {
+      x: this.ctx.canvas.width / 2,
+      y: this.ctx.canvas.height / 2,
+    };
     this.startInput();
     this.timer = new Timer();
   }
@@ -84,9 +87,14 @@ class GameEngine {
     }
 
     function updatePosition(e) {
-      self.mouse.x = Math.min(Math.max(0 + 5, (self.mouse.x += e.movementX)), self.ctx.canvas.width - 5);
-
-      self.mouse.y = Math.min(Math.max(0 + 5, (self.mouse.y += e.movementY)), self.ctx.canvas.height - 5);
+      self.mouse.x = Math.min(
+        Math.max(0 + 5, (self.mouse.x += e.movementX)),
+        self.ctx.canvas.width - 5
+      );
+      self.mouse.y = Math.min(
+        Math.max(0 + 5, (self.mouse.y += e.movementY)),
+        self.ctx.canvas.height - 5
+      );
     }
 
     // key listeners
@@ -150,7 +158,7 @@ class GameEngine {
       }
       return e2.boundingBox.top - e1.boundingBox.top;
     });
-
+    
     this.camera.update();
   }
 

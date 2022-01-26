@@ -5,6 +5,9 @@ class Skeleton {
     this.animations = [];
     this.loadAnimations();
 
+    this.originX = this.x;
+    this.originY = this.y;
+
     // states: idle (0), walking (1), attack (2), damaged (3), dying (4)
     this.state = 0;
 
@@ -16,27 +19,29 @@ class Skeleton {
 
     // bounding box for collisions
     this.updateBoundingBox();
+    this.hitBox = null;
 
     // remove from world
     this.removeFromWorld = false;
 
     // information about stats
+    this.maxHealth = 100;
     this.health = 100;
+    this.attackDamage = 0;
 
     // information about attacking
     this.isAttacking = false;
     this.attackCooldown = 1;
 
-    // information about stuns
-    this.isStunned = false;
-    this.stunDuration = 1;
-
     // information about skeleton movement
-    this.aggroDist = 300;
+    this.aggroDist = 500;
     this.maxSpeed = 125;
     this.speedAccel = 350;
     this.minSpeed = 125;
     this.currSpeed = this.minSpeed;
+
+    // misc
+    this.alpha = 1;
   }
 
   loadAnimations() {
@@ -52,7 +57,7 @@ class Skeleton {
 
     // attack animations: left, right
     this.animations[2].push(new Animator(this.spritesheet, 0, 64, 64, 64, 13, 0.09, 0, 0, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 396, 64, 64, 13, 0.09, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 384, 64, 64, 13, 0.09, 0, 0, false, false));
 
     // damaged animations: left, right
     this.animations[3].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.08, 0, 0, false, false));
@@ -64,9 +69,9 @@ class Skeleton {
   }
 
   update() {
-    // if dead, remove from world
-    if (this.health <= 0) {
-      this.state = 4;
+    // decrement cooldowns
+    if (this.state != 2) {
+      this.attackCooldown -= this.game.clockTick;
     }
 
     // enraged !
@@ -74,10 +79,27 @@ class Skeleton {
       this.currSpeed = 175;
     }
 
+    // if dead, remove from world
+    if (this.health <= 0) {
+      this.state = 4;
+    }
+
     // if death animation is playing, let it play out, otherwise remove entity from world
     if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
       return;
     } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+      // drop item on death
+
+      // calculate player center
+      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
+
+      if (Math.floor(Math.random()) + 1 === 1) {
+        const item = new Item(this.game, center_x, center_y);
+
+        this.game.addEntity(item);
+      }
+
       this.removeFromWorld = true;
       return;
     }
@@ -92,6 +114,8 @@ class Skeleton {
 
     // if attacking animation is playing, let it play out, otherwise go back to idle
     else if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
+      var curr_frame = this.animations[this.state][this.direction].currentFrame();
+      this.updateHitBox(curr_frame);
       return;
     } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
@@ -112,62 +136,83 @@ class Skeleton {
       // calculate unit vector towards knight
       var dist = getDistance(knight.x, knight.y, this.x, this.y);
       // aggro distance
-      if (dist < this.aggroDist) {
+      if (knight && dist < this.aggroDist) {
         var xVector = (knight.x - this.x) / dist;
         var yVector = (knight.y - this.y) / dist;
 
         if (xVector >= 0) this.direction = 1;
         else this.direction = 0;
 
-        if (xVector != 0 && yVector != 0) {
+        if (xVector != 0 || yVector != 0) {
           this.state = 1;
         } else {
           this.state = 0;
         }
 
-        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick, this.y + 80, 32, 24);
+        var attackDist = 30;
+        if (xVector < 0) attackDist *= -1;
+
+        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist, this.y + 80, 32, 24);
 
         var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
 
         if (verticalBox.collide(knight.boundingBox)) {
           yVector = 0;
-          this.state = 2;
+          if (this.attackCooldown <= 0) {
+            this.state = 2;
+            this.attackCooldown = 1;
+          }
         }
         if (horizontalBox.collide(knight.boundingBox)) {
           xVector = 0;
-          this.state = 2;
+          if (this.attackCooldown <= 0) {
+            this.state = 2;
+            this.attackCooldown = 1;
+          }
         }
-
-        // change 100 to be speed variable
-        this.x += xVector * this.currSpeed * this.game.clockTick;
-        this.y += yVector * this.currSpeed * this.game.clockTick;
       } else {
-        this.state = 0;
-      }
-      this.updateBoundingBox();
-    }
-    // detect possible collisions
-    this.game.entities.forEach((entity) => {
-      if (entity.attackBoundingBox && entity instanceof Knight) {
-        if (this.hurtBox.collide(entity.attackBoundingBox)) {
-          this.state = 3;
-          this.health -= entity.attackDamage;
-          this.textAnimations.push(
-            new TextAnimator(this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2, this.hurtBox.top - 10, entity.attackDamage, 1)
-          );
+        var dist = getDistance(this.originX, this.originY, this.x, this.y);
+        var xVector = (this.originX - this.x) / dist;
+        var yVector = (this.originY - this.y) / dist;
 
-          // make enemy look at them
-          if (entity.boundingBox.left > this.hurtBox.left) this.direction = 1;
-          else this.direction = 0;
+        if (xVector >= 0) this.direction = 1;
+        else this.direction = 0;
 
-          // update bounding box and return
-          this.updateBoundingBox();
-          return;
+        if (xVector != 0 || yVector != 0) {
+          this.state = 1;
         } else {
           this.state = 0;
         }
+        if (Math.abs(dist) < 1) {
+          xVector = yVector = 0;
+          this.state = 0;
+          this.direction = 0;
+        }
       }
-    });
+    }
+    // will refactor this at some point :D
+    else {
+      var dist = getDistance(this.originX, this.originY, this.x, this.y);
+      var xVector = (this.originX - this.x) / dist;
+      var yVector = (this.originY - this.y) / dist;
+
+      if (xVector >= 0) this.direction = 1;
+      else this.direction = 0;
+
+      if (xVector != 0 || yVector != 0) {
+        this.state = 1;
+      } else {
+        this.state = 0;
+      }
+      if (Math.abs(dist) < 1) {
+        xVector = yVector = 0;
+        this.state = 0;
+        this.direction = 0;
+      }
+    }
+    this.x += xVector * this.currSpeed * this.game.clockTick;
+    this.y += yVector * this.currSpeed * this.game.clockTick;
+    this.updateBoundingBox();
   }
 
   updateBoundingBox() {
@@ -183,14 +228,30 @@ class Skeleton {
     }
   }
 
-  draw(ctx) {
-    // draw hurt box and bounding box if parameter is on
-    if (params.DEBUG) {
-      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
-      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
-      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "red");
-    }
 
+  updateHitBox(current_frame) {
+    if (current_frame == 4) {
+      if (this.direction == 0) {
+        this.hitBox = new BoundingBox(this.x, this.y + 15, 96, 56);
+      } else {
+        this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 96, 56);
+      }
+    } else if (current_frame == 5) {
+      this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 64, 24);
+    } else if (current_frame == 8) {
+      this.hitBox = new BoundingBox(this.x, this.y + 32, 128, 48);
+    } else if (current_frame == 9) {
+      if (this.direction == 0) {
+        this.hitBox = new BoundingBox(this.x + 64, this.y + 32, 64, 32);
+      } else {
+        this.hitBox = new BoundingBox(this.x + 4, this.y + 32, 64, 36);
+      }
+    } else {
+      this.hitBox = null;
+    }
+  }
+
+  draw(ctx) {
     // draw shadows if not dying
     if (this.state != 4) {
       ctx.save();
@@ -213,22 +274,19 @@ class Skeleton {
     // draw skeleton
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
 
-    ctx.save();
-    ctx.fillStyle = "white";
-    ctx.font = "10px Arial";
-    ctx.fillText("Skeleton", this.x + 42, this.y + 12, 46);
-
-    ctx.fillStyle = "black";
-    ctx.fillRect(this.x + 43, this.y + 17, 46, 5);
-    ctx.fillStyle = "red";
-    ctx.fillRect(this.x + 42, this.y + 16, 46, 5);
-    ctx.fillStyle = "#32CD32";
-    ctx.fillRect(this.x + 42, this.y + 16, (this.health / 100) * 46, 5);
-    ctx.restore();
+    // draw hurt box and bounding box if parameter is on
+    if (params.DEBUG) {
+      drawBoundingBox(this.boundingBox, ctx, "white");
+      drawBoundingBox(this.hurtBox, ctx, "red");
+      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, "blue");
+      drawHealthBar(ctx, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    }
 
     // loop through and print all damage animations
     for (var i = 0; i < this.textAnimations.length; i++) {
       this.textAnimations[i].drawText(this.game.clockTick, ctx);
     }
+
+    drawHealthBar(ctx, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
   }
 }

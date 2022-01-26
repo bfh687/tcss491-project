@@ -14,6 +14,10 @@ ASSET_MANAGER.queueDownload("./sprites/skeleton.png");
 // cursor downloads
 ASSET_MANAGER.queueDownload("./sprites/cursor.png");
 
+// misc asset downloads
+ASSET_MANAGER.queueDownload("./sprites/items.png");
+ASSET_MANAGER.queueDownload("./sprites/geronimo's_goggles.png");
+
 // tileset downloads
 ASSET_MANAGER.queueDownload("./sprites/map/grass_tileset.png");
 ASSET_MANAGER.queueDownload("./sprites/map/ground_tileset.png");
@@ -34,12 +38,10 @@ ASSET_MANAGER.downloadAll(() => {
   engine.init(ctx);
 
   params.BLOCKWIDTH = params.BITWIDTH * params.SCALE;
-
   params.CANVAS_WIDTH = canvas.width;
   params.CANVAS_HEIGHT = canvas.height;
 
   // initialize scene manager
   new SceneManager(engine);
-
   engine.start();
 });

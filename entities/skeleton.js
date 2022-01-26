@@ -84,6 +84,7 @@ class Skeleton {
 
     // if death animation is playing, let it play out, otherwise remove entity from world
     if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+      this.updateHitBox(0);
       return;
     } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
       // drop item on death

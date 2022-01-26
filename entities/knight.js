@@ -47,88 +47,40 @@ class Knight {
     this.animations.push([], [], [], [], [], []);
 
     // idle animations: left, right, up, down
-    this.animations[0].push(
-      new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.16, 15, 15, false, true)
-    );
-    this.animations[0].push(
-      new Animator(this.spritesheet, 0, 64, 64, 64, 3, 0.16, 15, 15, false, true)
-    );
-    this.animations[0].push(
-      new Animator(this.spritesheet, 0, 192, 64, 64, 3, 0.16, 15, 15, false, true)
-    );
-    this.animations[0].push(
-      new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 15, 15, false, true)
-    );
+    this.animations[0].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.16, 15, 15, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 64, 64, 64, 3, 0.16, 15, 15, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 192, 64, 64, 3, 0.16, 15, 15, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 15, 15, false, true));
 
     // running animations: left, right, up, down
-    this.animations[1].push(
-      new Animator(this.spritesheet, 64, 320, 64, 64, 10, 0.08, 15, 15, false, true)
-    );
-    this.animations[1].push(
-      new Animator(this.spritesheet, 64, 256, 64, 64, 10, 0.08, 15, 15, false, true)
-    );
-    this.animations[1].push(
-      new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.08, 15, 15, false, true)
-    );
-    this.animations[1].push(
-      new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.08, 15, 15, false, true)
-    );
+    this.animations[1].push(new Animator(this.spritesheet, 64, 320, 64, 64, 10, 0.08, 15, 15, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 64, 256, 64, 64, 10, 0.08, 15, 15, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.08, 15, 15, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.08, 15, 15, false, true));
 
     // attack animations: left, right, up, down
-    this.animations[2].push(
-      new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.06, 15, 15, false, false)
-    );
-    this.animations[2].push(
-      new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.06, 15, 15, false, false)
-    );
-    this.animations[2].push(
-      new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.06, 15, 15, false, false)
-    );
-    this.animations[2].push(
-      new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.06, 15, 15, false, false)
-    );
+    this.animations[2].push(new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.06, 15, 15, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.06, 15, 15, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.06, 15, 15, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.06, 15, 15, false, false));
 
     // damaged animations: left, right, up, down
-    this.animations[3].push(
-      new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.1, 0, 0, false, true)
-    );
-    this.animations[3].push(
-      new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.1, 0, 0, false, true)
-    );
-    this.animations[3].push(
-      new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.1, 0, 0, false, true)
-    );
-    this.animations[3].push(
-      new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.1, 0, 0, false, true)
-    );
+    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.1, 0, 0, false, true));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.1, 0, 0, false, true));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.1, 0, 0, false, true));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.1, 0, 0, false, true));
 
     // death animations: left, right, up, down
-    this.animations[4].push(
-      new Animator(this.spritesheet, 0, 960, 64, 64, 8, 0.16, 0, 0, false, true)
-    );
-    this.animations[4].push(
-      new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.16, 0, 0, false, true)
-    );
-    this.animations[4].push(
-      new Animator(this.spritesheet, 0, 960, 64, 64, 8, 0.16, 0, 0, false, true)
-    );
-    this.animations[4].push(
-      new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.16, 0, 0, false, true)
-    );
+    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 8, 0.16, 0, 0, false, true));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.16, 0, 0, false, true));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 8, 0.16, 0, 0, false, true));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.16, 0, 0, false, true));
 
     // slide animations: front-left, front-right, back-left, back-right
-    this.animations[5].push(
-      new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false)
-    );
-    this.animations[5].push(
-      new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false)
-    );
-    this.animations[5].push(
-      new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false)
-    );
-    this.animations[5].push(
-      new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false)
-    );
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false));
   }
 
   update() {
@@ -265,19 +217,8 @@ class Knight {
   checkCollisions() {
     this.game.entities.forEach((entity) => {
       if (entity.boundingBox && entity instanceof Skeleton && entity.state != 4) {
-        var horizontalBox = new BoundingBox(
-          this.x + 28 + this.velocity.x * this.game.clockTick,
-          this.y + 94,
-          29,
-          24
-        );
-
-        var verticalBox = new BoundingBox(
-          this.x + 28,
-          this.y + 94 + this.velocity.y * this.game.clockTick,
-          29,
-          24
-        );
+        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * this.game.clockTick, this.y + 94, 29, 24);
+        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * this.game.clockTick, 29, 24);
 
         if (verticalBox.collide(entity.boundingBox)) {
           this.velocity.y = 0;
@@ -285,6 +226,20 @@ class Knight {
         if (horizontalBox.collide(entity.boundingBox)) {
           this.velocity.x = 0;
         }
+      }
+
+      if (entity.bounding_boxes) {
+        entity.bounding_boxes.forEach((box) => {
+          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * this.game.clockTick, this.y + 94, 29, 24);
+          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * this.game.clockTick, 29, 24);
+
+          if (verticalBox.collide(box)) {
+            this.velocity.y = 0;
+          }
+          if (horizontalBox.collide(box)) {
+            this.velocity.x = 0;
+          }
+        });
       }
     });
   }
@@ -295,13 +250,13 @@ class Knight {
   // }
 
   draw(ctx) {
-    // draw shadow
+    //draw shadow
     ctx.save();
     ctx.globalAlpha = 0.3;
     ctx.beginPath();
     ctx.ellipse(
-      this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 + 12,
-      this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 + 12,
+      this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 + 12 - this.game.camera.x,
+      this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 + 12 - this.game.camera.y,
       25 / 2,
       50 / 2,
       Math.PI / 4,
@@ -312,20 +267,14 @@ class Knight {
     ctx.fill();
     ctx.restore();
 
-    this.animations[this.state][this.direction].drawFrame(
-      this.game.clockTick,
-      ctx,
-      this.x,
-      this.y,
-      2.5
-    );
+    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
 
     // draw hurt box, hit box, and bounding box
     if (params.DEBUG) {
-      drawBoundingBox(this.hurtBox, ctx, "red");
-      drawBoundingBox(this.boundingBox, ctx, "white");
+      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
+      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
       if (this.attackBoundingBox) {
-        drawBoundingBox(this.attackBoundingBox, ctx, "red");
+        drawBoundingBox(this.attackBoundingBox, ctx, this.game, "red");
       }
     }
 
@@ -333,14 +282,14 @@ class Knight {
     ctx.save();
     ctx.fillStyle = "white";
     ctx.font = "10px Arial";
-    ctx.fillText("Knight", this.x + 28, this.y + 29, 48);
+    ctx.fillText("Knight", this.x - this.game.camera.x + 28, this.y - this.game.camera.y + 29, 48);
 
     ctx.fillStyle = "black";
-    ctx.fillRect(this.x + 29, this.y + 35, 32, 5);
+    ctx.fillRect(this.x - this.game.camera.x + 29, this.y - this.game.camera.y + 35, 32, 5);
     ctx.fillStyle = "red";
-    ctx.fillRect(this.x + 28, this.y + 34, 32, 5);
+    ctx.fillRect(this.x - this.game.camera.x + 28, this.y - this.game.camera.y + 34, 32, 5);
     ctx.fillStyle = "#32CD32";
-    ctx.fillRect(this.x + 28, this.y + 34, (this.health / 100) * 32, 5);
+    ctx.fillRect(this.x - this.game.camera.x + 28, this.y - this.game.camera.y + 34, (this.health / 100) * 32, 5);
     ctx.restore();
   }
 

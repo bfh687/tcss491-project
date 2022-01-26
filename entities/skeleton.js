@@ -43,44 +43,24 @@ class Skeleton {
     this.animations.push([], [], [], [], []);
 
     // idle animations: left, right
-    this.animations[0].push(
-      new Animator(this.spritesheet, 0, 0, 64, 64, 4, 0.16, 0, 0, false, true)
-    );
-    this.animations[0].push(
-      new Animator(this.spritesheet, 0, 320, 64, 64, 4, 0.16, 0, 0, false, true)
-    );
+    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 64, 64, 4, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 320, 64, 64, 4, 0.16, 0, 0, false, true));
 
     // walking animations: left, right
-    this.animations[1].push(
-      new Animator(this.spritesheet, 0, 192, 64, 64, 12, 0.13, 0, 0, false, true)
-    );
-    this.animations[1].push(
-      new Animator(this.spritesheet, 0, 512, 64, 64, 12, 0.13, 0, 0, false, true)
-    );
+    this.animations[1].push(new Animator(this.spritesheet, 0, 192, 64, 64, 12, 0.13, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 0, 512, 64, 64, 12, 0.13, 0, 0, false, true));
 
     // attack animations: left, right
-    this.animations[2].push(
-      new Animator(this.spritesheet, 0, 64, 64, 64, 13, 0.09, 0, 0, false, false)
-    );
-    this.animations[2].push(
-      new Animator(this.spritesheet, 0, 396, 64, 64, 13, 0.09, 0, 0, false, false)
-    );
+    this.animations[2].push(new Animator(this.spritesheet, 0, 64, 64, 64, 13, 0.09, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 396, 64, 64, 13, 0.09, 0, 0, false, false));
 
     // damaged animations: left, right
-    this.animations[3].push(
-      new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.08, 0, 0, false, false)
-    );
-    this.animations[3].push(
-      new Animator(this.spritesheet, 0, 448, 64, 64, 3, 0.08, 0, 0, false, false)
-    );
+    this.animations[3].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.08, 0, 0, false, false));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 448, 64, 64, 3, 0.08, 0, 0, false, false));
 
     // death animations: left, right
-    this.animations[4].push(
-      new Animator(this.spritesheet, 0, 256, 64, 64, 12, 0.12, 0, 0, false, false)
-    );
-    this.animations[4].push(
-      new Animator(this.spritesheet, 0, 576, 64, 64, 12, 0.12, 0, 0, false, false)
-    );
+    this.animations[4].push(new Animator(this.spritesheet, 0, 256, 64, 64, 12, 0.12, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 576, 64, 64, 12, 0.12, 0, 0, false, false));
   }
 
   update() {
@@ -145,19 +125,9 @@ class Skeleton {
           this.state = 0;
         }
 
-        var horizontalBox = new BoundingBox(
-          this.x + 54 + xVector * this.currSpeed * this.game.clockTick,
-          this.y + 80,
-          32,
-          24
-        );
+        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick, this.y + 80, 32, 24);
 
-        var verticalBox = new BoundingBox(
-          this.x + 54,
-          this.y + 80 + yVector * this.currSpeed * this.game.clockTick,
-          32,
-          24
-        );
+        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
 
         if (verticalBox.collide(knight.boundingBox)) {
           yVector = 0;
@@ -183,12 +153,7 @@ class Skeleton {
           this.state = 3;
           this.health -= entity.attackDamage;
           this.textAnimations.push(
-            new TextAnimator(
-              this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
-              this.hurtBox.top - 10,
-              entity.attackDamage,
-              1
-            )
+            new TextAnimator(this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2, this.hurtBox.top - 10, entity.attackDamage, 1)
           );
 
           // make enemy look at them
@@ -221,9 +186,9 @@ class Skeleton {
   draw(ctx) {
     // draw hurt box and bounding box if parameter is on
     if (params.DEBUG) {
-      drawBoundingBox(this.boundingBox, ctx, "white");
-      drawBoundingBox(this.hurtBox, ctx, "red");
-      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, "red");
+      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
+      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
+      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "red");
     }
 
     // draw shadows if not dying
@@ -246,13 +211,7 @@ class Skeleton {
     }
 
     // draw skeleton
-    this.animations[this.state][this.direction].drawFrame(
-      this.game.clockTick,
-      ctx,
-      this.x,
-      this.y,
-      2
-    );
+    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
 
     ctx.save();
     ctx.fillStyle = "white";

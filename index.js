@@ -28,7 +28,6 @@ ASSET_MANAGER.queueDownload("./sprites/map/plants.png");
 ASSET_MANAGER.queueDownload("./sprites/map/props.png");
 ASSET_MANAGER.queueDownload("./sprites/map/structures.png");
 ASSET_MANAGER.queueDownload("./sprites/map/0000-Level_0.png");
-ASSET_MANAGER.queueDownload("./sprites/map/0000-Hub_Level.png");
 ASSET_MANAGER.queueDownload("./sprites/hub.png");
 
 ASSET_MANAGER.downloadAll(() => {

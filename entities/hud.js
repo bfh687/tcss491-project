@@ -27,29 +27,30 @@ class HUD {
       ctx.fillRect(20, 60, 100 - slide_cooldown, 10);
     }
 
-    // fps counter
-    ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 90);
-
     var minutes = Math.floor(this.time / 60);
     var seconds = Math.floor(this.time % 60);
     var time = minutes + ":";
     if (seconds < 10) time += "0";
     time += seconds;
 
-    ctx.fillText("TIME: " + time, 20, 110);
+    ctx.fillText("TIME: " + time, 20, 90);
+    ctx.fillText("KILL COUNT: " + this.knight.kills, 20, 110);
+
+    // fps counter
+    ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 130);
 
     ctx.restore();
 
     const items = ASSET_MANAGER.getAsset("./sprites/items.png");
 
-    var y_offset = 128;
+    var y_offset = 156;
     var count = 0;
     this.knight.playerItems.forEach((obj) => {
-      ctx.drawImage(items, obj.item.x, obj.item.y, 32, 32, 10 + Math.floor(count / 5) * 48, y_offset, 32, 32);
+      ctx.drawImage(items, obj.item.x, obj.item.y, 32, 32, 15 + Math.floor(count / 5) * 48, y_offset, 32, 32);
       ctx.fillStyle = "white";
-      ctx.fillText("x" + obj.count, 34 + Math.floor(count / 5) * 48, y_offset);
+      ctx.fillText("x" + obj.count, 39 + Math.floor(count / 5) * 48, y_offset);
       count++;
-      if (count == 5) y_offset = 80;
+      if (count == 5) y_offset = 108;
       y_offset += 48;
     });
   }

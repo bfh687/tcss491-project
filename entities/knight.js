@@ -13,6 +13,9 @@ class Knight {
       y: 0,
     };
 
+    this.game.knight = this;
+    this.kills = 0;
+
     this.textAnimations = [];
     this.playerItems = [];
 

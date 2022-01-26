@@ -97,6 +97,7 @@ class Skeleton {
         this.game.addEntity(item);
       }
 
+      this.game.knight.kills += 1;
       this.removeFromWorld = true;
       return;
     }

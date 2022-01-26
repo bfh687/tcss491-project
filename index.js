@@ -10,9 +10,14 @@ ASSET_MANAGER.queueDownload("./sprites/knight_dash.png");
 
 // enemy-related downloads
 ASSET_MANAGER.queueDownload("./sprites/skeleton.png");
+ASSET_MANAGER.queueDownload("./sprites/eyeball.png");
 
 // cursor downloads
 ASSET_MANAGER.queueDownload("./sprites/cursor.png");
+
+// misc asset downloads
+ASSET_MANAGER.queueDownload("./sprites/items.png");
+ASSET_MANAGER.queueDownload("./sprites/geronimo's_goggles.png");
 
 // tileset downloads
 ASSET_MANAGER.queueDownload("./sprites/map/grass_tileset.png");
@@ -40,6 +45,5 @@ ASSET_MANAGER.downloadAll(() => {
 
   // initialize scene manager
   new SceneManager(engine);
-
   engine.start();
 });

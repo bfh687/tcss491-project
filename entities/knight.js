@@ -360,6 +360,19 @@ class Knight {
       if (entity instanceof Item) {
         if (this.hurtBox.collide(entity.boundingBox)) {
           entity.removeFromWorld = true;
+          const item = entity.getItem();
+          let contains = false;
+          for (let i = 0; i < this.playerItems.length; i++) {
+            if (item.code === this.playerItems[i].item.code) {
+              this.playerItems[i].count++;
+              contains = true;
+            }
+          }
+          if (!contains) {
+            const playerItem = { item: item, count: 1 };
+            this.playerItems.push(playerItem);
+          }
+          console.log(this.playerItems);
         }
       }
     });

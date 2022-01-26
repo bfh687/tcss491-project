@@ -89,7 +89,6 @@ class GameEngine {
 
     function updatePosition(e) {
       self.mouse.x = Math.min(Math.max(0 + 5, (self.mouse.x += e.movementX)), self.ctx.canvas.width - 5);
-
       self.mouse.y = Math.min(Math.max(0 + 5, (self.mouse.y += e.movementY)), self.ctx.canvas.height - 5);
     }
 
@@ -126,7 +125,7 @@ class GameEngine {
     // Clear the whole canvas with transparent color (rgba(0, 0, 0, 0))
     this.ctx.clearRect(0, 0, this.ctx.canvas.width, this.ctx.canvas.height);
     // Draw latest things first
-    for (let i = this.entities.length - 1; i >= 0; i--) {
+    for (let i = 0; i < this.entities.length; i++) {
       this.entities[i].draw(this.ctx, this);
     }
   }
@@ -142,18 +141,22 @@ class GameEngine {
     this.entities = this.entities.concat(this.entitiesToAdd);
     this.entitiesToAdd = [];
 
-    // sort entities to give 3d look
+    // sort entities to give 3d look, if e1 < e2 return -1
     this.entities.sort((e1, e2) => {
-      if (!e1.boundingBox && !e2.boundingBox) {
-        return e2.priority - e1.priority;
-      } else if (!e1.boundingBox) {
-        return e2.boundingBox - e1.priority;
-      } else if (!e2.boundingBox) {
-        return e2.priority - e1.boundingBox;
+      if (e1 instanceof Map) {
+        return -1;
+      } else if (e2 instanceof Map) {
+        return 1;
+      } else if (e1.boundingBox && e2.boundingBox) {
+        return e1.boundingBox.top - e2.boundingBox.top;
+      } else if (e1.boundingBox && !e2.boundingBox) {
+        return -1;
+      } else if (!e1.boundingBox && e2.boundingBox) {
+        return 1;
+      } else if (!e1.boundingBox && !e2.boundingBox) {
+        e1.priority - e2.priority;
       }
-      return e2.boundingBox.top - e1.boundingBox.top;
     });
-
     this.camera.update();
   }
 

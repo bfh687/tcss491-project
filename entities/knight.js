@@ -13,6 +13,9 @@ class Knight {
       y: 0,
     };
 
+    this.game.knight = this;
+    this.kills = 0;
+
     this.textAnimations = [];
     this.playerItems = [];
 
@@ -282,31 +285,41 @@ class Knight {
             entity.state = 3;
           }
           entity.health -= this.attackDamage * this.game.clockTick;
-          entity.textAnimations.push(
-            new TextAnimator(
-              entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
-              entity.hurtBox.top - 48,
-              this.attackDamage * this.game.clockTick,
-              1,
-              this.game
-            )
-          );
+
+          var damage = this.attackDamage * this.game.clockTick;
+          var flag = true;
+          for (var i = 0; i < entity.textAnimations.length; i++) {
+            if (!entity.textAnimations[i].isFull() && !entity.textAnimations[i].isDone()) {
+              entity.textAnimations[i].increment(damage);
+              flag = false;
+              break;
+            }
+          }
+
+          if (flag) {
+            entity.textAnimations.push(new TextAnimator(66, 0, this.attackDamage * this.game.clockTick, 1, this.game, entity));
+          }
         }
 
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
           if (this.state != 2) {
             this.state = 3;
           }
+
           this.health -= entity.attackDamage * this.game.clockTick;
-          this.textAnimations.push(
-            new TextAnimator(
-              this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
-              this.hurtBox.top,
-              entity.attackDamage * this.game.clockTick,
-              1,
-              this.game
-            )
-          );
+          var damage = entity.attackDamage * this.game.clockTick;
+          var flag = true;
+          for (var i = 0; i < this.textAnimations.length; i++) {
+            if (!this.textAnimations[i].isFull() && !this.textAnimations[i].isDone()) {
+              this.textAnimations[i].increment(damage);
+              flag = false;
+              break;
+            }
+          }
+
+          if (flag) {
+            this.textAnimations.push(new TextAnimator((62 * 2) / 2, 30, this.attackDamage * this.game.clockTick, 1, this.game, this));
+          }
         }
       } else if (entity instanceof Eyeball) {
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
@@ -314,15 +327,7 @@ class Knight {
             entity.state = 4;
           }
           entity.health -= this.attackDamage * this.game.clockTick;
-          entity.textAnimations.push(
-            new TextAnimator(
-              entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
-              entity.hurtBox.top - 48,
-              this.attackDamage * this.game.clockTick,
-              1,
-              this.game
-            )
-          );
+          entity.textAnimations.push(new TextAnimator(0, 0, this.attackDamage * this.game.clockTick, 1, this.game, entity));
         }
 
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
@@ -336,7 +341,8 @@ class Knight {
               this.hurtBox.top,
               entity.attackDamage * this.game.clockTick,
               1,
-              this.game
+              this.game,
+              this
             )
           );
         }
@@ -360,6 +366,19 @@ class Knight {
       if (entity instanceof Item) {
         if (this.hurtBox.collide(entity.boundingBox)) {
           entity.removeFromWorld = true;
+          const item = entity.getItem();
+          let contains = false;
+          for (let i = 0; i < this.playerItems.length; i++) {
+            if (item.code === this.playerItems[i].item.code) {
+              this.playerItems[i].count++;
+              contains = true;
+            }
+          }
+          if (!contains) {
+            const playerItem = { item: item, count: 1 };
+            this.playerItems.push(playerItem);
+          }
+          console.log(this.playerItems);
         }
       }
     });

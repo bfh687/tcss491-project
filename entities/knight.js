@@ -334,12 +334,108 @@ class Knight {
       }
     }
 
+
+    checkCollisions() {
+        this.game.entities.forEach((entity) => {
+            // prevent entity pass through
+            if ((entity instanceof Skeleton || entity instanceof Eyeball) && entity.state != 4 && entity.state != 5) {
+                // future collision detection
+                var slideMultiplier = 1;
+                if (this.state == 5) slideMultiplier = 6;
+                var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+                var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+
+                // check collisions
+                var flag = false;
+                if (verticalBox.collide(entity.boundingBox)) {
+                    this.velocity.y = 0;
+                    entity.currSpeed = 0;
+                    flag = true;
+                }
+                if (horizontalBox.collide(entity.boundingBox)) {
+                    this.velocity.x = 0;
+                    entity.currSpeed = 0;
+                    flag = true;
+                }
+                if (!flag) entity.currSpeed = entity.minSpeed;
+            }
+
+            if (entity instanceof Skeleton) {
+                if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
+                    if (entity.state != 2) {
+                        entity.state = 3;
+                    }
+                    entity.health -= this.attackDamage * this.game.clockTick;
+                    entity.textAnimations.push(
+                        new TextAnimator(
+                            entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
+                            entity.hurtBox.top - 48,
+                            this.attackDamage * this.game.clockTick,
+                            1
+                        )
+                    );
+                }
+
+                if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+                    if (this.state != 2) {
+                        this.state = 3;
+                    }
+                    this.health -= entity.attackDamage * this.game.clockTick;
+                    this.textAnimations.push(
+                        new TextAnimator(
+                            this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
+                            this.hurtBox.top,
+                            entity.attackDamage * this.game.clockTick,
+                            1
+                        )
+                    );
+                }
+            } else if (entity instanceof Eyeball) {
+                if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
+                    if (entity.state != 2) {
+                        entity.state = 4;
+                    }
+                    entity.health -= this.attackDamage * this.game.clockTick;
+                    entity.textAnimations.push(
+                        new TextAnimator(
+                            entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
+                            entity.hurtBox.top - 48,
+                            this.attackDamage * this.game.clockTick,
+                            1
+                        )
+                    );
+                }
+
+                if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+                    if (this.state != 2) {
+                        this.state = 3;
+                    }
+                    this.health -= entity.attackDamage * this.game.clockTick;
+                    this.textAnimations.push(
+                        new TextAnimator(
+                            this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
+                            this.hurtBox.top,
+                            entity.attackDamage * this.game.clockTick,
+                            1
+                        )
+                    );
+                }
+            }
+
+            if (entity instanceof Item) {
+                if (this.hurtBox.collide(entity.boundingBox)) {
+                    entity.removeFromWorld = true;
+                }
+            }
+        });
+
     // loop through and print all damage animations
     for (var i = 0; i < this.textAnimations.length; i++) {
       if (!this.textAnimations[i].isDone()) {
         this.textAnimations[i].critColor(this.damageColor);
         this.textAnimations[i].drawText(this.game.clockTick, ctx);
       }
+
     }
 
     drawHealthBar(ctx, this.hurtBox, this.constructor.name, this.health, this.maxHealth);

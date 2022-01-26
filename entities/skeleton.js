@@ -35,9 +35,7 @@ class Skeleton {
 
     // information about skeleton movement
     this.aggroDist = 500;
-    this.maxSpeed = 125;
-    this.speedAccel = 350;
-    this.minSpeed = 125;
+    this.minSpeed = 125 + 100 * Math.random();
     this.currSpeed = this.minSpeed;
 
     // misc
@@ -96,7 +94,6 @@ class Skeleton {
 
       if (Math.floor(Math.random()) + 1 === 1) {
         const item = new Item(this.game, center_x, center_y);
-
         this.game.addEntity(item);
       }
 
@@ -156,14 +153,14 @@ class Skeleton {
 
         var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
 
-        if (verticalBox.collide(knight.boundingBox)) {
+        if (verticalBox.collide(knight.hurtBox)) {
           yVector = 0;
           if (this.attackCooldown <= 0) {
             this.state = 2;
             this.attackCooldown = 1;
           }
         }
-        if (horizontalBox.collide(knight.boundingBox)) {
+        if (horizontalBox.collide(knight.hurtBox)) {
           xVector = 0;
           if (this.attackCooldown <= 0) {
             this.state = 2;

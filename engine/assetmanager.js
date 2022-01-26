@@ -7,7 +7,7 @@ class AssetManager {
     }
 
     queueDownload(path) {
-        console.log("Queueing " + path);
+        //console.log("Queueing " + path);
         this.downloadQueue.push(path);
     }
 
@@ -27,13 +27,13 @@ class AssetManager {
                 case "png":
                     const img = new Image();
                     img.addEventListener("load", () => {
-                        console.log("Loaded " + img.src);
+                        //console.log("Loaded " + img.src);
                         self.successCount++;
                         if (self.isDone()) callback();
                     });
 
                     img.addEventListener("error", () => {
-                        console.log("Error loading " + img.src);
+                        console.log("error loading " + img.src);
                         self.errorCount++;
                         if (self.isDone()) callback();
                     });
@@ -46,7 +46,7 @@ class AssetManager {
                     const audio = new Audio();
                     audio.addEventListener("loadeddata", () => {
                         self.successCount++;
-                        console.log(self.cache);
+                        //console.log(self.cache);
                         if (self.isDone()) callback();
                     });
 

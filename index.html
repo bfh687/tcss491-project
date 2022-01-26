@@ -8,19 +8,34 @@
         <script type="text/javascript" src="./engine/gameengine.js"></script>
         <script type="text/javascript" src="./engine/assetmanager.js"></script>
         <script type="text/javascript" src="./engine/animator.js"></script>
+        <script type="text/javascript" src="./engine/textanimator.js"></script>
+        <script type="text/javascript" src="./engine/sceneManager.js"></script>
         <script type="text/javascript" src="./engine/timer.js"></script>
+        <script type="text/javascript" src="./engine/boundingbox.js"></script>
 
         <!-- entities go here -->
+        <script type="text/javascript" src="./entities/knight.js"></script>
+        <script type="text/javascript" src="./entities/skeleton.js"></script>
+        <script type="text/javascript" src="./entities/eyeball.js"></script>
+
+        <script type="text/javascript" src="./entities/map.js"></script>
+        <script type="text/javascript" src="./entities/levels.js"></script>
+        <script type="text/javascript" src="./entities/item.js"></script>
+
+        <!-- HUD -->
+        <script type="text/javascript" src="./entities/cursor.js"></script>
+        <script type="text/javascript" src="./entities/hud.js"></script>
 
         <!-- utility -->
         <script type="text/javascript" src="./utility/util.js"></script>
+        <script type="text/javascript" src="./utility/drawing.js"></script>
 
         <!-- driver -->
         <script type="text/javascript" src="./index.js"></script>
     </head>
-    <body style="background: #324e4e">
-        <div style="text-align: center; padding-top: 75px">
-            <canvas id="gameWorld" width="1366" height="768" style="background: #324e4e" />
+    <body style="background: rgb(36, 35, 35, 0.993)">
+        <div style="text-align: center; padding-top: 70px">
+            <canvas id="gameWorld" width="1366" height="768" style="background: rgb(36, 35, 35)" />
         </div>
     </body>
 </html>

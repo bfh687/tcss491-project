@@ -10,7 +10,6 @@ class SceneManager {
     let midpoint_x = 1366 / 2;
     let midpoint_y = 768 / 2;
     this.knight = new Knight(this.game, midpoint_x + 2.5 * params.BITWIDTH, midpoint_y + 0 * params.BITWIDTH);
-    // this.loadLevel(levelOne, 0 * params.BLOCKWIDTH, 0 * params.BLOCKWIDTH, false, true);
     this.loadLevel(0, 0, false, true);
   }
 
@@ -22,9 +21,16 @@ class SceneManager {
 
   loadLevel(x, y, transition, title) {
     this.clearEntities();
-    this.game.addEntity(new Skeleton(this.game, 100, 100));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 290, this.knight.y + 150));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y + 200));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 270, this.knight.y + 190));
+
+    this.game.addEntity(new Eyeball(this.game, this.knight.x - 370, this.knight.y + 170));
+    this.game.addEntity(new Eyeball(this.game, this.knight.x - 390, this.knight.y + 190));
+    this.game.addEntity(new Eyeball(this.game, this.knight.x - 360, this.knight.y + 200));
+
     this.game.addEntity(this.knight);
-    this.game.addEntity(new Map(this.game, 0, 0));
+    this.game.addEntity(new Map(this.game, 310, 270));
 
     this.title = title;
     // this.level = level;
@@ -53,8 +59,8 @@ class SceneManager {
   }
 
   update() {
-    let midpoint_x = 1366 / 2 - 29 / 2 + 260;
-    let midpoint_y = 768 / 2 - (62 * 2.5) / 2 + 100;
+    let midpoint_x = 1366 / 2 - 29 / 2;
+    let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
     this.x = this.knight.x - midpoint_x;
     this.y = this.knight.y - midpoint_y;
   }

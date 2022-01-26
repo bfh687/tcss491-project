@@ -248,8 +248,7 @@ class Knight {
       }
     }
 
-    drawHealthBar(ctx, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
-    
+    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
   }
 
   checkCollisions() {
@@ -288,7 +287,8 @@ class Knight {
               entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
               entity.hurtBox.top - 48,
               this.attackDamage * this.game.clockTick,
-              1
+              1,
+              this.game
             )
           );
         }
@@ -303,7 +303,8 @@ class Knight {
               this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
               this.hurtBox.top,
               entity.attackDamage * this.game.clockTick,
-              1
+              1,
+              this.game
             )
           );
         }
@@ -318,7 +319,8 @@ class Knight {
               entity.hurtBox.left + (entity.hurtBox.right - entity.hurtBox.left) / 2,
               entity.hurtBox.top - 48,
               this.attackDamage * this.game.clockTick,
-              1
+              1,
+              this.game
             )
           );
         }
@@ -333,10 +335,26 @@ class Knight {
               this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
               this.hurtBox.top,
               entity.attackDamage * this.game.clockTick,
-              1
+              1,
+              this.game
             )
           );
         }
+      } else if (entity instanceof Map) {
+        entity.bounding_boxes.forEach((box) => {
+          var slideMultiplier = 1;
+          if (this.state == 5) slideMultiplier = 6;
+          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+
+          // check collisions
+          if (verticalBox.collide(box)) {
+            this.velocity.y = 0;
+          }
+          if (horizontalBox.collide(box)) {
+            this.velocity.x = 0;
+          }
+        });
       }
 
       if (entity instanceof Item) {

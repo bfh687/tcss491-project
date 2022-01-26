@@ -12,7 +12,7 @@ class Skeleton {
     this.state = 0;
 
     // directions: left (0), right (1)
-    this.direction = 0;
+    this.direction = 1;
 
     // damage number counters
     this.textAnimations = [];
@@ -34,8 +34,8 @@ class Skeleton {
     this.attackCooldown = 1;
 
     // information about skeleton movement
-    this.aggroDist = 500;
-    this.minSpeed = 125 + 100 * Math.random();
+    this.aggroDist = 250;
+    this.minSpeed = 125 + 25 * Math.random();
     this.currSpeed = this.minSpeed;
 
     // misc
@@ -254,8 +254,8 @@ class Skeleton {
       ctx.globalAlpha = 0.3;
       ctx.beginPath();
       ctx.ellipse(
-        this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 - 12,
-        this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 - 4,
+        this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 - 12 - this.game.camera.x,
+        this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 - 4 - this.game.camera.y,
         25 / 2,
         50 / 2,
         Math.PI / 4,
@@ -281,6 +281,6 @@ class Skeleton {
       this.textAnimations[i].drawText(this.game.clockTick, ctx);
     }
 
-    drawHealthBar(ctx, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
   }
 }

@@ -1,16 +1,17 @@
 class TextAnimator {
-  constructor(xStart, yStart, amount, duration) {
+  constructor(xStart, yStart, amount, duration, game) {
     Object.assign(this, {
       xStart,
       yStart,
       amount,
       duration,
+      game,
     });
 
     this.damageColor = "red";
 
-    this.x = xStart + (Math.random() * 30 - 30);
-    this.y = yStart;
+    this.x = xStart + (Math.random() * 30 - 30) - this.game.camera.x;
+    this.y = yStart - this.game.camera.y;
     this.alpha = 1;
   }
 

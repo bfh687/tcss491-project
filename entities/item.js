@@ -107,7 +107,7 @@ class Item {
     } else {
       string = "MYTHIC";
     }
-    const animator = new TextAnimator(this.x, this.y - 32, string, 100);
+    const animator = new TextAnimator(this.x, this.y - 32, string, 100, this.game);
     if (this.items[item].dropChance >= 15) {
       animator.critColor("white");
     } else if (this.items[item].dropChance >= 5) {
@@ -229,13 +229,13 @@ class Item {
       this.items[this.selectedItem].y,
       32,
       32,
-      this.x - 16,
-      this.y - 24 + Math.sin(this.elapsedTime * 2) * 10,
+      this.x - 16 - this.game.camera.x,
+      this.y - 24 + Math.sin(this.elapsedTime * 2) * 10 - this.game.camera.y,
       32,
       32
     );
 
-    drawBoundingBox(this.boundingBox, ctx, "yellow");
+    drawBoundingBox(this.boundingBox, ctx, this.game, "yellow");
 
     for (var i = 0; i < this.textAnimations.length; i++) {
       if (!this.textAnimations[i].isDone()) {

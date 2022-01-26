@@ -5,6 +5,7 @@ class Item {
     this.goggles_spritesheet = ASSET_MANAGER.getAsset("./sprites/geronimo's_goggles.png");
     this.textAnimations = [];
     this.items = [];
+
     // Items in items.png
     this.shatterproofSkull = {
       code: "Shatterproof Skull",

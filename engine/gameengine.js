@@ -113,6 +113,10 @@ class GameEngine {
       this.left_click = true;
     });
 
+    this.ctx.canvas.addEventListener("mouseup", (e) => {
+      this.left_click = false;
+    });
+
     this.mouse.x = this.ctx.canvas.width / 2;
     this.mouse.y = this.ctx.canvas.height / 2;
   }

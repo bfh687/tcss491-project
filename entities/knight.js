@@ -156,7 +156,7 @@ class Knight {
     var up = this.game.keys.w;
     var down = this.game.keys.s;
     var slide = this.game.keys[" "];
-    var attack = this.game.keys.q;
+    var attack = this.game.left_click;
 
     // set direction (priority based on direction pressed);
     if (left) this.direction = 0;

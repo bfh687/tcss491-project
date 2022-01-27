@@ -108,7 +108,7 @@ class Item {
     } else {
       string = "MYTHIC";
     }
-    const animator = new TextAnimator(this.x, this.y - 32, string, 100, this.game, this);
+    const animator = new TextAnimator(-5, -10, string, 100, this.game, this);
     if (this.items[item].dropChance >= 15) {
       animator.critColor("white");
     } else if (this.items[item].dropChance >= 5) {

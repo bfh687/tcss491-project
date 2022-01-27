@@ -1,3 +1,3 @@
 # ZAND
-A 2D Rogue-like Web Game
+A Rogue-like 2D Web Game
 

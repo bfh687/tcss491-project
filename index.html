@@ -1,41 +1,43 @@
 ﻿<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8" />
-        <title>Animation Test</title>
+  <head>
+    <meta charset="utf-8" />
+    <title>TCSS 491 Project</title>
 
-        <!-- engine -->
-        <script type="text/javascript" src="./engine/gameengine.js"></script>
-        <script type="text/javascript" src="./engine/assetmanager.js"></script>
-        <script type="text/javascript" src="./engine/animator.js"></script>
-        <script type="text/javascript" src="./engine/textanimator.js"></script>
-        <script type="text/javascript" src="./engine/sceneManager.js"></script>
-        <script type="text/javascript" src="./engine/timer.js"></script>
-        <script type="text/javascript" src="./engine/boundingbox.js"></script>
+    <!-- engine -->
+    <script type="text/javascript" src="./engine/gameengine.js"></script>
+    <script type="text/javascript" src="./engine/assetmanager.js"></script>
+    <script type="text/javascript" src="./engine/animator.js"></script>
+    <script type="text/javascript" src="./engine/textanimator.js"></script>
+    <script type="text/javascript" src="./engine/timer.js"></script>
+    <script type="text/javascript" src="./engine/boundingbox.js"></script>
 
-        <!-- entities go here -->
-        <script type="text/javascript" src="./entities/knight.js"></script>
-        <script type="text/javascript" src="./entities/skeleton.js"></script>
-        <script type="text/javascript" src="./entities/eyeball.js"></script>
+    <!-- scene -->
+    <script type="text/javascript" src="./engine/scenemanager.js"></script>
+    <script type="text/javascript" src="./engine/levels.js"></script>
 
-        <script type="text/javascript" src="./entities/map.js"></script>
-        <script type="text/javascript" src="./entities/levels.js"></script>
-        <script type="text/javascript" src="./entities/item.js"></script>
+    <!-- entities go here -->
+    <script type="text/javascript" src="./entities/knight.js"></script>
+    <script type="text/javascript" src="./entities/enemies/skeleton.js"></script>
+    <script type="text/javascript" src="./entities/enemies/eyeball.js"></script>
 
-        <!-- HUD -->
-        <script type="text/javascript" src="./entities/cursor.js"></script>
-        <script type="text/javascript" src="./entities/hud.js"></script>
+    <script type="text/javascript" src="./entities/scenes/map.js"></script>
+    <script type="text/javascript" src="./entities/drops/item.js"></script>
 
-        <!-- utility -->
-        <script type="text/javascript" src="./utility/util.js"></script>
-        <script type="text/javascript" src="./utility/drawing.js"></script>
+    <!-- HUD -->
+    <script type="text/javascript" src="./entities/overlays/cursor.js"></script>
+    <script type="text/javascript" src="./entities/overlays/hud.js"></script>
 
-        <!-- driver -->
-        <script type="text/javascript" src="./index.js"></script>
-    </head>
-    <body style="background: rgb(36, 35, 35, 0.993)">
-        <div style="text-align: center; padding-top: 70px">
-            <canvas id="gameWorld" width="1366" height="768" style="background: rgb(36, 35, 35)" />
-        </div>
-    </body>
+    <!-- utility -->
+    <script type="text/javascript" src="./utility/util.js"></script>
+    <script type="text/javascript" src="./utility/drawing.js"></script>
+
+    <!-- driver -->
+    <script type="text/javascript" src="./index.js"></script>
+  </head>
+  <body style="background: rgb(36, 35, 35, 0.993)">
+    <div style="text-align: center; padding-top: 70px">
+      <canvas id="gameWorld" width="1366" height="768" style="background: rgb(36, 35, 35)" />
+    </div>
+  </body>
 </html>

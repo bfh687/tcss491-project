@@ -1,84 +1,71 @@
 class Animator {
-    constructor(
-        spritesheet,
-        xStart,
-        yStart,
-        width,
-        height,
-        frameCount,
-        frameDuration,
-        framePaddingLeft,
-        framePaddingRight,
-        reverse,
-        loop
-    ) {
-        Object.assign(this, {
-            spritesheet,
-            xStart,
-            yStart,
-            height,
-            width,
-            frameCount,
-            frameDuration,
-            framePaddingLeft,
-            framePaddingRight,
-            reverse,
-            loop,
-        });
+  constructor(spritesheet, xStart, yStart, width, height, frameCount, frameDuration, framePaddingLeft, framePaddingRight, reverse, loop) {
+    Object.assign(this, {
+      spritesheet,
+      xStart,
+      yStart,
+      height,
+      width,
+      frameCount,
+      frameDuration,
+      framePaddingLeft,
+      framePaddingRight,
+      reverse,
+      loop,
+    });
 
-        this.elapsedTime = 0;
-        this.totalTime = this.frameCount * this.frameDuration;
+    this.elapsedTime = 0;
+    this.totalTime = this.frameCount * this.frameDuration;
+  }
+
+  drawFrame(tick, ctx, x, y, scale) {
+    this.elapsedTime += tick;
+
+    if (this.isDone()) {
+      if (this.loop) {
+        this.elapsedTime -= this.totalTime;
+      } else {
+        return;
+      }
     }
 
-    drawFrame(tick, ctx, x, y, scale) {
-        this.elapsedTime += tick;
+    let frame = this.currentFrame();
+    if (this.reverse) frame = this.frameCount - frame - 1;
 
-        if (this.isDone()) {
-            if (this.loop) {
-                this.elapsedTime -= this.totalTime;
-            } else {
-                //this.elapsedTime = 0;
-                return;
-            }
-        }
+    ctx.drawImage(
+      this.spritesheet,
+      this.xStart + frame * this.width + this.framePaddingLeft,
+      this.yStart,
+      this.width - this.framePaddingRight,
+      this.height,
+      x,
+      y,
+      (this.width - this.framePaddingRight) * scale,
+      this.height * scale
+    );
+  }
 
-        let frame = this.currentFrame();
-        if (this.reverse) frame = this.frameCount - frame - 1;
+  currentFrame() {
+    return Math.floor(this.elapsedTime / this.frameDuration);
+  }
 
-        ctx.drawImage(
-            this.spritesheet,
-            this.xStart + frame * this.width + this.framePaddingLeft,
-            this.yStart,
-            this.width - this.framePaddingRight,
-            this.height,
-            x,
-            y,
-            (this.width - this.framePaddingRight) * scale,
-            this.height * scale
-        );
-    }
+  setFrameDuration(duration) {
+    this.frameDuration = duration;
+  }
 
-    currentFrame() {
-        return Math.floor(this.elapsedTime / this.frameDuration);
-    }
+  reset() {
+    this.elapsedTime = 0;
+  }
 
-    setFrameDuration(duration) {
-        this.frameDuration = duration;
-    }
+  getWidth() {
+    return this.width - this.framePaddingLeft - this.framePaddingRight;
+  }
 
-    reset() {
-        this.elapsedTime = 0;
-    }
+  getHeight() {
+    return this.height;
+  }
 
-    getWidth() {
-        return this.width - this.framePaddingLeft - this.framePaddingRight;
-    }
-
-    getHeight() {
-        return this.height;
-    }
-
-    isDone() {
-        return this.elapsedTime >= this.totalTime;
-    }
+  isDone() {
+    return this.elapsedTime >= this.totalTime;
+  }
 }

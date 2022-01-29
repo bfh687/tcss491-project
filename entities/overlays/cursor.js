@@ -1,7 +1,7 @@
 class Cursor {
   constructor(game) {
     Object.assign(this, { game });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/cursor.png");
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/hud/cursor.png");
     this.priority = Number.MAX_VALUE - 1;
   }
 

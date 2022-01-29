@@ -1,19 +1,68 @@
 class Item {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    this.items_spritesheet = ASSET_MANAGER.getAsset("./sprites/items.png");
-    this.goggles_spritesheet = ASSET_MANAGER.getAsset("./sprites/geronimo's_goggles.png");
-    this.textAnimations = [];
-    this.items = [];
+    this.items_spritesheet = ASSET_MANAGER.getAsset("./sprites/items/items.png");
+    this.goggles_spritesheet = ASSET_MANAGER.getAsset("./sprites/items/goggles.png");
 
-    this.priority =
-      // Items in items.png
-      this.shatterproofSkull = {
-        code: "Shatterproof Skull",
-        x: 0,
-        y: 0,
-        dropChance: 5, // 5% chance
-      };
+    // load items and shuffle them
+    this.items = [];
+    this.loadItems();
+    this.randomizeItems();
+    this.shuffleArray(this.items);
+
+    // init bounding box
+    this.updateBoundingBox();
+
+    // select random item and animate text for item
+    this.selectedItem = Math.floor(Math.random() * this.items.length);
+    this.animateRarity(this.selectedItem);
+
+    // total time item has been on the map
+    this.elapsedTime = 0;
+
+    // time item stays before being removed
+    this.duration = 30;
+
+    // remove from world
+    this.removeFromWorld = false;
+
+    // max pull distance
+    this.pullDist = 100;
+  }
+
+  animateRarity(item) {
+    let rarity = "";
+    if (this.items[item].dropChance >= 15) {
+      rarity = "COMMON";
+    } else if (this.items[item].dropChance >= 5) {
+      rarity = "RARE";
+    } else {
+      rarity = "MYTHIC";
+    }
+
+    let color = "";
+    if (this.items[item].dropChance >= 15) {
+      color = "white";
+    } else if (this.items[item].dropChance >= 5) {
+      color = "cyan";
+    } else {
+      color = "orange";
+    }
+
+    this.textAnimation = new TextAnimator(rarity, color, this.game, this);
+  }
+
+  getItem() {
+    return this.items[this.selectedItem];
+  }
+
+  loadItems() {
+    this.shatterproofSkull = {
+      code: "Shatterproof Skull",
+      x: 0,
+      y: 0,
+      dropChance: 5, // 5% chance
+    };
 
     this.boneThickener = {
       code: "Bone Thickener",
@@ -70,57 +119,6 @@ class Item {
       y: 32,
       dropChance: 1, // 1% chance
     };
-
-    // Item from Geronimos Goggles
-    // this.goggles = {
-    //   code: "Goggles",
-    //   coords: [0, 0],
-    //   dropChance: 15, // 6.67% chance
-    // };
-    this.loadItems();
-
-    this.updateBoundingBox();
-
-    // select random item
-    this.selectedItem = Math.floor(Math.random() * this.items.length);
-
-    this.animateRarity(this.selectedItem);
-    // total time item has been on the map
-    this.elapsedTime = 0;
-
-    // time item stays before being removed
-    this.duration = 30;
-
-    // remove from world
-    this.removeFromWorld = false;
-
-    // max pull distance
-    this.pullDist = 100;
-  }
-
-  animateRarity(item) {
-    console.log(this.items[item]);
-    let string = "";
-    if (this.items[item].dropChance >= 15) {
-      string = "COMMON";
-    } else if (this.items[item].dropChance >= 5) {
-      string = "RARE";
-    } else {
-      string = "MYTHIC";
-    }
-    const animator = new TextAnimator(-5, -10, string, 100, this.game, this);
-    if (this.items[item].dropChance >= 15) {
-      animator.critColor("white");
-    } else if (this.items[item].dropChance >= 5) {
-      animator.critColor("cyan");
-    } else {
-      animator.critColor("orange");
-    }
-    this.textAnimations.push(animator);
-  }
-
-  getItem() {
-    return this.items[this.selectedItem];
   }
 
   randomizeItems() {
@@ -170,11 +168,6 @@ class Item {
     }
   }
 
-  loadItems() {
-    this.randomizeItems();
-    this.shuffleArray(this.items);
-  }
-
   shuffleArray(arr) {
     for (let i = arr.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -183,25 +176,21 @@ class Item {
   }
 
   update() {
+    // increment time item has been on the map
     this.elapsedTime += this.game.clockTick;
+
     // despawn if past duration and not picked up
     if (this.elapsedTime >= this.duration) this.removeFromWorld = true;
 
-    // add knight to scene manager at some point
-    var knight;
-    for (var i = 0; i < this.game.entities.length; i++) {
-      if (this.game.entities[i] instanceof Knight) {
-        knight = this.game.entities[i];
-        break;
-      }
-    }
-
+    // calculate knight center
+    var knight = this.game.knight;
     var knight_x = knight.hurtBox.left + Math.abs(knight.hurtBox.right - knight.hurtBox.left) / 2;
     var knight_y = knight.hurtBox.top + Math.abs(knight.hurtBox.top - knight.hurtBox.bottom) / 2;
 
     // center these values
     var dist = getDistance(knight_x, knight_y, this.x, this.y);
 
+    // calculate vectors of attraction towards knight
     var xVector = 0;
     var yVector = 0;
     if (knight && dist < this.pullDist) {
@@ -211,16 +200,11 @@ class Item {
 
     this.x += xVector * this.game.clockTick;
     this.y += yVector * this.game.clockTick;
-    //this.checkCollisions();
     this.updateBoundingBox();
   }
 
-  checkCollisions() {
-    this.game.entities.forEach((entity) => {});
-  }
-
   updateBoundingBox() {
-    this.boundingBox = new BoundingBox(this.x - 16, this.y - 24, 32, 32);
+    this.boundingBox = new BoundingBox(this.x, this.y - 24, 32, 32);
   }
 
   draw(ctx) {
@@ -230,19 +214,18 @@ class Item {
       this.items[this.selectedItem].y,
       32,
       32,
-      this.x - 16 - this.game.camera.x,
-      this.y - 24 + Math.sin(this.elapsedTime * 2) * 10 - this.game.camera.y,
+      this.x - this.game.camera.x,
+      this.y - 24 + Math.sin(this.elapsedTime * 2) * 7 - this.game.camera.y,
       32,
       32
     );
+
+    // draw bounding box of item
     if (params.DEBUG) {
       drawBoundingBox(this.boundingBox, ctx, this.game, "yellow");
     }
 
-    for (var i = 0; i < this.textAnimations.length; i++) {
-      if (!this.textAnimations[i].isDone()) {
-        this.textAnimations[i].drawText(this.game.clockTick, ctx);
-      }
-    }
+    // draw text animation for the item
+    this.textAnimation.drawText(ctx);
   }
 }

@@ -103,6 +103,15 @@ class Eyeball {
       this.animations[this.state][this.direction].reset();
       this.removeFromWorld = true;
       this.state = 0;
+
+      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
+
+      // drop item on death
+      if (Math.floor(Math.random()) + 1 === 1) {
+        const item = new Item(this.game, center_x, center_y);
+        this.game.addEntity(item);
+      }
     }
 
     var knight = this.game.knight;

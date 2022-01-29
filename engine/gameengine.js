@@ -151,6 +151,10 @@ class GameEngine {
         return -1;
       } else if (e2 instanceof Map) {
         return 1;
+      } else if (e1 instanceof Cursor) {
+        return 1;
+      } else if (e2 instanceof Cursor) {
+        return -1;
       } else if (e1.boundingBox && e2.boundingBox) {
         return e1.boundingBox.top - e2.boundingBox.top;
       } else if (e1.boundingBox && !e2.boundingBox) {

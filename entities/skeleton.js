@@ -25,13 +25,10 @@ class Skeleton {
     // remove from world
     this.removeFromWorld = false;
 
-    // information about stats
+    // information about stats + attacking
     this.maxHealth = 100;
     this.health = 100;
     this.attackDamage = 0;
-
-    // information about attacking
-    this.isAttacking = false;
     this.attackCooldown = 1;
 
     // information about skeleton movement
@@ -83,28 +80,17 @@ class Skeleton {
       this.state = 4;
     }
 
-    // if death animation is playing, let it play out, otherwise remove entity from world
-    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
-      this.updateHitBox(0);
+    // handle attacking state + animation
+    if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
+      var curr_frame = this.animations[this.state][this.direction].currentFrame();
+      this.updateHitBox();
       return;
-    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
-      // drop item on death
-
-      // calculate player center
-      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
-      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
-
-      if (Math.floor(Math.random()) + 1 === 1) {
-        const item = new Item(this.game, center_x, center_y);
-        this.game.addEntity(item);
-      }
-
-      this.game.knight.kills += 1;
-      this.removeFromWorld = true;
-      return;
+    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
+      this.animations[this.state][this.direction].reset();
+      this.state = 0;
     }
 
-    // if damaged animation is playing, let it play out, otherwise go back to idle
+    // handle damaged state + animation
     else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
       return;
     } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
@@ -112,50 +98,60 @@ class Skeleton {
       this.state = 0;
     }
 
-    // if attacking animation is playing, let it play out, otherwise go back to idle
-    else if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
-      var curr_frame = this.animations[this.state][this.direction].currentFrame();
-      this.updateHitBox(curr_frame);
+    // if death animation is playing, let it play out, otherwise remove entity from world
+    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+      this.updateHitBox();
       return;
-    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
-      this.animations[this.state][this.direction].reset();
-      this.state = 0;
-    }
+    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+      // calculate player center
+      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
 
-    // attraction towards knight (player)
-    var knight;
-    for (var i = 0; i < this.game.entities.length; i++) {
-      if (this.game.entities[i] instanceof Knight) {
-        knight = this.game.entities[i];
-        break;
+      // drop item on death
+      if (Math.floor(Math.random()) + 1 === 1) {
+        const item = new Item(this.game, center_x, center_y);
+        this.game.addEntity(item);
       }
+
+      // increment knight kills on death
+      this.game.knight.kills += 1;
+      this.removeFromWorld = true;
+      return;
     }
 
-    // should always be a player, double check just in case
+    var knight = this.game.knight;
+
     if (knight) {
-      // calculate unit vector towards knight
+      // calculate distance towards knight
       var dist = getDistance(knight.x, knight.y, this.x, this.y);
-      // aggro distance
-      if (knight && dist < this.aggroDist) {
+
+      if (dist < this.aggroDist) {
         var xVector = (knight.x - this.x) / dist;
         var yVector = (knight.y - this.y) / dist;
 
-        if (xVector >= 0) this.direction = 1;
-        else this.direction = 0;
+        // set direction based on player location
+        if (this.hurtBox.left >= knight.hurtBox.right) {
+          this.direction = 0;
+        } else if (this.hurtBox.right <= knight.hurtBox.left) {
+          this.direction = 1;
+        }
 
+        // set state based on vectors towards players
         if (xVector != 0 || yVector != 0) {
           this.state = 1;
         } else {
           this.state = 0;
         }
 
+        // set distance away from the player that the eyeball must be to begin attacking
         var attackDist = 30;
         if (xVector < 0) attackDist *= -1;
 
+        // get bounding boxes of NEXT tick (assuming no major changes in fps)
         var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist, this.y + 80, 32, 24);
-
         var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
 
+        // check collisions and attack if there would be on on the vertical axis
         if (verticalBox.collide(knight.hurtBox)) {
           yVector = 0;
           if (this.attackCooldown <= 0) {
@@ -163,6 +159,8 @@ class Skeleton {
             this.attackCooldown = 1;
           }
         }
+
+        // check collisions and attack if there would be on on the horizontal axis
         if (horizontalBox.collide(knight.hurtBox)) {
           xVector = 0;
           if (this.attackCooldown <= 0) {
@@ -170,19 +168,32 @@ class Skeleton {
             this.attackCooldown = 1;
           }
         }
-      } else {
+
+        // if not moving, set state to idle
+        if (xVector == 0 && yVector == 0) this.state = 0;
+      }
+
+      // path towards origin/spawn point
+      else {
+        // calculate distance to spawn point
         var dist = getDistance(this.originX, this.originY, this.x, this.y);
+
+        // calculate vector towards spawn point
         var xVector = (this.originX - this.x) / dist;
         var yVector = (this.originY - this.y) / dist;
 
+        // set direction based on location
         if (xVector >= 0) this.direction = 1;
         else this.direction = 0;
 
+        // set state based on vectors towards spawn point
         if (xVector != 0 || yVector != 0) {
           this.state = 1;
         } else {
           this.state = 0;
         }
+
+        // set idle behavior + direction of skeleton
         if (Math.abs(dist) < 1) {
           xVector = yVector = 0;
           this.state = 0;
@@ -190,26 +201,7 @@ class Skeleton {
         }
       }
     }
-    // will refactor this at some point :D
-    else {
-      var dist = getDistance(this.originX, this.originY, this.x, this.y);
-      var xVector = (this.originX - this.x) / dist;
-      var yVector = (this.originY - this.y) / dist;
 
-      if (xVector >= 0) this.direction = 1;
-      else this.direction = 0;
-
-      if (xVector != 0 || yVector != 0) {
-        this.state = 1;
-      } else {
-        this.state = 0;
-      }
-      if (Math.abs(dist) < 1) {
-        xVector = yVector = 0;
-        this.state = 0;
-        this.direction = 0;
-      }
-    }
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
     this.updateBoundingBox();
@@ -226,24 +218,31 @@ class Skeleton {
       this.boundingBox = new BoundingBox(this.x + 42, this.y + 80, 32, 24);
       this.hurtBox = new BoundingBox(this.x + 42, this.y + 32, 32, 66);
     }
+
+    this.updateHitBox();
   }
 
-  updateHitBox(current_frame) {
-    if (current_frame == 4) {
-      if (this.direction == 0) {
-        this.hitBox = new BoundingBox(this.x, this.y + 15, 96, 56);
+  updateHitBox() {
+    var current_frame = this.animations[this.state][this.direction].currentFrame();
+    if (this.state == 2) {
+      if (current_frame == 4) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x, this.y + 15, 96, 56);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 96, 56);
+        }
+      } else if (current_frame == 5) {
+        this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 64, 24);
+      } else if (current_frame == 8) {
+        this.hitBox = new BoundingBox(this.x, this.y + 32, 128, 48);
+      } else if (current_frame == 9) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 64, this.y + 32, 64, 32);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 4, this.y + 32, 64, 36);
+        }
       } else {
-        this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 96, 56);
-      }
-    } else if (current_frame == 5) {
-      this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 64, 24);
-    } else if (current_frame == 8) {
-      this.hitBox = new BoundingBox(this.x, this.y + 32, 128, 48);
-    } else if (current_frame == 9) {
-      if (this.direction == 0) {
-        this.hitBox = new BoundingBox(this.x + 64, this.y + 32, 64, 32);
-      } else {
-        this.hitBox = new BoundingBox(this.x + 4, this.y + 32, 64, 36);
+        this.hitBox = null;
       }
     } else {
       this.hitBox = null;
@@ -253,21 +252,7 @@ class Skeleton {
   draw(ctx) {
     // draw shadows if not dying
     if (this.state != 4) {
-      ctx.save();
-      ctx.globalAlpha = 0.3;
-      ctx.beginPath();
-      ctx.ellipse(
-        this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 - 12 - this.game.camera.x,
-        this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 - 4 - this.game.camera.y,
-        25 / 2,
-        50 / 2,
-        Math.PI / 4,
-        0,
-        2 * Math.PI
-      );
-      ctx.fillStyle = "black";
-      ctx.fill();
-      ctx.restore();
+      drawShadow(ctx, this.game, this);
     }
 
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);

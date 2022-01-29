@@ -2,12 +2,9 @@ class HUD {
   constructor(game, knight) {
     Object.assign(this, { game, knight });
     this.priority = Number.MAX_VALUE;
-    this.time = 0;
   }
 
-  update() {
-    this.time += this.game.clockTick;
-  }
+  update() {}
 
   draw(ctx) {
     ctx.save();
@@ -18,32 +15,32 @@ class HUD {
     ctx.fillStyle = "white";
 
     if (attack_cooldown) {
-      ctx.fillText("ATTACK", 20, 10);
-      ctx.fillRect(20, 20, 100 - attack_cooldown, 10);
+      ctx.fillText("ATTACK", 20, 30);
+      ctx.fillRect(20, 40, 100 - attack_cooldown, 10);
     }
 
     if (slide_cooldown) {
-      ctx.fillText("SLIDE", 20, 50);
-      ctx.fillRect(20, 60, 100 - slide_cooldown, 10);
+      ctx.fillText("SLIDE", 20, 70);
+      ctx.fillRect(20, 80, 100 - slide_cooldown, 10);
     }
 
-    var minutes = Math.floor(this.time / 60);
-    var seconds = Math.floor(this.time % 60);
+    var minutes = Math.floor(this.game.timer.gameTime / 60);
+    var seconds = Math.floor(this.game.timer.gameTime % 60);
     var time = minutes + ":";
     if (seconds < 10) time += "0";
     time += seconds;
 
-    ctx.fillText("TIME: " + time, 20, 90);
-    ctx.fillText("KILL COUNT: " + this.knight.kills, 20, 110);
+    ctx.fillText("TIME: " + time, 20, 110);
+    ctx.fillText("KILL COUNT: " + this.knight.kills, 20, 130);
 
     // fps counter
-    ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 130);
+    ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 150);
 
     ctx.restore();
 
     const items = ASSET_MANAGER.getAsset("./sprites/items.png");
 
-    var y_offset = 156;
+    var y_offset = 176;
     var count = 0;
     this.knight.items.forEach((obj) => {
       ctx.drawImage(items, obj.item.x, obj.item.y, 32, 32, 15 + Math.floor(count / 5) * 48, y_offset, 32, 32);

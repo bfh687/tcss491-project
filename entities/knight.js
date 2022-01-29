@@ -32,7 +32,7 @@ class Knight {
 
     // information about player stats
     this.attackDamage = 100;
-    this.critMultiplier = 1.5;
+    this.critMultiplier = 5;
     this.critChance = 0.04;
     this.health = 100;
     this.maxHealth = 100;
@@ -98,7 +98,7 @@ class Knight {
 
   update() {
     // update cooldowns
-    if (this.slideCooldown > 0) this.slideCooldown -= this.game.clockTick;
+    if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
     if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
 
     // set death state upon losing all health
@@ -210,7 +210,7 @@ class Knight {
 
   draw(ctx) {
     // draw shadow
-    drawShadow(ctx, this.game, this);
+    //drawShadow(ctx, this.game, this);
 
     // draw sprite
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
@@ -226,9 +226,7 @@ class Knight {
 
     // loop through and print all damage animations
     for (var i = 0; i < this.textAnimations.length; i++) {
-      if (!this.textAnimations[i].isDone()) {
-        this.textAnimations[i].drawText(ctx);
-      }
+      this.textAnimations[i].drawText(ctx);
     }
 
     drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
@@ -380,9 +378,16 @@ class Knight {
     var damage = attacker.attackDamage * this.game.clockTick;
     attacked.health -= damage;
 
+    // calculate crit chance
+    var color = "red";
+    if (Math.random() <= this.critChance) {
+      damage *= this.critMultiplier;
+      color = "yellow";
+    }
+
     var flag = true;
     for (var i = 0; i < attacked.textAnimations.length; i++) {
-      if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone()) {
+      if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone() && attacked.textAnimations[i].color != "yellow") {
         attacked.textAnimations[i].increment(damage);
         flag = false;
         break;
@@ -390,11 +395,10 @@ class Knight {
     }
 
     if (flag) {
-      attacked.textAnimations.push(new TextAnimator(damage, "red", this.game, this));
+      attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
     }
   }
 
-  // add item
   addItem(item) {
     let contains = false;
     for (let i = 0; i < this.items.length; i++) {

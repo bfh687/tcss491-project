@@ -20,15 +20,15 @@ class TextAnimator {
     this.alpha = 1;
   }
 
-  drawText(tick, ctx) {
-    this.alpha -= tick;
+  drawText(ctx) {
+    this.alpha -= this.game.clockTick;
     if (this.isDone()) return;
 
     ctx.save();
 
     // set opacity and y-offset values
     ctx.globalAlpha = this.alpha;
-    this.y_offset -= 20 * tick;
+    this.y_offset -= 20 * this.game.clockTick;
 
     // calculate x_center of entity
     var x_center = this.entity.boundingBox.left + (this.entity.boundingBox.right - this.entity.boundingBox.left) / 2;

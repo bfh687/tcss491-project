@@ -232,13 +232,7 @@ class Knight {
     ctx.fill();
     ctx.restore();
 
-    this.animations[this.state][this.direction].drawFrame(
-      this.game.clockTick,
-      ctx,
-      this.x - this.game.camera.x,
-      this.y - this.game.camera.y,
-      2.5
-    );
+    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
 
     // draw hurt box, hit box, and bounding box
     if (params.DEBUG) {
@@ -252,8 +246,7 @@ class Knight {
     // loop through and print all damage animations
     for (var i = 0; i < this.textAnimations.length; i++) {
       if (!this.textAnimations[i].isDone()) {
-        this.textAnimations[i].critColor(this.damageColor);
-        this.textAnimations[i].drawText(this.game.clockTick, ctx);
+        this.textAnimations[i].drawText(ctx);
       }
     }
 
@@ -267,18 +260,8 @@ class Knight {
         // future collision detection
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;
-        var horizontalBox = new BoundingBox(
-          this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick,
-          this.y + 94,
-          29,
-          24
-        );
-        var verticalBox = new BoundingBox(
-          this.x + 28,
-          this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick,
-          29,
-          24
-        );
+        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
         // check collisions
         var flag = false;
@@ -335,9 +318,7 @@ class Knight {
           }
 
           if (flag) {
-            this.textAnimations.push(
-              new TextAnimator((62 * 2) / 2, 30, this.attackDamage * this.game.clockTick, 1, this.game, this)
-            );
+            this.textAnimations.push(new TextAnimator((62 * 2) / 2, 30, this.attackDamage * this.game.clockTick, 1, this.game, this));
           }
         }
       } else if (entity instanceof Eyeball) {
@@ -369,18 +350,8 @@ class Knight {
         entity.bounding_boxes.forEach((box) => {
           var slideMultiplier = 1;
           if (this.state == 5) slideMultiplier = 6;
-          var horizontalBox = new BoundingBox(
-            this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick,
-            this.y + 94,
-            29,
-            24
-          );
-          var verticalBox = new BoundingBox(
-            this.x + 28,
-            this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick,
-            29,
-            24
-          );
+          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
           // check collisions
           if (verticalBox.collide(box)) {

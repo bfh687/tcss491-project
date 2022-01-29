@@ -5,6 +5,7 @@ class Skeleton {
     this.animations = [];
     this.loadAnimations();
 
+    // skeleton spawn point
     this.originX = this.x;
     this.originY = this.y;
 
@@ -280,7 +281,7 @@ class Skeleton {
 
     // loop through and print all damage animations
     for (var i = 0; i < this.textAnimations.length; i++) {
-      this.textAnimations[i].drawText(this.game.clockTick, ctx);
+      this.textAnimations[i].drawText(ctx);
     }
 
     drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);

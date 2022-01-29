@@ -1,6 +1,4 @@
-/**
- * draws bounding box to the screen
- */
+// draws bounding box to the screen
 const drawBoundingBox = (boundingBox, ctx, game, color) => {
   ctx.save();
   ctx.fillStyle = color;
@@ -9,9 +7,7 @@ const drawBoundingBox = (boundingBox, ctx, game, color) => {
   ctx.restore();
 };
 
-/**
- * draws healthbar to the screen
- */
+// draws healthbar to the screen
 const drawHealthBar = (ctx, game, hurtBox, name, health, maxHealth) => {
   var width = hurtBox.right - hurtBox.left;
   ctx.save();
@@ -24,5 +20,21 @@ const drawHealthBar = (ctx, game, hurtBox, name, health, maxHealth) => {
   ctx.fillRect(hurtBox.left - game.camera.x, hurtBox.top - 16 - game.camera.y, width, 3);
   ctx.fillStyle = "#32CD32";
   ctx.fillRect(hurtBox.left - game.camera.x, hurtBox.top - 16 - game.camera.y, Math.max(0, health / maxHealth) * width, 3);
+  ctx.restore();
+};
+
+// draws shadow to the screen
+const drawShadow = (ctx, game, entity) => {
+  ctx.save();
+
+  ctx.globalAlpha = 0.125;
+  ctx.fillStyle = "black";
+
+  var x_center = entity.boundingBox.right;
+  var y_center = entity.boundingBox.top;
+
+  ctx.beginPath();
+  ctx.ellipse(x_center - game.camera.x, y_center - game.camera.y, 25 / 2, 50 / 2, Math.PI / 4, 0, 2 * Math.PI);
+  ctx.fill();
   ctx.restore();
 };

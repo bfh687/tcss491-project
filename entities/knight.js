@@ -209,22 +209,8 @@ class Knight {
   }
 
   draw(ctx) {
-    //draw shadow
-    ctx.save();
-    ctx.globalAlpha = 0.3;
-    ctx.beginPath();
-    ctx.ellipse(
-      this.x + (this.animations[this.state][this.direction].getWidth() * 2.5) / 2 + 12 - this.game.camera.x,
-      this.y + (this.animations[this.state][this.direction].getHeight() * 2.5) / 2 + 12 - this.game.camera.y,
-      25 / 2,
-      50 / 2,
-      Math.PI / 4,
-      0,
-      2 * Math.PI
-    );
-    ctx.fillStyle = "black";
-    ctx.fill();
-    ctx.restore();
+    // draw shadow
+    drawShadow(ctx, this.game, this);
 
     // draw sprite
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);

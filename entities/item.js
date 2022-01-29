@@ -6,14 +6,13 @@ class Item {
     this.textAnimations = [];
     this.items = [];
 
-    this.priority =
-      // Items in items.png
-      this.shatterproofSkull = {
-        code: "Shatterproof Skull",
-        x: 0,
-        y: 0,
-        dropChance: 5, // 5% chance
-      };
+    // Items in items.png
+    this.shatterproofSkull = {
+      code: "Shatterproof Skull",
+      x: 0,
+      y: 0,
+      dropChance: 5, // 5% chance
+    };
 
     this.boneThickener = {
       code: "Bone Thickener",
@@ -99,24 +98,25 @@ class Item {
   }
 
   animateRarity(item) {
-    console.log(this.items[item]);
-    let string = "";
+    let rarity = "";
     if (this.items[item].dropChance >= 15) {
-      string = "COMMON";
+      rarity = "COMMON";
     } else if (this.items[item].dropChance >= 5) {
-      string = "RARE";
+      rarity = "RARE";
     } else {
-      string = "MYTHIC";
+      rarity = "MYTHIC";
     }
-    const animator = new TextAnimator(-5, -10, string, 100, this.game, this);
+
+    let color = "";
     if (this.items[item].dropChance >= 15) {
-      animator.critColor("white");
+      color = "white";
     } else if (this.items[item].dropChance >= 5) {
-      animator.critColor("cyan");
+      color = "cyan";
     } else {
-      animator.critColor("orange");
+      color = "orange";
     }
-    this.textAnimations.push(animator);
+
+    this.textAnimations.push(new TextAnimator(rarity, color, this.game, this));
   }
 
   getItem() {
@@ -211,16 +211,11 @@ class Item {
 
     this.x += xVector * this.game.clockTick;
     this.y += yVector * this.game.clockTick;
-    //this.checkCollisions();
     this.updateBoundingBox();
   }
 
-  checkCollisions() {
-    this.game.entities.forEach((entity) => {});
-  }
-
   updateBoundingBox() {
-    this.boundingBox = new BoundingBox(this.x - 16, this.y - 24, 32, 32);
+    this.boundingBox = new BoundingBox(this.x, this.y - 24, 32, 32);
   }
 
   draw(ctx) {
@@ -230,15 +225,18 @@ class Item {
       this.items[this.selectedItem].y,
       32,
       32,
-      this.x - 16 - this.game.camera.x,
+      this.x - this.game.camera.x,
       this.y - 24 + Math.sin(this.elapsedTime * 2) * 10 - this.game.camera.y,
       32,
       32
     );
+
+    // draw bounding box of item
     if (params.DEBUG) {
       drawBoundingBox(this.boundingBox, ctx, this.game, "yellow");
     }
 
+    // draw all text animations for the item
     for (var i = 0; i < this.textAnimations.length; i++) {
       if (!this.textAnimations[i].isDone()) {
         this.textAnimations[i].drawText(this.game.clockTick, ctx);

@@ -1,25 +1,31 @@
 class Knight {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
+
+    // load knight spritesheets and sounds
     this.swordslash = ASSET_MANAGER.getAsset("./sfx/sword_slash.png");
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/knight.png");
     this.slide_spritesheet = ASSET_MANAGER.getAsset("./sprites/knight_dash.png");
+
+    // load/initialize animations
+    this.textAnimations = [];
     this.animations = [];
     this.loadAnimations();
-    this.damageColor = "red";
 
+    // initialize velocity
     this.velocity = {
       x: 0,
       y: 0,
     };
 
+    // add knight as variable to engine
     this.game.knight = this;
+
     this.kills = 0;
 
-    this.textAnimations = [];
     this.playerItems = [];
 
-    // states: idle (0), running (1), attack (2), damaged (3), crouch walking (4), slideing (5)
+    // states: idle (0), running (1), attack (2), damaged (3), crouch walking (4), sliding (5)
     this.state = 0;
 
     // directions: left (0), right (1), up (2), down (3)
@@ -91,12 +97,6 @@ class Knight {
   }
 
   update() {
-    // reset for debugging
-    if (this.game.keys.r && params.DEBUG) {
-      this.x = this.game.ctx.canvas.width / 2;
-      this.y = this.game.ctx.canvas.height / 2;
-    }
-
     // update cooldowns
     if (this.slideCooldown > 0) this.slideCooldown -= this.game.clockTick;
     if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
@@ -232,7 +232,13 @@ class Knight {
     ctx.fill();
     ctx.restore();
 
-    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
+    this.animations[this.state][this.direction].drawFrame(
+      this.game.clockTick,
+      ctx,
+      this.x - this.game.camera.x,
+      this.y - this.game.camera.y,
+      2.5
+    );
 
     // draw hurt box, hit box, and bounding box
     if (params.DEBUG) {
@@ -261,8 +267,18 @@ class Knight {
         // future collision detection
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;
-        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+        var horizontalBox = new BoundingBox(
+          this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick,
+          this.y + 94,
+          29,
+          24
+        );
+        var verticalBox = new BoundingBox(
+          this.x + 28,
+          this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick,
+          29,
+          24
+        );
 
         // check collisions
         var flag = false;
@@ -297,11 +313,12 @@ class Knight {
           }
 
           if (flag) {
-            entity.textAnimations.push(new TextAnimator(66, 0, this.attackDamage * this.game.clockTick, 1, this.game, entity));
+            entity.textAnimations.push(new TextAnimator(damage, "red", this.game, entity));
           }
         }
 
-        if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+        // removed for testing purposes
+        if (entity.hitBox && this.hurtBox.collide(entity.hitBox) && false) {
           if (this.state != 2) {
             this.state = 3;
           }
@@ -318,7 +335,9 @@ class Knight {
           }
 
           if (flag) {
-            this.textAnimations.push(new TextAnimator((62 * 2) / 2, 30, this.attackDamage * this.game.clockTick, 1, this.game, this));
+            this.textAnimations.push(
+              new TextAnimator((62 * 2) / 2, 30, this.attackDamage * this.game.clockTick, 1, this.game, this)
+            );
           }
         }
       } else if (entity instanceof Eyeball) {
@@ -350,8 +369,18 @@ class Knight {
         entity.bounding_boxes.forEach((box) => {
           var slideMultiplier = 1;
           if (this.state == 5) slideMultiplier = 6;
-          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+          var horizontalBox = new BoundingBox(
+            this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick,
+            this.y + 94,
+            29,
+            24
+          );
+          var verticalBox = new BoundingBox(
+            this.x + 28,
+            this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick,
+            29,
+            24
+          );
 
           // check collisions
           if (verticalBox.collide(box)) {

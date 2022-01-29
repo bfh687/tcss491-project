@@ -20,13 +20,6 @@ ASSET_MANAGER.queueDownload("./sprites/items.png");
 ASSET_MANAGER.queueDownload("./sprites/geronimo's_goggles.png");
 
 // tileset downloads
-ASSET_MANAGER.queueDownload("./sprites/map/grass_tileset.png");
-ASSET_MANAGER.queueDownload("./sprites/map/ground_tileset.png");
-ASSET_MANAGER.queueDownload("./sprites/map/wall_tileset.png");
-ASSET_MANAGER.queueDownload("./sprites/map/plant_shadows.png");
-ASSET_MANAGER.queueDownload("./sprites/map/plants.png");
-ASSET_MANAGER.queueDownload("./sprites/map/props.png");
-ASSET_MANAGER.queueDownload("./sprites/map/structures.png");
 ASSET_MANAGER.queueDownload("./sprites/map/0000-Level_0.png");
 ASSET_MANAGER.queueDownload("./sprites/map/0000-Hub_Level.png");
 ASSET_MANAGER.queueDownload("./sprites/hub.png");
@@ -39,12 +32,12 @@ ASSET_MANAGER.downloadAll(() => {
   // initialize and start engine
   engine.init(ctx);
 
+  // setup global variables
   params.BLOCKWIDTH = params.BITWIDTH * params.SCALE;
-
   params.CANVAS_WIDTH = canvas.width;
   params.CANVAS_HEIGHT = canvas.height;
 
-  // initialize scene manager
+  // initialize scene manager and start engine
   new SceneManager(engine);
   engine.start();
 });

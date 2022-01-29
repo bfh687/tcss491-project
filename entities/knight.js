@@ -210,7 +210,7 @@ class Knight {
 
   draw(ctx) {
     // draw shadow
-    //drawShadow(ctx, this.game, this);
+    drawShadow(ctx, this.game, this);
 
     // draw sprite
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);

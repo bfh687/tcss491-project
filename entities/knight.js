@@ -18,18 +18,14 @@ class Knight {
       y: 0,
     };
 
-    // add knight as variable to engine
-    this.game.knight = this;
-
-    this.kills = 0;
-
-    this.playerItems = [];
-
     // states: idle (0), running (1), attack (2), damaged (3), crouch walking (4), sliding (5)
     this.state = 0;
 
     // directions: left (0), right (1), up (2), down (3)
     this.direction = 3;
+
+    // add knight as variable to engine
+    this.game.knight = this;
 
     // bounding box for collisions
     this.updateBoundingBox();
@@ -37,9 +33,15 @@ class Knight {
     // information about player stats
     this.attackDamage = 100;
     this.critMultiplier = 1.5;
-    this.critChance = 25; // 4% chance
-    this.maxHealth = 100;
+    this.critChance = 0.04;
     this.health = 100;
+    this.maxHealth = 100;
+
+    // misc
+    this.kills = 0;
+    this.xp = 0;
+    this.currency = 0;
+    this.playerItems = [];
 
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
@@ -50,9 +52,7 @@ class Knight {
     this.attackCooldown = 0.25;
 
     // information about player movement
-    this.maxSpeed = 250;
-    this.speedAccel = 350;
-    this.minSpeed = 100;
+    this.speed = 250;
   }
 
   loadAnimations() {
@@ -101,6 +101,7 @@ class Knight {
     if (this.slideCooldown > 0) this.slideCooldown -= this.game.clockTick;
     if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
 
+    // set death state upon losing all health
     if (this.health <= 0) {
       this.state = 4;
     }
@@ -146,8 +147,8 @@ class Knight {
     // if done sliding, reset sliding animation
     else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
-      this.velocity.y = this.maxSpeed;
-      this.velocity.x = this.maxSpeed;
+      this.velocity.y = this.speed;
+      this.velocity.x = this.speed;
     }
 
     // capture input booleans
@@ -166,7 +167,6 @@ class Knight {
 
     // if able to slide, slide
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
-      this.calculateSlideDir(left, right, up, down);
       this.state = 5;
       this.slideCooldown = 1.5;
     }
@@ -182,17 +182,17 @@ class Knight {
       this.state = 1;
 
       if (left && !right) {
-        this.velocity.x = -this.maxSpeed;
+        this.velocity.x = -this.speed;
       } else if (!left && right) {
-        this.velocity.x = this.maxSpeed;
+        this.velocity.x = this.speed;
       } else if (!(left || right)) {
         this.velocity.x = 0;
       }
 
       if (up && !down) {
-        this.velocity.y = -this.maxSpeed;
+        this.velocity.y = -this.speed;
       } else if (!up && down) {
-        this.velocity.y = this.maxSpeed;
+        this.velocity.y = this.speed;
       } else if (!(up || down)) {
         this.velocity.y = 0;
       }
@@ -206,6 +206,7 @@ class Knight {
       this.velocity.x = this.velocity.y = 0;
     }
 
+    // check collisions then update velocity and bounding boxes
     this.checkCollisions();
     this.x += this.velocity.x * this.game.clockTick;
     this.y += this.velocity.y * 0.85 * this.game.clockTick;
@@ -439,47 +440,5 @@ class Knight {
     } else {
       this.hitBox = null;
     }
-  }
-
-  calculateSlideDir(left, right, up, down) {
-    if ((right && left) || (up && down)) return;
-
-    const dir = { x: 0, y: 0 };
-    if (right) dir.x = 1;
-    else if (left) dir.x = -1;
-    if (up) dir.y = -1;
-    else if (down) dir.y = 1;
-
-    this.slideDirection = dir;
-
-    if (dir.y == -1 && dir.x == 0) {
-      this.direction = 2; // replace with up slide
-    } else if (dir.y == -1 && dir.x == -1) {
-      this.direction = 2;
-    } else if (dir.y == -1 && dir.x == 1) {
-      this.direction = 3;
-    } else if (dir.y == 1 && dir.x == 0) {
-      this.direction = 1;
-    } else if (dir.y == 1 && dir.x == -1) {
-      this.direction = 0;
-    } else if (dir.y == 1 && dir.x == 1) {
-      this.direction = 1;
-    } else if (dir.x == -1 && dir.y == 0) {
-      this.direction = 0;
-    } else if (dir.x == -1 && dir.y == -1) {
-      this.direction = 2;
-    } else if (dir.x == -1 && dir.y == 1) {
-      this.direction = 0;
-    } else if (dir.x == 1 && dir.y == 0) {
-      this.direction = 1;
-    } else if (dir.x == 1 && dir.y == -1) {
-      this.direction = 3;
-    } else if (dir.x == 1 && dir.y == 1) {
-      this.direction = 1;
-    }
-  }
-
-  getDamageColor() {
-    return this.damageColor;
   }
 }

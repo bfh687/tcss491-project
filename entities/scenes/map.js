@@ -1,7 +1,7 @@
 class Map {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/prototype_hud.png");
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/prototype_hub.png");
     this.bounding_boxes = [];
   }
 

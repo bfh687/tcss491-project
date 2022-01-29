@@ -1,7 +1,7 @@
 class Eyeball {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/eyeball.png");
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/eyeball.png");
 
     // eyeball spawn point
     this.originX = this.x;

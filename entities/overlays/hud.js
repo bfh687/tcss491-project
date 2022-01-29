@@ -9,21 +9,23 @@ class HUD {
   draw(ctx) {
     ctx.save();
 
-    var attack_cooldown = (this.knight.attackCooldown / 0.25) * 100;
-    var slide_cooldown = (this.knight.slideCooldown / 1.5) * 100;
-
     ctx.fillStyle = "white";
 
+    // draw attack cooldown bar
+    var attack_cooldown = (this.knight.attackCooldown / 0.25) * 100;
     if (attack_cooldown) {
       ctx.fillText("ATTACK", 20, 30);
       ctx.fillRect(20, 40, 100 - attack_cooldown, 10);
     }
 
+    // draw slide cooldown bar
+    var slide_cooldown = (this.knight.slideCooldown / 1.5) * 100;
     if (slide_cooldown) {
       ctx.fillText("SLIDE", 20, 70);
       ctx.fillRect(20, 80, 100 - slide_cooldown, 10);
     }
 
+    // draw timer
     var minutes = Math.floor(this.game.timer.gameTime / 60);
     var seconds = Math.floor(this.game.timer.gameTime % 60);
     var time = minutes + ":";
@@ -38,6 +40,7 @@ class HUD {
 
     ctx.restore();
 
+    // draw items
     const items = ASSET_MANAGER.getAsset("./sprites/items.png");
 
     var y_offset = 176;

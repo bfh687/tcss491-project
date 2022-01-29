@@ -1,7 +1,7 @@
 class Skeleton {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/skeleton.png");
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/skeleton.png");
     this.animations = [];
     this.loadAnimations();
 

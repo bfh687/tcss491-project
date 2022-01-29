@@ -1,8 +1,8 @@
 class Item {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    this.items_spritesheet = ASSET_MANAGER.getAsset("./sprites/items.png");
-    this.goggles_spritesheet = ASSET_MANAGER.getAsset("./sprites/geronimo's_goggles.png");
+    this.items_spritesheet = ASSET_MANAGER.getAsset("./sprites/items/items.png");
+    this.goggles_spritesheet = ASSET_MANAGER.getAsset("./sprites/items/goggles.png");
 
     // load items and shuffle them
     this.items = [];

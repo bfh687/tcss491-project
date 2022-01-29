@@ -5,24 +5,23 @@ const ASSET_MANAGER = new AssetManager();
 ASSET_MANAGER.queueDownload("./sfx/sword_slash.mp3");
 
 // knight-related downloads
-ASSET_MANAGER.queueDownload("./sprites/knight.png");
-ASSET_MANAGER.queueDownload("./sprites/knight_dash.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/knight.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/knight_dash.png");
 
 // enemy-related downloads
-ASSET_MANAGER.queueDownload("./sprites/skeleton.png");
-ASSET_MANAGER.queueDownload("./sprites/eyeball.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/skeleton.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/eyeball.png");
 
 // cursor downloads
-ASSET_MANAGER.queueDownload("./sprites/cursor.png");
+ASSET_MANAGER.queueDownload("./sprites/hud/cursor.png");
 
 // misc asset downloads
-ASSET_MANAGER.queueDownload("./sprites/items.png");
-ASSET_MANAGER.queueDownload("./sprites/geronimo's_goggles.png");
+ASSET_MANAGER.queueDownload("./sprites/items/items.png");
+ASSET_MANAGER.queueDownload("./sprites/items/goggles.png");
 
-// tileset downloads
-ASSET_MANAGER.queueDownload("./sprites/map/0000-Level_0.png");
-ASSET_MANAGER.queueDownload("./sprites/map/0000-Hub_Level.png");
-ASSET_MANAGER.queueDownload("./sprites/hub.png");
+// level downloads
+ASSET_MANAGER.queueDownload("./sprites/map/prototype_hub.png");
+ASSET_MANAGER.queueDownload("./sprites/map/alt_hub.png");
 
 ASSET_MANAGER.downloadAll(() => {
   const canvas = document.getElementById("gameWorld");

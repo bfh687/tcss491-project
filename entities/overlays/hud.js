@@ -41,7 +41,7 @@ class HUD {
     ctx.restore();
 
     // draw items
-    const items = ASSET_MANAGER.getAsset("./sprites/items.png");
+    const items = ASSET_MANAGER.getAsset("./sprites/items/items.png");
 
     var y_offset = 176;
     var count = 0;

@@ -45,7 +45,7 @@ class HUD {
 
     var y_offset = 156;
     var count = 0;
-    this.knight.playerItems.forEach((obj) => {
+    this.knight.items.forEach((obj) => {
       ctx.drawImage(items, obj.item.x, obj.item.y, 32, 32, 15 + Math.floor(count / 5) * 48, y_offset, 32, 32);
       ctx.fillStyle = "white";
       ctx.fillText("x" + obj.count, 39 + Math.floor(count / 5) * 48, y_offset);

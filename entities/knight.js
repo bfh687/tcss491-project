@@ -41,7 +41,7 @@ class Knight {
     this.kills = 0;
     this.xp = 0;
     this.currency = 0;
-    this.playerItems = [];
+    this.items = [];
 
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
@@ -106,15 +106,18 @@ class Knight {
       this.state = 4;
     }
 
-    // if death animation is playing, let it play out, otherwise remove entity from world
-    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+    // handle attacking state + animations
+    if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
+      this.updateBoundingBox();
+      this.checkCollisions();
       return;
-    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
-      this.removeFromWorld = true;
-      return;
+    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
+      this.animations[this.state][this.direction].reset();
+      this.state = 0;
+      this.hitBox = null;
     }
 
-    // if damaged animation is going, let it playout
+    // handle damaged state + animations
     else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
       return;
     } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
@@ -122,30 +125,22 @@ class Knight {
       this.state = 0;
     }
 
-    // if attacking, dont allow other input
-    if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
-      var curr_frame = this.animations[this.state][this.direction].currentFrame();
-      this.updateBoundingBox();
-      this.checkCollisions();
+    // handle death state + animations
+    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+      return;
+    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+      this.removeFromWorld = true;
       return;
     }
-    // if done attacking, reset attacking animation and state
-    else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
-      this.animations[this.state][this.direction].reset();
-      this.state = 0;
-      this.hitBox = null;
-    }
 
-    // if sliding, update sliding position
+    // handle sliding state + animations
     if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
       this.checkCollisions();
       this.x += 6 * this.velocity.x * this.game.clockTick;
       this.y += 6 * this.velocity.y * this.game.clockTick;
       this.updateBoundingBox();
       return;
-    }
-    // if done sliding, reset sliding animation
-    else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
+    } else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
       this.velocity.y = this.speed;
       this.velocity.x = this.speed;
@@ -165,19 +160,19 @@ class Knight {
     else if (up) this.direction = 2;
     else if (down) this.direction = 3;
 
-    // if able to slide, slide
+    // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
       this.slideCooldown = 1.5;
     }
-    // if able to attack, attack
+    // handle attack input
     else if (attack && this.attackCooldown <= 0) {
       ASSET_MANAGER.setVolume(0.25);
       ASSET_MANAGER.playAudio("./sfx/sword_slash.mp3");
       this.state = 2;
       this.attackCooldown = 0.25;
     }
-    // if movement input, move
+    // handle movement input
     else if (left || right || up || down) {
       this.state = 1;
 
@@ -200,7 +195,7 @@ class Knight {
       if (left && right) this.velocity.x = 0;
       if (up && down) this.velocity.y = 0;
     }
-    // otherwise, player is idle
+    // handle idle player
     else {
       this.state = 0;
       this.velocity.x = this.velocity.y = 0;
@@ -212,8 +207,6 @@ class Knight {
     this.y += this.velocity.y * 0.85 * this.game.clockTick;
     this.updateBoundingBox();
   }
-
-  loadItemAbilities() {}
 
   draw(ctx) {
     //draw shadow
@@ -233,6 +226,7 @@ class Knight {
     ctx.fill();
     ctx.restore();
 
+    // draw sprite
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
 
     // draw hurt box, hit box, and bounding box
@@ -256,11 +250,13 @@ class Knight {
 
   checkCollisions() {
     this.game.entities.forEach((entity) => {
-      // prevent entity pass through
+      // prevent entity pass through for alive enemies
       if ((entity instanceof Skeleton || entity instanceof Eyeball) && entity.state != 4 && entity.state != 5) {
-        // future collision detection
+        // handle sliding collisions
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;
+
+        // get bounding boxes of NEXT tick (assuming no major changes in fps)
         var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
         var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
@@ -279,107 +275,59 @@ class Knight {
         if (!flag) entity.currSpeed = entity.minSpeed;
       }
 
+      // handle skeleton collisions
       if (entity instanceof Skeleton) {
+        // handle case where player attacks the skeleton
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) {
-            entity.state = 3;
-          }
-          entity.health -= this.attackDamage * this.game.clockTick;
-
-          var damage = this.attackDamage * this.game.clockTick;
-          var flag = true;
-          for (var i = 0; i < entity.textAnimations.length; i++) {
-            if (!entity.textAnimations[i].isFull() && !entity.textAnimations[i].isDone()) {
-              entity.textAnimations[i].increment(damage);
-              flag = false;
-              break;
-            }
-          }
-
-          if (flag) {
-            entity.textAnimations.push(new TextAnimator(damage, "red", this.game, entity));
-          }
+          if (entity.state != 2) entity.state = 3;
+          this.handleAttackCollision(this, entity);
         }
 
-        // removed for testing purposes
-        if (entity.hitBox && this.hurtBox.collide(entity.hitBox) && false) {
-          if (this.state != 2) {
-            this.state = 3;
-          }
-
-          this.health -= entity.attackDamage * this.game.clockTick;
-          var damage = entity.attackDamage * this.game.clockTick;
-          var flag = true;
-          for (var i = 0; i < this.textAnimations.length; i++) {
-            if (!this.textAnimations[i].isFull() && !this.textAnimations[i].isDone()) {
-              this.textAnimations[i].increment(damage);
-              flag = false;
-              break;
-            }
-          }
-
-          if (flag) {
-            this.textAnimations.push(new TextAnimator((62 * 2) / 2, 30, this.attackDamage * this.game.clockTick, 1, this.game, this));
-          }
-        }
-      } else if (entity instanceof Eyeball) {
-        if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) {
-            entity.state = 4;
-          }
-          entity.health -= this.attackDamage * this.game.clockTick;
-          entity.textAnimations.push(new TextAnimator(0, 0, this.attackDamage * this.game.clockTick, 1, this.game, entity));
-        }
-
+        // handle case where skeleton attacks the player
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
-          if (this.state != 2) {
-            this.state = 3;
-          }
-          this.health -= entity.attackDamage * this.game.clockTick;
-          this.textAnimations.push(
-            new TextAnimator(
-              this.hurtBox.left + (this.hurtBox.right - this.hurtBox.left) / 2,
-              this.hurtBox.top,
-              entity.attackDamage * this.game.clockTick,
-              1,
-              this.game,
-              this
-            )
-          );
+          if (this.state != 2) this.state = 3;
+          this.handleAttackCollision(entity, this);
         }
-      } else if (entity instanceof Map) {
+      }
+
+      // handle eyeball collisions
+      else if (entity instanceof Eyeball) {
+        // handle case where player attacks the eyeball
+        if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
+          if (entity.state != 2) entity.state = 4;
+          this.handleAttackCollision(this, entity);
+        }
+
+        // handle case where eyeball attcks the player
+        if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+          if (this.state != 2) this.state = 3;
+          this.handleAttackCollision(entity, this);
+          this.health -= entity.attackDamage * this.game.clockTick;
+        }
+      }
+
+      // handle map collisions
+      else if (entity instanceof Map) {
         entity.bounding_boxes.forEach((box) => {
+          // handle sliding collisions
           var slideMultiplier = 1;
           if (this.state == 5) slideMultiplier = 6;
+
+          // get bounding boxes of NEXT tick (assuming no major changes in fps)
           var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
           var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
-          // check collisions
-          if (verticalBox.collide(box)) {
-            this.velocity.y = 0;
-          }
-          if (horizontalBox.collide(box)) {
-            this.velocity.x = 0;
-          }
+          // check for and handle collisions
+          if (verticalBox.collide(box)) this.velocity.y = 0;
+          if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
       }
 
-      if (entity instanceof Item) {
+      // handle item collision/pickup
+      else if (entity instanceof Item) {
         if (this.hurtBox.collide(entity.boundingBox)) {
           entity.removeFromWorld = true;
-          const item = entity.getItem();
-          let contains = false;
-          for (let i = 0; i < this.playerItems.length; i++) {
-            if (item.code === this.playerItems[i].item.code) {
-              this.playerItems[i].count++;
-              contains = true;
-            }
-          }
-          if (!contains) {
-            const playerItem = { item: item, count: 1 };
-            this.playerItems.push(playerItem);
-          }
-          console.log(this.playerItems);
+          this.addItem(entity.getItem());
         }
       }
     });
@@ -439,6 +387,40 @@ class Knight {
       }
     } else {
       this.hitBox = null;
+    }
+  }
+
+  handleAttackCollision(attacker, attacked) {
+    var damage = attacker.attackDamage * this.game.clockTick;
+    attacked.health -= damage;
+
+    var flag = true;
+    for (var i = 0; i < attacked.textAnimations.length; i++) {
+      if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone()) {
+        attacked.textAnimations[i].increment(damage);
+        flag = false;
+        break;
+      }
+    }
+
+    if (flag) {
+      attacked.textAnimations.push(new TextAnimator(damage, "red", this.game, this));
+    }
+  }
+
+  // add item
+  addItem(item) {
+    let contains = false;
+    for (let i = 0; i < this.items.length; i++) {
+      if (item.code === this.items[i].item.code) {
+        this.items[i].count++;
+        contains = true;
+      }
+    }
+
+    if (!contains) {
+      const newItem = { item: item, count: 1 };
+      this.items.push(newItem);
     }
   }
 }

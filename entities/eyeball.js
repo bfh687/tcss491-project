@@ -93,13 +93,7 @@ class Eyeball {
       this.state = 0;
     }
 
-    var knight;
-    for (var i = 0; i < this.game.entities.length; i++) {
-      if (this.game.entities[i] instanceof Knight) {
-        knight = this.game.entities[i];
-        break;
-      }
-    }
+    var knight = this.game.knight;
 
     // should always be a player, double check just in case
     if (knight) {
@@ -252,10 +246,8 @@ class Eyeball {
 
   updateHitBox() {
     var current_frame = this.animations[this.state][this.direction].currentFrame();
-    // 9 13
     if (this.state == 2 && current_frame >= 9 && current_frame <= 13) {
       if (this.direction == 0) {
-        // 9 - 13
         if (current_frame == 9) {
           this.hitBox = new BoundingBox(this.x - 45 + 195 - 50, this.y + 13, 48, 36);
         } else if (current_frame == 10) {
@@ -290,11 +282,12 @@ class Eyeball {
 
     if (params.DEBUG) {
       if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "blue");
-      for (var i = 0; i < this.textAnimations.length; i++) {
-        this.textAnimations[i].drawText(this.game.clockTick, ctx);
-      }
       drawBoundingBox(this.boundingBox, ctx, this.game, "white");
       drawBoundingBox(this.hurtBox, ctx, this.game, "red");
+    }
+
+    for (var i = 0; i < this.textAnimations.length; i++) {
+      this.textAnimations[i].drawText(ctx);
     }
 
     drawHealthBar(ctx, this.game, this.boundingBox, this.constructor.name, this.health, this.maxHealth);

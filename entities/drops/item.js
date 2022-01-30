@@ -217,6 +217,18 @@ class Item {
   }
 
   draw(ctx) {
+    var center_x = this.boundingBox.left + (this.boundingBox.right - this.boundingBox.left) / 2 - this.game.camera.x;
+    var center_y = this.boundingBox.bottom - this.game.camera.y;
+
+    // draw item shadow;
+    ctx.save();
+    ctx.fillStyle = "black";
+    ctx.globalAlpha = 0.125;
+    ctx.beginPath();
+    ctx.arc(center_x, center_y, Math.sin(this.elapsedTime * 2) * 3 + 5, 0, 2 * Math.PI);
+    ctx.fill();
+    ctx.restore();
+
     ctx.drawImage(
       this.items_spritesheet,
       this.items[this.selectedItem].x,

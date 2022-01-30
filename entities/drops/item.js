@@ -62,6 +62,7 @@ class Item {
       x: 0,
       y: 0,
       dropChance: 5, // 5% chance
+      desc: "Upon receiving damage that would kill you,\nbe restored to full health (60 sec. cooldown)",
     };
 
     this.boneThickener = {
@@ -69,6 +70,7 @@ class Item {
       x: 32,
       y: 0,
       dropChance: 20, // 20% chance
+      desc: "Increase HP by 25 per stack",
     };
 
     this.spareHeart = {
@@ -76,6 +78,7 @@ class Item {
       x: 64,
       y: 0,
       dropChance: 10, // 10% chance
+      desc: "Upon death, resurrect in place with 5 sec.\nimmunity (lose any stacks gained from items)",
     };
 
     this.wing = {
@@ -83,6 +86,7 @@ class Item {
       x: 160,
       y: 0,
       dropChance: 15, // 15% chance
+      desc: "Gain 0.25% movement speed per stack",
     };
 
     this.scale = {
@@ -90,6 +94,7 @@ class Item {
       x: 320,
       y: 0,
       dropChance: 20, // 20% chance
+      desc: "Gain 1 armor (take 1% less damage on hit)",
     };
 
     this.clover1 = {
@@ -97,6 +102,7 @@ class Item {
       x: 0,
       y: 32,
       dropChance: 23, // 23% chance
+      desc: "Gain 5% critical hit chance",
     };
 
     this.clover2 = {
@@ -104,6 +110,7 @@ class Item {
       x: 32,
       y: 32,
       dropChance: 4, // 4% chance
+      desc: "Gain 10% critical hit chance",
     };
 
     this.clover3 = {
@@ -111,6 +118,7 @@ class Item {
       x: 64,
       y: 32,
       dropChance: 2, // 2% chance
+      desc: "Gain 15% critical hit chance",
     };
 
     this.clover4 = {
@@ -118,6 +126,7 @@ class Item {
       x: 96,
       y: 32,
       dropChance: 1, // 1% chance
+      desc: "Gain 25% critical hit chance",
     };
   }
 

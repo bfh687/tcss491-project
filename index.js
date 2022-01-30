@@ -14,6 +14,7 @@ ASSET_MANAGER.queueDownload("./sprites/entities/eyeball.png");
 
 // cursor downloads
 ASSET_MANAGER.queueDownload("./sprites/hud/cursor.png");
+ASSET_MANAGER.queueDownload("./sprites/hud/icons.png");
 
 // misc asset downloads
 ASSET_MANAGER.queueDownload("./sprites/items/items.png");

@@ -3,9 +3,22 @@ class Map {
     Object.assign(this, { game, x, y });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/prototype_hub.png");
     this.bounding_boxes = [];
+
+    this.icons = ASSET_MANAGER.getAsset("./sprites/hud/icons.png");
+    this.test_box = new BoundingBox(this.x + 1135, this.y + 515, 100, 100);
+    this.drawIcon = false;
+
+    this.alpha = 0;
+    this.color = "purple";
   }
 
   update() {
+    if (this.drawIcon) {
+      this.alpha = Math.min(1, this.alpha + this.game.clockTick * 6);
+    } else {
+      this.alpha = Math.max(0, this.alpha - this.game.clockTick * 6);
+    }
+
     this.bounding_boxes = [];
 
     // // vertical walls
@@ -53,10 +66,28 @@ class Map {
       params.BLOCKWIDTH * (18.1 * 2)
     );
 
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    if (this.drawIcon || this.alpha > 0) {
+      ctx.drawImage(
+        this.icons,
+        112,
+        32,
+        16,
+        16,
+        this.test_box.left + (this.test_box.right - this.test_box.left) / 2 - this.game.camera.x - 16,
+        this.y + 515 - this.game.camera.y + Math.sin(this.game.timer.gameTime * 2) * 7,
+        32,
+        32
+      );
+    }
+    ctx.restore();
+
     if (params.DEBUG) {
       this.bounding_boxes.forEach((box) => {
         drawBoundingBox(box, ctx, this.game, "red");
       });
+      drawBoundingBox(this.test_box, ctx, this.game, this.color);
     }
   }
 }

@@ -305,6 +305,18 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
+
+        if (this.hurtBox.collide(entity.test_box)) {
+          entity.drawIcon = true;
+          if (this.game.keys.e) {
+            entity.color = "red";
+          } else {
+            entity.color = "purple";
+          }
+        } else {
+          entity.drawIcon = false;
+          entity.color = "purple";
+        }
       }
 
       // handle item collision/pickup

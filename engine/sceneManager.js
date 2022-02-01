@@ -21,17 +21,19 @@ class SceneManager {
 
   loadLevel(x, y, transition, title) {
     this.clearEntities();
-    for (var i = 0; i < 50; i++) this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
 
     this.game.addEntity(new Eyeball(this.game, this.knight.x - 500, this.knight.y - 340));
     this.game.addEntity(new Eyeball(this.game, this.knight.x - 520, this.knight.y - 390));
     this.game.addEntity(new Eyeball(this.game, this.knight.x - 490, this.knight.y - 380));
+
     this.game.addEntity(new Cursor(this.game));
     this.game.addEntity(new HUD(this.game, this.knight));
 
     this.game.addEntity(this.knight);
+    this.game.addEntity(new Shop(this.game, 1366 / 2 + 50 * 16 - 85, 670));
     this.game.addEntity(new Map(this.game, 310, 270));
 
     this.title = title;
@@ -61,16 +63,6 @@ class SceneManager {
   }
 
   update() {
-    if (this.game.entities.length < 4) {
-      this.respawnTimer -= this.game.clockTick;
-      if (this.respawnTimer <= 0) {
-        for (var i = 0; i < 5; i++) {
-          this.game.addEntity(new Skeleton(this.game, this.knight.x + 290, this.knight.y + 150));
-        }
-        this.respawnTimer = 10;
-      }
-    }
-
     let midpoint_x = 1366 / 2 - 29 / 2;
     let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
     this.x = this.knight.x - midpoint_x;

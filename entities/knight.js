@@ -305,18 +305,18 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
+      } else if (entity instanceof Shop) {
+        // handle sliding collisions
+        var slideMultiplier = 1;
+        if (this.state == 5) slideMultiplier = 6;
 
-        if (this.hurtBox.collide(entity.test_box)) {
-          entity.drawIcon = true;
-          if (this.game.keys.e) {
-            entity.color = "red";
-          } else {
-            entity.color = "purple";
-          }
-        } else {
-          entity.drawIcon = false;
-          entity.color = "purple";
-        }
+        // get bounding boxes of NEXT tick (assuming no major changes in fps)
+        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+
+        // check for and handle collisions
+        if (verticalBox.collide(entity.boundingBox)) this.velocity.y = 0;
+        if (horizontalBox.collide(entity.boundingBox)) this.velocity.x = 0;
       }
 
       // handle item collision/pickup

@@ -45,6 +45,8 @@ class Shop {
     // draw shop keeper
     ctx.drawImage(this.spritesheet, 0, 0, 96, 96, this.x - this.game.camera.x, this.y - this.game.camera.y, 96 * 2, 96 * 2);
 
+    var center = this.boundingBox.left + (this.boundingBox.right - this.boundingBox.left) / 2;
+
     // draw icon
     ctx.save();
     ctx.globalAlpha = this.alpha;
@@ -55,10 +57,27 @@ class Shop {
         32,
         16,
         16,
-        this.boundingBox.left + (this.boundingBox.right - this.boundingBox.left) / 2 - this.game.camera.x - 12,
+        center - this.game.camera.x - 12,
         this.y - this.game.camera.y + Math.sin(this.game.timer.gameTime * 2) * 4,
         24,
         24
+      );
+
+      var width = ctx.measureText("PRESS E TO SHOP").width / 2;
+
+      // draw info text
+      ctx.fillStyle = "black";
+      ctx.fillText(
+        "PRESS E TO SHOP",
+        center - width - this.game.camera.x + 1,
+        this.y + 130 - this.game.camera.y + 1 + Math.sin(this.game.timer.gameTime * 2) * 4
+      );
+
+      ctx.fillStyle = "white";
+      ctx.fillText(
+        "PRESS E TO SHOP",
+        center - width - this.game.camera.x,
+        this.y + 130 - this.game.camera.y + Math.sin(this.game.timer.gameTime * 2) * 4
       );
     }
     ctx.restore();
@@ -75,9 +94,14 @@ class ShopUI {
     Object.assign(this, { game, shop });
   }
 
-  update() {}
+  update() {
+    // things you should be able to buy
+    // buy back health,
+    // buy certain items?
+  }
 
   draw(ctx) {
+    // refactor to draw shop item, where you pass sprite, x, y, item description, and item
     if (this.shop.isShopActive) {
       ctx.save();
       ctx.globalAlpha = 0.8;

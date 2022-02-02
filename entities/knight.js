@@ -38,8 +38,9 @@ class Knight {
     this.maxHealth = 100;
 
     // misc
+
     this.kills = 0;
-    this.xp = 0;
+    this.xpSystem = new XP();
     this.currency = 0;
     this.items = [];
 

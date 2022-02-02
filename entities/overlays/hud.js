@@ -39,6 +39,18 @@ class HUD {
     // fps counter
     ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 150);
 
+    // xp + level
+    ctx.fillText(
+      "Level: " +
+        this.knight.xpSystem.currLevel +
+        ", XP: " +
+        this.knight.xpSystem.currXP +
+        ", XP Needed for Next Level: " +
+        (this.knight.xpSystem.xpNeeded - this.knight.xpSystem.currXP),
+      20,
+      170
+    );
+
     ctx.restore();
 
     // draw items

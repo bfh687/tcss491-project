@@ -37,6 +37,7 @@ class Eyeball {
 
     // misc
     this.alpha = 1;
+    this.xpDropped = 250;
   }
 
   loadAnimations() {
@@ -112,6 +113,8 @@ class Eyeball {
         const item = new Item(this.game, center_x, center_y);
         this.game.addEntity(item);
       }
+
+      this.game.knight.xpSystem.incrementXP(this.xpDropped);
     }
 
     var knight = this.game.knight;

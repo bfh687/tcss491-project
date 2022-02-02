@@ -92,6 +92,7 @@ class Shop {
 class ShopUI {
   constructor(game, shop) {
     Object.assign(this, { game, shop });
+    this.items = ASSET_MANAGER.getAsset("./sprites/items/shopitems.png");
   }
 
   update() {
@@ -104,32 +105,30 @@ class ShopUI {
     // refactor to draw shop item, where you pass sprite, x, y, item description, and item
     if (this.shop.isShopActive) {
       ctx.save();
-      ctx.globalAlpha = 0.8;
+      ctx.font = "30px Arial";
+      var width = ctx.measureText("SHOP").width / 2;
       ctx.fillStyle = "black";
-      ctx.fillRect(1366 / 2 - 300, 768 / 2 - 325, 600, 650);
-      ctx.globalAlpha = 0.9;
+      ctx.fillText("SHOP", 1366 / 2 - width + 1, 40 + 40 + 1);
       ctx.fillStyle = "white";
-      ctx.fillRect(1366 / 2 - 300 + 25, 768 / 2 - 300, 550, 100);
+      ctx.fillText("SHOP", 1366 / 2 - width, 40 + 40);
+      ctx.globalAlpha = 0.5;
       ctx.fillStyle = "black";
-      ctx.fillText("TEST SHOP ITEM 1", 1366 / 2 - 300 + 35, 768 / 2 - 275);
-      ctx.fillStyle = "white";
-      ctx.fillRect(1366 / 2 - 300 + 25, 768 / 2 - 175, 550, 100);
-      ctx.fillStyle = "black";
-      ctx.fillText("TEST SHOP ITEM 2", 1366 / 2 - 300 + 35, 768 / 2 - 150);
-      ctx.fillStyle = "white";
-      ctx.fillRect(1366 / 2 - 300 + 25, 768 / 2 - 50, 550, 100);
-      ctx.fillStyle = "black";
-      ctx.fillText("TEST SHOP ITEM 3", 1366 / 2 - 300 + 35, 768 / 2 - 25);
-      ctx.fillStyle = "white";
-      ctx.fillRect(1366 / 2 - 300 + 25, 768 / 2 + 75, 550, 100);
-      ctx.fillStyle = "black";
-      ctx.fillText("TEST SHOP ITEM 4", 1366 / 2 - 300 + 35, 768 / 2 + 100);
-      ctx.fillStyle = "white";
-      ctx.fillRect(1366 / 2 - 300 + 25, 768 / 2 + 200, 550, 100);
-      ctx.fillStyle = "black";
-      ctx.fillText("TEST SHOP ITEM 5", 1366 / 2 - 300 + 35, 768 / 2 + 225);
-
+      ctx.fillRect(1366 / 2 - 100, 60 + 768 / 2 - 325, 200, 300);
       ctx.restore();
+
+      ctx.fillStyle = "white";
+      ctx.drawImage(this.items, 0, 0, 32, 32, 1366 / 2 - 32, 70 + 768 / 2 - 325, 32 * 2, 32 * 2);
+      ctx.fillText("Geronimo's Goggles", 1366 / 2 - 48, 70 + 768 / 2 - 325);
+      ctx.fillText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, ", 1366 / 2 - 48, 70 + 768 / 2 - 325);
+
+      ctx.drawImage(this.items, 32, 0, 32, 32, 1366 / 2 - 280, 70 + 768 / 2 - 325 + 125, 32 * 1.75, 32 * 1.75);
+      ctx.fillText("______'s Armor", 1366 / 2 - 280, 70 + 768 / 2 - 325 + 125);
+
+      ctx.drawImage(this.items, 64, 0, 32, 32, 1366 / 2 - 280, 70 + 768 / 2 - 325 + 125 * 2, 32 * 1.75, 32 * 1.75);
+      ctx.fillText("______'s Potion", 1366 / 2 - 280, 70 + 768 / 2 - 325 + 125 * 2);
+
+      ctx.drawImage(this.items, 96, 0, 32, 32, 1366 / 2 - 280, 70 + 768 / 2 - 325 + 125 * 3, 32 * 2, 32 * 2);
+      ctx.fillText("______'s Dagger", 1366 / 2 - 280, 70 + 768 / 2 - 325 + 125 * 3);
     } else {
       // remove from world if associated shop isnt active
       this.removeFromWorld = true;

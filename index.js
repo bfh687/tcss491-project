@@ -18,6 +18,7 @@ ASSET_MANAGER.queueDownload("./sprites/hud/icons.png");
 
 // misc asset downloads
 ASSET_MANAGER.queueDownload("./sprites/items/items.png");
+ASSET_MANAGER.queueDownload("./sprites/items/shopitems.png");
 ASSET_MANAGER.queueDownload("./sprites/items/goggles.png");
 
 // level downloads

@@ -230,7 +230,7 @@ class Knight {
       this.textAnimations[i].drawText(ctx);
     }
 
-    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    //drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
   }
 
   checkCollisions() {

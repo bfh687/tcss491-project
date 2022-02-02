@@ -39,17 +39,58 @@ class HUD {
     // fps counter
     ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 150);
 
-    // xp + level
-    ctx.fillText(
-      "Level: " +
-        this.knight.xpSystem.currLevel +
-        ", XP: " +
-        this.knight.xpSystem.currXP +
-        ", XP Needed for Next Level: " +
-        (this.knight.xpSystem.xpNeeded - this.knight.xpSystem.currXP),
-      20,
-      170
-    );
+    // level
+    ctx.fillStyle = "white";
+    ctx.font = "15px Arial";
+    ctx.fillText("Level", 21, 700, 90);
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.beginPath();
+    ctx.arc(40, 730, 20, 0, 2 * Math.PI, false);
+    ctx.fillStyle = "black";
+
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = "white";
+    ctx.stroke();
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText(this.knight.xpSystem.currLevel, 31, 740, 90);
+
+    // xp bar
+    var width = 350;
+    ctx.save();
+    ctx.fillStyle = "white";
+    ctx.font = "16px Arial";
+    // ctx.fillText("XP", 100, 730 - 25, width);
+    // ctx.fillStyle = "black";
+    // ctx.fillRect(100 + 1, 730 - 17, width, 5);
+    // ctx.fillStyle = "white";
+    // ctx.fillRect(100, 730 - 16, width, 5);
+    ctx.fillStyle = "#d5479c";
+    ctx.fillRect(100, 730 - 16, Math.max(0, this.knight.xpSystem.currXP / this.knight.xpSystem.xpNeeded) * width, 5);
+    ctx.restore();
+
+    ctx.fillStyle = "white";
+    ctx.font = "12px Arial";
+    ctx.fillText(this.knight.xpSystem.currXP + "/" + this.knight.xpSystem.xpNeeded, 460, 720, width);
+
+    //health bar
+    var width = 350;
+    ctx.save();
+    ctx.fillStyle = "white";
+    ctx.font = "16px Arial";
+    // ctx.fillText("Health", 100, 700 - 25, width);
+    ctx.fillStyle = "black";
+    ctx.fillRect(100 + 1, 740 - 17, width, 15);
+    ctx.fillStyle = "red";
+    ctx.fillRect(100, 740 - 16, width, 15);
+    ctx.fillStyle = "#32CD32";
+    ctx.fillRect(100, 740 - 16, Math.max(0, this.knight.health / this.knight.maxHealth) * width, 15);
+    ctx.restore();
+
+    ctx.fillStyle = "white";
+    ctx.font = "12px Arial";
+    ctx.fillText(this.knight.health + "/" + this.knight.maxHealth, 460, 735, width);
 
     ctx.restore();
 

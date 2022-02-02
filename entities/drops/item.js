@@ -6,7 +6,9 @@ class Item {
 
     // load items and shuffle them
     this.items = [];
+    this.uniques = [];
     this.loadItems();
+    this.getUniques();
     this.randomizeItems();
     this.shuffleArray(this.items);
 
@@ -28,6 +30,10 @@ class Item {
 
     // max pull distance
     this.pullDist = 100;
+  }
+
+  getUniques() {
+    return this.uniques;
   }
 
   animateRarity(item) {
@@ -64,6 +70,7 @@ class Item {
       dropChance: 5, // 5% chance
       desc: "Upon receiving damage that would kill you,\nbe restored to full health (60 sec. cooldown)",
     };
+    this.uniques.push(this.shatterproofSkull);
 
     this.boneThickener = {
       code: "Bone Thickener",
@@ -72,6 +79,7 @@ class Item {
       dropChance: 20, // 20% chance
       desc: "Increase HP by 25 per stack",
     };
+    this.uniques.push(this.boneThickener);
 
     this.spareHeart = {
       code: "Spare Heart",
@@ -80,6 +88,7 @@ class Item {
       dropChance: 10, // 10% chance
       desc: "Upon death, resurrect in place with 5 sec.\nimmunity (lose any stacks gained from items)",
     };
+    this.uniques.push(this.spareHeart);
 
     this.wing = {
       code: "Wing",
@@ -88,6 +97,7 @@ class Item {
       dropChance: 15, // 15% chance
       desc: "Gain 0.25% movement speed per stack",
     };
+    this.uniques.push(this.wing);
 
     this.scale = {
       code: "Scale",
@@ -96,6 +106,7 @@ class Item {
       dropChance: 20, // 20% chance
       desc: "Gain 1 armor (take 1% less damage on hit)",
     };
+    this.uniques.push(this.scale);
 
     this.clover1 = {
       code: "Clover 1",
@@ -104,6 +115,7 @@ class Item {
       dropChance: 23, // 23% chance
       desc: "Gain 5% critical hit chance",
     };
+    this.uniques.push(this.clover1);
 
     this.clover2 = {
       code: "Clover 2",
@@ -112,6 +124,7 @@ class Item {
       dropChance: 4, // 4% chance
       desc: "Gain 10% critical hit chance",
     };
+    this.uniques.push(this.clover2);
 
     this.clover3 = {
       code: "Clover 3",
@@ -120,6 +133,7 @@ class Item {
       dropChance: 2, // 2% chance
       desc: "Gain 15% critical hit chance",
     };
+    this.uniques.push(this.clover3);
 
     this.clover4 = {
       code: "Clover 4",
@@ -128,6 +142,7 @@ class Item {
       dropChance: 1, // 1% chance
       desc: "Gain 25% critical hit chance",
     };
+    this.uniques.push(this.clover4);
   }
 
   randomizeItems() {

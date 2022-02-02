@@ -115,6 +115,7 @@ class Eyeball {
       }
 
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
+      this.game.knight.kills += 1;
     }
 
     var knight = this.game.knight;

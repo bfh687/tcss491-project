@@ -86,7 +86,7 @@ class HUD {
     ctx.fillRect(50, 695 + 25, width, 1);
     ctx.restore();
 
-    ctx.save();
+    //ctx.save();
     ctx.globalAlpha = 0.25;
     ctx.font = "28px Arial";
     ctx.fillStyle = "black";
@@ -114,51 +114,53 @@ class HUD {
 
     // draw item hud and show description on cursor hover
     this.knight.items.forEach((obj) => {
-      // draw item and make bounding box for the current item
-      ctx.drawImage(this.items, obj.item.x, obj.item.y, 32, 32, 15, y_offset, 32, 32);
-      var itemBox = new BoundingBox(15, y_offset, 32, 32);
+      if (obj.count > 0) {
+        // draw item and make bounding box for the current item
+        ctx.drawImage(this.items, obj.item.x, obj.item.y, 32, 32, 15, y_offset, 32, 32);
+        var itemBox = new BoundingBox(15, y_offset, 32, 32);
 
-      // set hover color
-      if (mouseBox.collide(itemBox)) {
-        // outline hovered item
-        ctx.save();
-        ctx.globalAlpha = 0.4;
+        // set hover color
+        if (mouseBox.collide(itemBox)) {
+          // outline hovered item
+          ctx.save();
+          ctx.globalAlpha = 0.4;
 
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 1;
-        ctx.beginPath();
-        ctx.rect(15, y_offset, 32, 32);
-        ctx.stroke();
+          ctx.strokeStyle = "black";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.rect(15, y_offset, 32, 32);
+          ctx.stroke();
 
-        // "draw item description"
-        var desc = obj.item.desc;
+          // "draw item description"
+          var desc = obj.item.desc;
 
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "white";
-
-        var lineheight = 15;
-        var lines = desc.split("\n");
-        if (lines.length > 1) {
-          for (var i = 0; i < lines.length; i++) {
-            ctx.fillStyle = "black";
-            ctx.fillText(lines[i], 65, y_offset + 13 + i * lineheight);
-            ctx.fillStyle = "white";
-            ctx.fillText(lines[i], 64, y_offset + 12 + i * lineheight);
-          }
-        } else {
-          ctx.fillStyle = "black";
-          ctx.fillText(desc, 65, y_offset + 20);
+          ctx.globalAlpha = 1;
           ctx.fillStyle = "white";
-          ctx.fillText(desc, 64, y_offset + 19);
+
+          var lineheight = 15;
+          var lines = desc.split("\n");
+          if (lines.length > 1) {
+            for (var i = 0; i < lines.length; i++) {
+              ctx.fillStyle = "black";
+              ctx.fillText(lines[i], 65, y_offset + 13 + i * lineheight);
+              ctx.fillStyle = "white";
+              ctx.fillText(lines[i], 64, y_offset + 12 + i * lineheight);
+            }
+          } else {
+            ctx.fillStyle = "black";
+            ctx.fillText(desc, 65, y_offset + 20);
+            ctx.fillStyle = "white";
+            ctx.fillText(desc, 64, y_offset + 19);
+          }
+
+          ctx.restore();
         }
 
-        ctx.restore();
+        ctx.fillStyle = "white";
+        ctx.fillText("x" + obj.count, 39, y_offset);
+        count++;
+        y_offset += 48;
       }
-
-      ctx.fillStyle = "white";
-      ctx.fillText("x" + obj.count, 39, y_offset);
-      count++;
-      y_offset += 48;
     });
   }
 }

@@ -11,7 +11,7 @@ class Knight {
     this.textAnimations = [];
     this.animations = [];
     this.loadAnimations();
-
+    this.item = new Item();
     // initialize velocity
     this.velocity = {
       x: 0,
@@ -43,6 +43,7 @@ class Knight {
     this.xpSystem = new XP();
     this.currency = 0;
     this.items = [];
+    this.loadPlayerItems();
 
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
@@ -54,6 +55,16 @@ class Knight {
 
     // information about player movement
     this.speed = 250;
+  }
+
+  loadPlayerItems() {
+    const uniques = this.item.getUniques();
+    for (let i = 0; i < uniques.length; i++) {
+      const item = uniques[i];
+      const count = 0;
+      const newItem = { item: item, count };
+      this.items.push(newItem);
+    }
   }
 
   loadAnimations() {
@@ -412,18 +423,59 @@ class Knight {
     }
   }
 
+  // [0] -> Shatterproof Skull
+  // [1] -> Bone Thickener
+  // [2] -> Spare Heart
+  // [3] -> Wing
+  // [4] -> Scale
+  // [5] -> Clover 1
+  // [6] -> Clover 2
+  // [7] -> Clover 3
+  // [8] -> Clover 4
+
   addItem(item) {
-    let contains = false;
     for (let i = 0; i < this.items.length; i++) {
       if (item.code === this.items[i].item.code) {
         this.items[i].count++;
-        contains = true;
+        if (i === 5 && this.items[i].count >= 3) {
+          // Clover 1 Needs to Upgrade Clover 2
+          let increment = Math.floor(this.items[i].count / 3);
+          let remainder = this.items[i].count % 3;
+          this.items[i].count = remainder;
+          this.items[i + 1].count += increment;
+          if (this.items[i + 1].count >= 3) {
+            let increment = Math.floor(this.items[i + 1].count / 3);
+            let remainder = this.items[i + 1].count % 3;
+            this.items[i + 1].count = remainder;
+            this.items[i + 2].count += increment;
+            if (this.items[i + 2].count >= 3) {
+              let increment = Math.floor(this.items[i + 2].count / 3);
+              let remainder = this.items[i + 2].count % 3;
+              this.items[i + 2].count = remainder;
+              this.items[i + 3].count += increment;
+            }
+          }
+        } else if (i === 6 && this.items[i].count >= 3) {
+          // Clover 2 Needs to Upgrade Clover 3
+          let increment = Math.floor(this.items[i].count / 3);
+          let remainder = this.items[i].count % 3;
+          this.items[i].count = remainder;
+          this.items[i + 1].count += increment;
+          if (this.items[i + 1].count >= 3) {
+            let increment = Math.floor(this.items[i + 1].count / 3);
+            let remainder = this.items[i + 1].count % 3;
+            this.items[i + 1].count = remainder;
+            this.items[i + 2].count += increment;
+          }
+        } else if (i === 7 && this.items[i].count >= 3) {
+          // Clover 3 Needs to Upgrade Clover 4
+          let increment = Math.floor(this.items[i].count / 3);
+          let remainder = this.items[i].count % 3;
+          this.items[i].count = remainder;
+          this.items[i + 1].count += increment;
+        }
       }
     }
-
-    if (!contains) {
-      const newItem = { item: item, count: 1 };
-      this.items.push(newItem);
-    }
+    console.log("Hello");
   }
 }

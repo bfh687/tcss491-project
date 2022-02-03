@@ -38,7 +38,7 @@ class Skeleton {
 
     // misc
     this.alpha = 1;
-    this.xpDropped = 100;
+    this.xpDropped = 25;
   }
 
   loadAnimations() {
@@ -117,8 +117,6 @@ class Skeleton {
       // increment knight kills on death
       this.game.knight.kills += 1;
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
-      console.log(this.game.knight.xpSystem.currXP);
-      console.log(this.game.knight.xpSystem.xpNeeded);
       this.removeFromWorld = true;
       return;
     }

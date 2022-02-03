@@ -12,6 +12,7 @@ class Knight {
     this.animations = [];
     this.loadAnimations();
     this.item = new Item();
+
     // initialize velocity
     this.velocity = {
       x: 0,
@@ -31,7 +32,7 @@ class Knight {
     this.updateBoundingBox();
 
     // information about player stats
-    this.attackDamage = 100;
+    this.attackDamage = 11100;
     this.critMultiplier = 5;
     this.critChance = 0.04;
     this.health = 100;
@@ -40,7 +41,7 @@ class Knight {
     // misc
 
     this.kills = 0;
-    this.xpSystem = new XP();
+    this.xpSystem = new XP(this);
     this.currency = 0;
     this.items = [];
     this.loadPlayerItems();
@@ -109,6 +110,9 @@ class Knight {
   }
 
   update() {
+    this.health += this.game.clockTick;
+    this.health = Math.min(this.health, this.maxHealth);
+
     // update cooldowns
     if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
     if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
@@ -476,6 +480,5 @@ class Knight {
         }
       }
     }
-    console.log("Hello");
   }
 }

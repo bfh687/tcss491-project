@@ -1,5 +1,6 @@
 class XP {
-  constructor() {
+  constructor(knight) {
+    this.knight = knight;
     this.baseXP = 1000;
     this.currLevel = 1;
     this.currXP = 0;
@@ -9,8 +10,8 @@ class XP {
 
   incrementXP(xp) {
     this.currXP += xp;
-    if (this.currXP >= this.xpNeeded) {
-      this.currXP = this.currXP % this.xpNeeded;
+    while (this.currXP >= this.xpNeeded) {
+      this.currXP -= this.xpNeeded;
       this.level();
     }
   }
@@ -19,6 +20,9 @@ class XP {
     this.currLevel++;
     this.skillPoints++;
     this.xpNeeded = Math.pow(1.1, this.currLevel - 1) * this.baseXP;
+
+    // testing hp scaling by level
+    this.knight.maxHealth = Math.round(this.knight.maxHealth * 1.1);
   }
 
   purchaseSkill(levels) {

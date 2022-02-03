@@ -87,7 +87,7 @@ class HUD {
     ctx.fillRect(50, 695 + 25, width, 1);
     ctx.restore();
 
-    //ctx.save();
+    ctx.save();
     ctx.globalAlpha = 0.25;
     ctx.font = "28px Arial";
     ctx.fillStyle = "black";

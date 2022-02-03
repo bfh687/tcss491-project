@@ -302,7 +302,6 @@ class Knight {
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
           if (this.state != 2) this.state = 3;
           this.handleAttackCollision(entity, this);
-          this.health -= entity.attackDamage * this.game.clockTick;
         }
       }
 
@@ -404,14 +403,15 @@ class Knight {
 
   handleAttackCollision(attacker, attacked) {
     var damage = attacker.attackDamage * this.game.clockTick;
-    attacked.health -= damage;
 
     // calculate crit chance
     var color = "red";
-    if (Math.random() <= this.critChance) {
+    if (Math.random() <= this.critChance && attacker instanceof Knight) {
       damage *= this.critMultiplier;
       color = "yellow";
     }
+
+    attacked.health -= damage;
 
     var flag = true;
     for (var i = 0; i < attacked.textAnimations.length; i++) {

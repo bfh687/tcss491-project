@@ -38,6 +38,7 @@ class HUD {
 
     // fps counter
     ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 150);
+    ctx.restore();
 
     // xp bar
     var width = 250;

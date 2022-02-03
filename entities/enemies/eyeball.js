@@ -27,7 +27,7 @@ class Eyeball {
     // information about stats + attacking;
     this.health = 100;
     this.maxHealth = 100;
-    this.attackDamage = 0;
+    this.attackDamage = 15000;
     this.attackCooldown = 2;
 
     // information about eyeball movement

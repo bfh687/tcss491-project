@@ -67,7 +67,7 @@ class Item {
       code: "Shatterproof Skull",
       x: 0,
       y: 0,
-      dropChance: 5, // 5% chance
+      dropChance: 2, // 2% chance
       desc: "Upon receiving damage that would kill you,\nbe restored to full health (60 sec. cooldown)",
     };
     this.uniques.push(this.shatterproofSkull);
@@ -84,9 +84,9 @@ class Item {
     this.spareHeart = {
       code: "Spare Heart",
       x: 64,
-      y: 0,
+      y: 10,
       dropChance: 10, // 10% chance
-      desc: "Upon death, resurrect in place with 5 sec.\nimmunity (lose any stacks gained from items)",
+      desc: "Instantly Regen to Max Health",
     };
     this.uniques.push(this.spareHeart);
 

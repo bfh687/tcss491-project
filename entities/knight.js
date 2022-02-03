@@ -32,11 +32,13 @@ class Knight {
     this.updateBoundingBox();
 
     // information about player stats
-    this.attackDamage = 11100;
+    this.attackDamage = 200;
     this.critMultiplier = 5;
-    this.critChance = 0.04;
+    this.critChance = 0;
     this.health = 100;
     this.maxHealth = 100;
+    this.armor = 1;
+    this.regenRate = 2;
 
     // misc
 
@@ -110,16 +112,24 @@ class Knight {
   }
 
   update() {
-    this.health += this.game.clockTick;
-    this.health = Math.min(this.health, this.maxHealth);
+    if (this.state != 4) {
+      this.health += this.game.clockTick * this.regenRate;
+      this.health = Math.min(this.health, this.maxHealth);
 
-    // update cooldowns
-    if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
-    if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
+      // update cooldowns
+      if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
+      if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
+    }
 
     // set death state upon losing all health
     if (this.health <= 0) {
-      this.state = 4;
+      if (this.items[0].count > 0) {
+        this.health = this.maxHealth;
+        this.items[0].count--;
+      } else {
+        this.state = 4;
+        this.health = 0;
+      }
     }
 
     // handle attacking state + animations
@@ -437,10 +447,66 @@ class Knight {
   // [7] -> Clover 3
   // [8] -> Clover 4
 
+  collectSpareHeart() {
+    this.health = this.maxHealth;
+    this.items[2].count--;
+  }
+
+  collectBoneThickener() {
+    this.maxHealth += 25;
+    this.health += 25;
+  }
+
+  collectWing() {
+    this.speed = Math.ceil(this.speed * 1.005);
+    console.log(this.speed);
+  }
+
+  collectScale() {
+    this.armor -= 0.01;
+  }
+
+  collectClover1() {
+    this.critChance += 0.05;
+  }
+
+  collectClover2() {
+    this.critChance += 0.1;
+  }
+
+  collectClover3() {
+    this.critChance += 0.15;
+  }
+
+  collectClover4() {
+    this.critChance += 0.25;
+  }
+
   addItem(item) {
     for (let i = 0; i < this.items.length; i++) {
       if (item.code === this.items[i].item.code) {
+        if (this.items[i].count == 25) {
+          break;
+        }
         this.items[i].count++;
+        if (i === 1) {
+          this.collectBoneThickener();
+        } else if (i === 2) {
+          this.collectSpareHeart();
+        } else if (i === 3) {
+          this.collectWing();
+        } else if (i === 4) {
+          this.collectScale();
+        } else if (i === 5) {
+          this.collectClover1();
+        } else if (i === 6) {
+          this.collectClover2();
+        } else if (i === 7) {
+          this.collectClover3();
+        } else if (i === 8) {
+          this.collectClover4();
+        }
+
         if (i === 5 && this.items[i].count >= 3) {
           // Clover 1 Needs to Upgrade Clover 2
           let increment = Math.floor(this.items[i].count / 3);

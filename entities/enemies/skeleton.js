@@ -28,7 +28,7 @@ class Skeleton {
     // information about stats + attacking
     this.maxHealth = 100;
     this.health = 100;
-    this.attackDamage = 0;
+    this.attackDamage = 10;
     this.attackCooldown = 1;
 
     // information about skeleton movement

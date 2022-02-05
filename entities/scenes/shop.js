@@ -172,7 +172,7 @@ class ShopUI {
       //item
       ctx.drawImage(this.items, 0, 0, 32, 32, this.itemStartX + 2, 70 + 768 / 2 - 325, 32 * 2, 32 * 2);
       var itemBoxGoggles = new BoundingBox(this.itemStartX + 2, 70 + 768 / 2 - 325, 32 * 2, 32 * 2);
-      if (mouseBox.collide(itemBoxGoggles) && this.game.left_click) {
+      if (mouseBox.collide(itemBoxGoggles) && this.game.single_click) {
         // outline hovered item
 
         if (this.shop.skillPoints > 0) {
@@ -180,8 +180,9 @@ class ShopUI {
           this.game.knight.xpSystem.skillPoints--;
           console.log(this.shop.gogglesLevel);
         } else {
-          console.log("NO SKILL POINTS");
+          console.log("NO SKILL POINTS AVAILABLE");
         }
+        this.game.single_click = false;
         ctx.save();
 
         // ADD COUNT TO ITEM
@@ -224,7 +225,7 @@ class ShopUI {
       //item
       ctx.drawImage(this.items, 32, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
       var itemBoxArmor = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
-      if (mouseBox.collide(itemBoxArmor) && this.game.left_click) {
+      if (mouseBox.collide(itemBoxArmor) && this.game.single_click) {
         // outline hovered item
 
         if (this.shop.skillPoints > 0) {
@@ -232,8 +233,10 @@ class ShopUI {
           this.game.knight.xpSystem.skillPoints--;
           console.log(this.shop.armorLevel);
         } else {
-          console.log("NO SKILL POINTS");
+          console.log("NO SKILL POINTS AVAILABLE");
         }
+        this.game.single_click = false;
+
         ctx.save();
 
         // ADD COUNT TO ITEM
@@ -279,7 +282,7 @@ class ShopUI {
       //item
       ctx.drawImage(this.items, 64, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2, 32 * 1.75, 32 * 1.75);
       var itemBoxPotion = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2, 32 * 1.75, 32 * 1.75);
-      if (mouseBox.collide(itemBoxPotion) && this.game.left_click) {
+      if (mouseBox.collide(itemBoxPotion) && this.game.single_click) {
         // outline hovered item
 
         if (this.shop.skillPoints > 0) {
@@ -287,8 +290,10 @@ class ShopUI {
           this.game.knight.xpSystem.skillPoints--;
           console.log(this.shop.potionLevel);
         } else {
-          console.log("NO SKILL POINTS");
+          console.log("NO SKILL POINTS AVAILABLE");
         }
+        this.game.single_click = false;
+
         ctx.save();
 
         // ADD COUNT TO ITEM
@@ -327,7 +332,7 @@ class ShopUI {
 
       ctx.drawImage(this.items, 96, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 3, 32 * 2, 32 * 2);
       var itemBoxDagger = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 3, 32 * 2, 32 * 2);
-      if (mouseBox.collide(itemBoxDagger) && this.game.left_click) {
+      if (mouseBox.collide(itemBoxDagger) && this.game.single_click) {
         // outline hovered item
 
         if (this.shop.skillPoints > 0) {
@@ -335,8 +340,10 @@ class ShopUI {
           this.game.knight.xpSystem.skillPoints--;
           console.log(this.shop.daggerLevel);
         } else {
-          console.log("NO SKILL POINTS");
+          console.log("NO SKILL POINTS AVAILABLE");
         }
+        this.game.single_click = false;
+
         ctx.save();
 
         // ADD COUNT TO ITEM

@@ -94,22 +94,6 @@ class Shop {
       drawBoundingBox(this.boundingBox, ctx, this.game, "white");
     }
   }
-
-  levelGoggles() {
-    this.gogglesLevel++;
-  }
-
-  levelArmor() {
-    this.armorLevel++;
-  }
-
-  levelPotion() {
-    this.potionLevel++;
-  }
-
-  levelDagger() {
-    this.daggerLevel++;
-  }
 }
 
 class ShopUI {
@@ -139,6 +123,7 @@ class ShopUI {
       ctx.font = "30px Arial";
       var width = ctx.measureText("SHOP").width / 2;
       var widthSP = ctx.measureText("SP").width / 2;
+      var widthPoints = ctx.measureText(this.shop.skillPoints).width / 2;
       ctx.fillStyle = "black";
       ctx.fillText("SHOP", 1366 / 2 - width + 1, 40 + 40 + 1);
       ctx.fillStyle = "white";
@@ -162,9 +147,9 @@ class ShopUI {
       //sp
       ctx.font = "40px Arial";
       ctx.fillStyle = "black";
-      ctx.fillText(this.shop.skillPoints, 1366 / 2 - 100 - 120 / 2 - 18, 70 + 768 / 2 - 325 + 52);
+      ctx.fillText(this.shop.skillPoints, 1366 / 2 - widthPoints - 174 + 1, 70 + 768 / 2 - 325 + 52);
       ctx.fillStyle = "white";
-      ctx.fillText(this.shop.skillPoints, 1366 / 2 - 100 - 120 / 2 - 20, 70 + 768 / 2 - 325 + 50);
+      ctx.fillText(this.shop.skillPoints, 1366 / 2 - widthPoints - 174, 70 + 768 / 2 - 325 + 50);
 
       var mouseBox = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
       // GERONIMOS GOGGLES
@@ -173,24 +158,7 @@ class ShopUI {
       ctx.drawImage(this.items, 0, 0, 32, 32, this.itemStartX + 2, 70 + 768 / 2 - 325, 32 * 2, 32 * 2);
       var itemBoxGoggles = new BoundingBox(this.itemStartX + 2, 70 + 768 / 2 - 325, 32 * 2, 32 * 2);
       if (mouseBox.collide(itemBoxGoggles) && this.game.single_click) {
-        // outline hovered item
-
-        if (this.shop.skillPoints > 0) {
-          this.shop.gogglesLevel++;
-          this.game.knight.xpSystem.skillPoints--;
-          console.log(this.shop.gogglesLevel);
-        } else {
-          console.log("NO SKILL POINTS AVAILABLE");
-        }
-        this.game.single_click = false;
-        ctx.save();
-
-        // ADD COUNT TO ITEM
-
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "white";
-
-        ctx.restore();
+        this.levelGoggles();
       }
       //container
       // ctx.strokeStyle = "orange";
@@ -226,25 +194,7 @@ class ShopUI {
       ctx.drawImage(this.items, 32, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
       var itemBoxArmor = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
       if (mouseBox.collide(itemBoxArmor) && this.game.single_click) {
-        // outline hovered item
-
-        if (this.shop.skillPoints > 0) {
-          this.shop.armorLevel++;
-          this.game.knight.xpSystem.skillPoints--;
-          console.log(this.shop.armorLevel);
-        } else {
-          console.log("NO SKILL POINTS AVAILABLE");
-        }
-        this.game.single_click = false;
-
-        ctx.save();
-
-        // ADD COUNT TO ITEM
-
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "white";
-
-        ctx.restore();
+        this.levelArmor();
       }
 
       //container
@@ -283,25 +233,7 @@ class ShopUI {
       ctx.drawImage(this.items, 64, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2, 32 * 1.75, 32 * 1.75);
       var itemBoxPotion = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2, 32 * 1.75, 32 * 1.75);
       if (mouseBox.collide(itemBoxPotion) && this.game.single_click) {
-        // outline hovered item
-
-        if (this.shop.skillPoints > 0) {
-          this.shop.potionLevel++;
-          this.game.knight.xpSystem.skillPoints--;
-          console.log(this.shop.potionLevel);
-        } else {
-          console.log("NO SKILL POINTS AVAILABLE");
-        }
-        this.game.single_click = false;
-
-        ctx.save();
-
-        // ADD COUNT TO ITEM
-
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "white";
-
-        ctx.restore();
+        this.levelPotion();
       }
       //text
       ctx.fillStyle = "red";
@@ -333,25 +265,7 @@ class ShopUI {
       ctx.drawImage(this.items, 96, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 3, 32 * 2, 32 * 2);
       var itemBoxDagger = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 3, 32 * 2, 32 * 2);
       if (mouseBox.collide(itemBoxDagger) && this.game.single_click) {
-        // outline hovered item
-
-        if (this.shop.skillPoints > 0) {
-          this.shop.daggerLevel++;
-          this.game.knight.xpSystem.skillPoints--;
-          console.log(this.shop.daggerLevel);
-        } else {
-          console.log("NO SKILL POINTS AVAILABLE");
-        }
-        this.game.single_click = false;
-
-        ctx.save();
-
-        // ADD COUNT TO ITEM
-
-        ctx.globalAlpha = 1;
-        ctx.fillStyle = "white";
-
-        ctx.restore();
+        this.levelDagger();
       }
       // text
       ctx.fillStyle = "magenta";
@@ -380,5 +294,101 @@ class ShopUI {
       // remove from world if associated shop isnt active
       this.removeFromWorld = true;
     }
+  }
+
+  levelGoggles() {
+    if (this.shop.skillPoints > 0 && this.shop.gogglesLevel < this.shop.itemLevels) {
+      if (this.shop.gogglesLevel == 0) {
+        this.shop.gogglesLevel++;
+        this.game.knight.xpSystem.skillPoints--;
+      } else if (this.shop.gogglesLevel == 1 && this.shop.skillPoints > 1) {
+        this.shop.gogglesLevel++;
+        this.game.knight.xpSystem.skillPoints -= 2;
+      } else if (this.shop.gogglesLevel == 2 && this.shop.skillPoints > 2) {
+        this.shop.gogglesLevel++;
+        this.game.knight.xpSystem.skillPoints -= 3;
+      } else if (this.shop.gogglesLevel == 3 && this.shop.skillPoints > 3) {
+        this.shop.gogglesLevel++;
+        this.game.knight.xpSystem.skillPoints -= 4;
+      }
+    } else if (this.shop.gogglesLevel == this.shop.itemLevels) {
+      console.log("MAX LEVEL");
+    } else {
+      console.log("Not enough SP");
+    }
+    this.game.single_click = false;
+    this.game.knight.gogglesLevel = this.shop.gogglesLevel;
+  }
+
+  levelArmor() {
+    if (this.shop.skillPoints > 0 && this.shop.armorLevel < this.shop.itemLevels) {
+      if (this.shop.armorLevel == 0) {
+        this.shop.armorLevel++;
+        this.game.knight.xpSystem.skillPoints--;
+      } else if (this.shop.armorLevel == 1 && this.shop.skillPoints > 1) {
+        this.shop.armorLevel++;
+        this.game.knight.xpSystem.skillPoints -= 2;
+      } else if (this.shop.armorLevel == 2 && this.shop.skillPoints > 2) {
+        this.shop.armorLevel++;
+        this.game.knight.xpSystem.skillPoints -= 3;
+      } else if (this.shop.armorLevel == 3 && this.shop.skillPoints > 3) {
+        this.shop.armorLevel++;
+        this.game.knight.xpSystem.skillPoints -= 4;
+      }
+    } else if (this.shop.armorLevel == this.shop.itemLevels) {
+      console.log("MAX LEVEL");
+    } else {
+      console.log("Not enough SP");
+    }
+    this.game.single_click = false;
+    this.game.knight.armorLevel = this.shop.armorLevel;
+  }
+
+  levelPotion() {
+    if (this.shop.skillPoints > 0 && this.shop.potionLevel < this.shop.itemLevels) {
+      if (this.shop.potionLevel == 0) {
+        this.shop.potionLevel++;
+        this.game.knight.xpSystem.skillPoints--;
+      } else if (this.shop.potionLevel == 1 && this.shop.skillPoints > 1) {
+        this.shop.potionLevel++;
+        this.game.knight.xpSystem.skillPoints -= 2;
+      } else if (this.shop.potionLevel == 2 && this.shop.skillPoints > 2) {
+        this.shop.potionLevel++;
+        this.game.knight.xpSystem.skillPoints -= 3;
+      } else if (this.shop.potionLevel == 3 && this.shop.skillPoints > 3) {
+        this.shop.potionLevel++;
+        this.game.knight.xpSystem.skillPoints -= 4;
+      }
+    } else if (this.shop.potionLevel == this.shop.itemLevels) {
+      console.log("MAX LEVEL");
+    } else {
+      console.log("Not enough SP");
+    }
+    this.game.single_click = false;
+    this.game.knight.potionLevel = this.shop.potionLevel;
+  }
+
+  levelDagger() {
+    if (this.shop.skillPoints > 0 && this.shop.daggerLevel < this.shop.itemLevels) {
+      if (this.shop.daggerLevel == 0) {
+        this.shop.daggerLevel++;
+        this.game.knight.xpSystem.skillPoints--;
+      } else if (this.shop.daggerLevel == 1 && this.shop.skillPoints > 1) {
+        this.shop.daggerLevel++;
+        this.game.knight.xpSystem.skillPoints -= 2;
+      } else if (this.shop.daggerLevel == 2 && this.shop.skillPoints > 2) {
+        this.shop.daggerLevel++;
+        this.game.knight.xpSystem.skillPoints -= 3;
+      } else if (this.shop.daggerLevel == 3 && this.shop.skillPoints > 3) {
+        this.shop.daggerLevel++;
+        this.game.knight.xpSystem.skillPoints -= 4;
+      }
+    } else if (this.shop.daggerLevel == this.shop.itemLevels) {
+      console.log("MAX LEVEL");
+    } else {
+      console.log("Not enough SP");
+    }
+    this.game.single_click = false;
+    this.game.knight.daggerLevel = this.shop.daggerLevel;
   }
 }

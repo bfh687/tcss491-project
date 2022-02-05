@@ -27,8 +27,11 @@ class Eyeball {
     // information about stats + attacking;
     this.health = 100;
     this.maxHealth = 100;
-    this.attackDamage = 15000;
+    this.attackDamage = 1500;
     this.attackCooldown = 2;
+
+    this.isBleeding = false;
+    this.bleedingCooldown = 1;
 
     // information about eyeball movement
     this.aggroDist = 200;
@@ -74,9 +77,19 @@ class Eyeball {
       this.attackCooldown -= this.game.clockTick;
     }
 
-    // if dead, remove from world
-    if (this.health <= 0) {
-      this.state = 5;
+    if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
+
+    if (this.isBleeding) {
+      if (this.bleedingCooldown <= 0) {
+        this.bleed();
+        console.log("TICK");
+        this.bleedingCooldown = 1;
+      }
+
+      // if dead, remove from world
+      if (this.health <= 0) {
+        this.state = 5;
+      }
     }
 
     // handle attacking state + animations
@@ -206,6 +219,11 @@ class Eyeball {
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
     this.updateBoundingBox();
+  }
+
+  bleed() {
+    this.health = Math.max(this.health - this.bleedDamage, 0);
+    this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
   }
 
   updateBoundingBox() {

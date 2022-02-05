@@ -26,10 +26,13 @@ class Skeleton {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 100;
-    this.health = 100;
+    this.maxHealth = 1000;
+    this.health = 1000;
     this.attackDamage = 10;
     this.attackCooldown = 1;
+
+    this.isBleeding = false;
+    this.bleedingCooldown = 1;
 
     // information about skeleton movement
     this.aggroDist = 250;
@@ -69,6 +72,16 @@ class Skeleton {
     // decrement cooldowns
     if (this.state != 2) {
       this.attackCooldown -= this.game.clockTick;
+    }
+
+    if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
+
+    if (this.isBleeding) {
+      if (this.bleedingCooldown <= 0) {
+        this.bleed();
+        console.log("TICK");
+        this.bleedingCooldown = 1;
+      }
     }
 
     // enraged !
@@ -207,6 +220,11 @@ class Skeleton {
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
     this.updateBoundingBox();
+  }
+
+  bleed() {
+    this.health = Math.max(this.health - this.bleedDamage, 0);
+    this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
   }
 
   updateBoundingBox() {

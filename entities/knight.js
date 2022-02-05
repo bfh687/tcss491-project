@@ -31,6 +31,10 @@ class Knight {
     // bounding box for collisions
     this.updateBoundingBox();
 
+    // goggles
+    this.gogglesLevel = 0;
+    this.gogglesMultiplier = 1.5;
+
     // information about player stats
     this.attackDamage = 200;
     this.critMultiplier = 5;
@@ -44,6 +48,21 @@ class Knight {
 
     this.kills = 0;
     this.xpSystem = new XP(this);
+
+    // armor
+    this.armorLevel = 0;
+    this.armorDeflect = 1;
+
+    // potion
+    this.potionLevel = 0;
+    this.potionRegen = 0.025;
+    this.potionCooldown = 1;
+
+    // dagger
+    this.daggerLevel = 0;
+    this.daggerBleed = 5;
+    this.bleedDuration = 5000;
+
     this.currency = 0;
     this.items = [];
     this.loadPlayerItems();
@@ -113,12 +132,10 @@ class Knight {
 
   update() {
     if (this.state != 4) {
-      this.health += this.game.clockTick * this.regenRate;
-      this.health = Math.min(this.health, this.maxHealth);
-
       // update cooldowns
       if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
       if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
+      if (this.potionCooldown > 0) this.potionCooldown -= this.game.clockTick;
     }
 
     // set death state upon losing all health
@@ -186,6 +203,14 @@ class Knight {
     else if (up) this.direction = 2;
     else if (down) this.direction = 3;
 
+    // handle hp / sec
+    if (this.potionCooldown <= 0 && this.health < this.maxHealth) {
+      this.health = Math.min(this.health + Math.floor(this.potionRegen * this.potionLevel * this.maxHealth), this.maxHealth);
+      this.potionCooldown = 1;
+    } else {
+      this.health += this.game.clockTick * this.regenRate;
+      this.health = Math.min(this.health, this.maxHealth);
+    }
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
@@ -412,16 +437,36 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
+    // DAMAGE TO BE DEFLECTED
+    var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
+
     var damage = attacker.attackDamage * this.game.clockTick;
 
     // calculate crit chance
     var color = "red";
-    if (Math.random() <= this.critChance && attacker instanceof Knight) {
-      damage *= this.critMultiplier;
-      color = "yellow";
+    if (attacker instanceof Knight) {
+      var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
+      damage *= damageMultiplier;
+      if (Math.random() <= this.critChance) {
+        damage *= this.critMultiplier;
+        color = "yellow";
+      }
+      if (this.daggerLevel > 0 && !attacked.isBleeding) {
+        attacked.isBleeding = true;
+        setTimeout(() => {
+          attacked.isBleeding = false;
+        }, this.bleedDuration);
+        attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
+      }
+    } else if (attacked instanceof Knight) {
+      // ARMOR DEFLECTING DAMAGE BACK
+      let initDmg = damage;
+
+      damage *= deflectPercentage;
+      attacker.health -= Math.ceil(initDmg * (1 - deflectPercentage));
     }
 
-    attacked.health -= damage;
+    attacked.health -= Math.max(0, damage);
 
     var flag = true;
     for (var i = 0; i < attacked.textAnimations.length; i++) {
@@ -459,7 +504,6 @@ class Knight {
 
   collectWing() {
     this.speed = Math.ceil(this.speed * 1.005);
-    console.log(this.speed);
   }
 
   collectScale() {

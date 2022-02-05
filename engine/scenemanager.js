@@ -19,8 +19,6 @@ class SceneManager {
     });
   }
 
-  //rand
-
   loadLevel(x, y, transition, title) {
     this.clearEntities();
     for (var i = 0; i < 50; i++) this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
@@ -35,6 +33,7 @@ class SceneManager {
 
     this.game.addEntity(this.knight);
     this.game.addEntity(new Shop(this.game, 1366 / 2 + 50 * 16 - 85, 670));
+
     this.game.addEntity(new Map(this.game, 310, 270));
 
     this.title = title;

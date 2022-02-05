@@ -482,6 +482,7 @@ class Knight {
     }
   }
 
+  //rand
   // [0] -> Shatterproof Skull
   // [1] -> Bone Thickener
   // [2] -> Spare Heart

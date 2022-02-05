@@ -25,8 +25,8 @@ class Eyeball {
     this.updateBoundingBox();
 
     // information about stats + attacking;
-    this.health = 100;
-    this.maxHealth = 100;
+    this.health = 500;
+    this.maxHealth = 500;
     this.attackDamage = 1500;
     this.attackCooldown = 2;
 

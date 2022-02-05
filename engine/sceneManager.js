@@ -22,8 +22,8 @@ class SceneManager {
   loadLevel(x, y, transition, title) {
     this.clearEntities();
     this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
     // this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
     // this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
     // this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));

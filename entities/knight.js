@@ -11,6 +11,7 @@ class Knight {
     this.textAnimations = [];
     this.animations = [];
     this.loadAnimations();
+    this.item = new Item();
 
     // initialize velocity
     this.velocity = {
@@ -30,18 +31,41 @@ class Knight {
     // bounding box for collisions
     this.updateBoundingBox();
 
+    // goggles
+    this.gogglesLevel = 0;
+    this.gogglesMultiplier = 1.5;
+
     // information about player stats
-    this.attackDamage = 100;
+    this.attackDamage = 200;
     this.critMultiplier = 5;
-    this.critChance = 0.04;
+    this.critChance = 0;
     this.health = 100;
     this.maxHealth = 100;
+    this.armor = 1;
+    this.regenRate = 2;
 
     // misc
+
     this.kills = 0;
-    this.xp = 0;
+    this.xpSystem = new XP(this);
+
+    // armor
+    this.armorLevel = 0;
+    this.armorDeflect = 1;
+
+    // potion
+    this.potionLevel = 0;
+    this.potionRegen = 0.025;
+    this.potionCooldown = 1;
+
+    // dagger
+    this.daggerLevel = 0;
+    this.daggerBleed = 5;
+    this.bleedDuration = 5000;
+
     this.currency = 0;
     this.items = [];
+    this.loadPlayerItems();
 
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
@@ -53,6 +77,16 @@ class Knight {
 
     // information about player movement
     this.speed = 250;
+  }
+
+  loadPlayerItems() {
+    const uniques = this.item.getUniques();
+    for (let i = 0; i < uniques.length; i++) {
+      const item = uniques[i];
+      const count = 0;
+      const newItem = { item: item, count };
+      this.items.push(newItem);
+    }
   }
 
   loadAnimations() {
@@ -97,13 +131,22 @@ class Knight {
   }
 
   update() {
-    // update cooldowns
-    if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
-    if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
+    if (this.state != 4) {
+      // update cooldowns
+      if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
+      if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
+      if (this.potionCooldown > 0) this.potionCooldown -= this.game.clockTick;
+    }
 
     // set death state upon losing all health
     if (this.health <= 0) {
-      this.state = 4;
+      if (this.items[0].count > 0) {
+        this.health = this.maxHealth;
+        this.items[0].count--;
+      } else {
+        this.state = 4;
+        this.health = 0;
+      }
     }
 
     // handle attacking state + animations
@@ -160,6 +203,14 @@ class Knight {
     else if (up) this.direction = 2;
     else if (down) this.direction = 3;
 
+    // handle hp / sec
+    if (this.potionCooldown <= 0 && this.health < this.maxHealth) {
+      this.health = Math.min(this.health + Math.floor(this.potionRegen * this.potionLevel * this.maxHealth), this.maxHealth);
+      this.potionCooldown = 1;
+    } else {
+      this.health += this.game.clockTick * this.regenRate;
+      this.health = Math.min(this.health, this.maxHealth);
+    }
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
@@ -229,7 +280,7 @@ class Knight {
       this.textAnimations[i].drawText(ctx);
     }
 
-    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    //drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
   }
 
   checkCollisions() {
@@ -286,7 +337,6 @@ class Knight {
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
           if (this.state != 2) this.state = 3;
           this.handleAttackCollision(entity, this);
-          this.health -= entity.attackDamage * this.game.clockTick;
         }
       }
 
@@ -305,6 +355,18 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
+      } else if (entity instanceof Shop) {
+        // handle sliding collisions
+        var slideMultiplier = 1;
+        if (this.state == 5) slideMultiplier = 6;
+
+        // get bounding boxes of NEXT tick (assuming no major changes in fps)
+        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+
+        // check for and handle collisions
+        if (verticalBox.collide(entity.boundingBox)) this.velocity.y = 0;
+        if (horizontalBox.collide(entity.boundingBox)) this.velocity.x = 0;
       }
 
       // handle item collision/pickup
@@ -375,15 +437,36 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
+    // DAMAGE TO BE DEFLECTED
+    var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
+
     var damage = attacker.attackDamage * this.game.clockTick;
-    attacked.health -= damage;
 
     // calculate crit chance
     var color = "red";
-    if (Math.random() <= this.critChance) {
-      damage *= this.critMultiplier;
-      color = "yellow";
+    if (attacker instanceof Knight) {
+      var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
+      damage *= damageMultiplier;
+      if (Math.random() <= this.critChance) {
+        damage *= this.critMultiplier;
+        color = "yellow";
+      }
+      if (this.daggerLevel > 0 && !attacked.isBleeding) {
+        attacked.isBleeding = true;
+        setTimeout(() => {
+          attacked.isBleeding = false;
+        }, this.bleedDuration);
+        attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
+      }
+    } else if (attacked instanceof Knight) {
+      // ARMOR DEFLECTING DAMAGE BACK
+      let initDmg = damage;
+
+      damage *= deflectPercentage;
+      attacker.health -= Math.ceil(initDmg - damage);
     }
+
+    attacked.health -= Math.max(0, damage);
 
     var flag = true;
     for (var i = 0; i < attacked.textAnimations.length; i++) {
@@ -399,18 +482,114 @@ class Knight {
     }
   }
 
+  //rand
+  // [0] -> Shatterproof Skull
+  // [1] -> Bone Thickener
+  // [2] -> Spare Heart
+  // [3] -> Wing
+  // [4] -> Scale
+  // [5] -> Clover 1
+  // [6] -> Clover 2
+  // [7] -> Clover 3
+  // [8] -> Clover 4
+
+  collectSpareHeart() {
+    this.health = this.maxHealth;
+    this.items[2].count--;
+  }
+
+  collectBoneThickener() {
+    this.maxHealth += 25;
+    this.health += 25;
+  }
+
+  collectWing() {
+    this.speed = Math.ceil(this.speed * 1.005);
+  }
+
+  collectScale() {
+    this.armor -= 0.01;
+  }
+
+  collectClover1() {
+    this.critChance += 0.05;
+  }
+
+  collectClover2() {
+    this.critChance += 0.1;
+  }
+
+  collectClover3() {
+    this.critChance += 0.15;
+  }
+
+  collectClover4() {
+    this.critChance += 0.25;
+  }
+
   addItem(item) {
-    let contains = false;
     for (let i = 0; i < this.items.length; i++) {
       if (item.code === this.items[i].item.code) {
+        if (this.items[i].count == 25) {
+          break;
+        }
         this.items[i].count++;
-        contains = true;
-      }
-    }
+        if (i === 1) {
+          this.collectBoneThickener();
+        } else if (i === 2) {
+          this.collectSpareHeart();
+        } else if (i === 3) {
+          this.collectWing();
+        } else if (i === 4) {
+          this.collectScale();
+        } else if (i === 5) {
+          this.collectClover1();
+        } else if (i === 6) {
+          this.collectClover2();
+        } else if (i === 7) {
+          this.collectClover3();
+        } else if (i === 8) {
+          this.collectClover4();
+        }
 
-    if (!contains) {
-      const newItem = { item: item, count: 1 };
-      this.items.push(newItem);
+        if (i === 5 && this.items[i].count >= 3) {
+          // Clover 1 Needs to Upgrade Clover 2
+          let increment = Math.floor(this.items[i].count / 3);
+          let remainder = this.items[i].count % 3;
+          this.items[i].count = remainder;
+          this.items[i + 1].count += increment;
+          if (this.items[i + 1].count >= 3) {
+            let increment = Math.floor(this.items[i + 1].count / 3);
+            let remainder = this.items[i + 1].count % 3;
+            this.items[i + 1].count = remainder;
+            this.items[i + 2].count += increment;
+            if (this.items[i + 2].count >= 3) {
+              let increment = Math.floor(this.items[i + 2].count / 3);
+              let remainder = this.items[i + 2].count % 3;
+              this.items[i + 2].count = remainder;
+              this.items[i + 3].count += increment;
+            }
+          }
+        } else if (i === 6 && this.items[i].count >= 3) {
+          // Clover 2 Needs to Upgrade Clover 3
+          let increment = Math.floor(this.items[i].count / 3);
+          let remainder = this.items[i].count % 3;
+          this.items[i].count = remainder;
+          this.items[i + 1].count += increment;
+          if (this.items[i + 1].count >= 3) {
+            let increment = Math.floor(this.items[i + 1].count / 3);
+            let remainder = this.items[i + 1].count % 3;
+            this.items[i + 1].count = remainder;
+            this.items[i + 2].count += increment;
+          }
+        } else if (i === 7 && this.items[i].count >= 3) {
+          // Clover 3 Needs to Upgrade Clover 4
+          let increment = Math.floor(this.items[i].count / 3);
+          let remainder = this.items[i].count % 3;
+          this.items[i].count = remainder;
+          this.items[i + 1].count += increment;
+        }
+      }
     }
   }
 }

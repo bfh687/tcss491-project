@@ -14,14 +14,17 @@ ASSET_MANAGER.queueDownload("./sprites/entities/eyeball.png");
 
 // cursor downloads
 ASSET_MANAGER.queueDownload("./sprites/hud/cursor.png");
+ASSET_MANAGER.queueDownload("./sprites/hud/icons.png");
 
 // misc asset downloads
 ASSET_MANAGER.queueDownload("./sprites/items/items.png");
+ASSET_MANAGER.queueDownload("./sprites/items/shopitems.png");
 ASSET_MANAGER.queueDownload("./sprites/items/goggles.png");
 
 // level downloads
 ASSET_MANAGER.queueDownload("./sprites/map/prototype_hub.png");
 ASSET_MANAGER.queueDownload("./sprites/map/alt_hub.png");
+ASSET_MANAGER.queueDownload("./sprites/map/shop.png");
 
 ASSET_MANAGER.downloadAll(() => {
   const canvas = document.getElementById("gameWorld");

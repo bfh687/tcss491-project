@@ -32,6 +32,8 @@ class SceneManager {
     this.game.addEntity(new HUD(this.game, this.knight));
 
     this.game.addEntity(this.knight);
+    this.game.addEntity(new Shop(this.game, 1366 / 2 + 50 * 16 - 85, 670));
+
     this.game.addEntity(new Map(this.game, 310, 270));
 
     this.title = title;

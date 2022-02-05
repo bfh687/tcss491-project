@@ -15,6 +15,7 @@ class GameEngine {
     this.click = false;
     this.left_click = false;
     this.keys = {};
+    this.single_click = false;
 
     // information about pointer lock
     this.locked = false;
@@ -111,6 +112,10 @@ class GameEngine {
 
     this.ctx.canvas.addEventListener("mousedown", (e) => {
       this.left_click = true;
+      this.single_click = true;
+      setTimeout(() => {
+        this.single_click = false;
+      }, 300);
     });
 
     this.ctx.canvas.addEventListener("mouseup", (e) => {

@@ -55,6 +55,7 @@ class Knight {
 
     // potion
     this.potionLevel = 0;
+    this.potionRegen = 0.025;
 
     // dagger
     this.daggerLevel = 0;
@@ -200,8 +201,12 @@ class Knight {
     else if (up) this.direction = 2;
     else if (down) this.direction = 3;
 
-    this.health += this.game.clockTick * this.regenRate * (this.potionLevel + 1);
-    this.health = Math.min(this.health, this.maxHealth);
+    if (this.potionLevel > 0) {
+      this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
+    } else {
+      this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
+    }
+
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
@@ -430,7 +435,6 @@ class Knight {
   handleAttackCollision(attacker, attacked) {
     // DAMAGE TO BE DEFLECTED
     var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
-
     var damage = attacker.attackDamage * this.game.clockTick;
 
     // calculate crit chance
@@ -454,7 +458,7 @@ class Knight {
       let initDmg = damage;
 
       damage *= deflectPercentage;
-      attacker.health -= Math.ceil((this.attackDamage / 3) * deflectPercentage);
+      attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
     }
 
     attacked.health -= Math.max(0, damage);

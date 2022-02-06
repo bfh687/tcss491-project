@@ -26,9 +26,9 @@ class Skeleton {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 250;
-    this.health = 250;
-    this.attackDamage = 10;
+    this.maxHealth = 800;
+    this.health = 800;
+    this.attackDamage = 1;
     this.attackCooldown = 1;
 
     this.isBleeding = false;
@@ -225,6 +225,10 @@ class Skeleton {
   bleed() {
     this.health = Math.max(this.health - this.bleedDamage, 0);
     this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
+  }
+
+  deflected(damage) {
+    this.textAnimations.push(new TextAnimator(damage, "cyan", this.game, this));
   }
 
   updateBoundingBox() {

@@ -239,7 +239,7 @@ class ShopUI {
       ctx.fillStyle = "red";
       ctx.fillText("Penelope's Potion", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 2);
       ctx.fillStyle = "white";
-      ctx.fillText("Regen 5% HP / sec", this.nameStartX - 4, 70 + 768 / 2 - 325 + 125 * 2.2);
+      ctx.fillText("Regen HP faster!", this.nameStartX - 4, 70 + 768 / 2 - 325 + 125 * 2.2);
 
       // levels
       let potionLevel = this.shop.potionLevel;

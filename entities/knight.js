@@ -454,7 +454,7 @@ class Knight {
       let initDmg = damage;
 
       damage *= deflectPercentage;
-      attacker.health -= Math.ceil(initDmg - damage);
+      attacker.health -= Math.ceil((this.attackDamage / 3) * deflectPercentage);
     }
 
     attacked.health -= Math.max(0, damage);

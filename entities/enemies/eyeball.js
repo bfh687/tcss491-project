@@ -85,11 +85,11 @@ class Eyeball {
         console.log("TICK");
         this.bleedingCooldown = 1;
       }
+    }
 
-      // if dead, remove from world
-      if (this.health <= 0) {
-        this.state = 5;
-      }
+    // if dead, remove from world
+    if (this.health <= 0) {
+      this.state = 5;
     }
 
     // handle attacking state + animations

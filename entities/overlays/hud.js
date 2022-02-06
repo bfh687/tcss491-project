@@ -3,6 +3,7 @@ class HUD {
     Object.assign(this, { game, knight });
     this.priority = Number.MAX_VALUE - 1;
     this.items = ASSET_MANAGER.getAsset("./sprites/items/items.png");
+    this.armor = ASSET_MANAGER.getAsset("./sprites/items/shield.png");
   }
 
   update() {}
@@ -19,20 +20,38 @@ class HUD {
     // ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 150);
     // ctx.restore();
 
+    // armor
+    ctx.save();
+    ctx.drawImage(this.armor, 0, 0, 32, 32, 400, ctx.canvas.height - 130, 56, 56);
+
+    ctx.globalAlpha = 1;
+    ctx.font = "22px impact";
+
+    var text = ((1 - this.knight.armor) * 100).toFixed(0);
+    ctx.font = "22px impact";
+    ctx.fillStyle = "white";
+    ctx.fillText(text, 429 - ctx.measureText(text).width / 2, ctx.canvas.height - 125 + 30, 28);
+
+    ctx.fillStyle = "black";
+    ctx.fillText(text, 428 - ctx.measureText(text).width / 2, ctx.canvas.height - 125 + 30, 30);
+    let x = 5;
+    x.toString();
+    ctx.restore();
+
     // xp bar
     var width = 250;
     ctx.save();
     ctx.globalAlpha = 0.5;
-    ctx.font = "14px Arial";
+    ctx.font = "14px impact";
     ctx.fillStyle = "black";
-    ctx.fillText("LVL " + this.knight.xpSystem.currLevel, 27 + 20, 712 - 20 + 33, 100);
+    ctx.fillText("L V L   " + this.knight.xpSystem.currLevel, 27 + 20, 712 - 20 + 33, 120);
     ctx.globalAlpha = 1;
     ctx.fillStyle = "white";
-    ctx.font = "14px Arial";
-    ctx.fillText("LVL " + this.knight.xpSystem.currLevel, 25 + 20, 710 - 20 + 33, 100);
+    ctx.font = "14px impact";
+    ctx.fillText("L V L   " + this.knight.xpSystem.currLevel, 25 + 20, 710 - 20 + 33, 120);
     ctx.globalAlpha = 0.1;
     ctx.fillStyle = "black";
-    ctx.fillText("LVL " + this.knight.xpSystem.currLevel, 27 + 20, 712 - 20 + 33, 100);
+    ctx.fillText("L V L   " + this.knight.xpSystem.currLevel, 27 + 20, 712 - 20 + 33, 120);
     ctx.fillRect(125 + 1 + 20, 720 - 20 - 17 + 33, width, 4);
     ctx.globalAlpha = 0.2;
     ctx.fillStyle = "black";

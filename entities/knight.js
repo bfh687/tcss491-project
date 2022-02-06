@@ -41,7 +41,7 @@ class Knight {
     this.critChance = 0;
     this.health = 100;
     this.maxHealth = 100;
-    this.armor = 1;
+    this.armor = 1.0;
     this.regenRate = 2;
     this.damageCooldown = 0.1;
 
@@ -461,6 +461,7 @@ class Knight {
         let initDmg = damage;
 
         damage *= deflectPercentage;
+        damage -= this.armor;
         attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
       }
       attacked.health -= Math.max(0, damage);

@@ -57,6 +57,7 @@ class Knight {
     // potion
     this.potionLevel = 0;
     this.potionRegen = 0.025;
+    this.regenCooldown = 1;
 
     // dagger
     this.daggerLevel = 0;
@@ -136,6 +137,7 @@ class Knight {
       if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
       if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
       if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
+      if (this.regenCooldown > 0) this.regenCooldown -= this.game.clockTick;
     }
 
     // set death state upon losing all health
@@ -149,10 +151,12 @@ class Knight {
       }
     }
 
-    if (this.potionLevel > 0) {
-      this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
-    } else {
-      this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
+    if (this.regenCooldown <= 0) {
+      if (this.potionLevel > 0) {
+        this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
+      } else {
+        this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
+      }
     }
 
     // handle attacking state + animations
@@ -463,6 +467,7 @@ class Knight {
         damage *= deflectPercentage;
         damage -= this.armor;
         attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
+        this.regenCooldown = 1;
       }
       attacked.health -= Math.max(0, damage);
       attacked.damageCooldown = 0.1;

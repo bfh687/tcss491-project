@@ -69,7 +69,7 @@ class Knight {
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
     this.slideLength = 200;
-    this.slideCooldown = 1.5;
+    this.slideCooldown = 0.25;
 
     // information about attacking
     this.attackCooldown = 0.25;
@@ -210,7 +210,7 @@ class Knight {
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
-      this.slideCooldown = 1.5;
+      this.slideCooldown = 0.25;
     }
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {
@@ -351,7 +351,7 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
-      } else if (entity instanceof Shop) {
+      } else if (entity instanceof Shop || entity instanceof Foilage || entity instanceof Prop) {
         // handle sliding collisions
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;

@@ -1,59 +1,51 @@
 class Map {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/prototype_hub.png");
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/level_1.png");
     this.bounding_boxes = [];
+
+    // add props... has to be a better way... .... .....
+
+    // add pillars
+    this.game.addEntity(new Prop(this.game, 19 * 32, 4 * 32, "pillar1"));
+    this.game.addEntity(new Prop(this.game, 29 * 32, 6 * 32, "pillar2"));
+
+    // add bushes
+    this.game.addEntity(new Foilage(this.game, 27 * 32, 8 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 43 * 32, 18 * 32, "smallbush"));
+    this.game.addEntity(new Foilage(this.game, 69 * 32, 20 * 32, "smallbush"));
+
+    // add rocks
+    this.game.addEntity(new Prop(this.game, 21 * 32, 8 * 32, "smallrock3"));
+    this.game.addEntity(new Prop(this.game, 53 * 32, 16 * 32, "smallrock3"));
+    this.game.addEntity(new Prop(this.game, 19 * 32, 12 * 32, "smallrock4"));
+    this.game.addEntity(new Prop(this.game, 27 * 32, 10 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 11 * 32, 18 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 45 * 32, 18 * 32, "bigrock"));
+
+    // add misc props
+    this.game.addEntity(new Prop(this.game, 33 * 32, 8 * 32, "barrel"));
+    this.game.addEntity(new Prop(this.game, 35 * 32, 10 * 32, "box"));
+    this.game.addEntity(new Prop(this.game, 55 * 32, 10 * 32, "box"));
+
+    // add trees
+    this.game.addEntity(new Foilage(this.game, 9 * 32, 8 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 33 * 32, 10 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 13 * 32, 14 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 45 * 32, 10 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 49 * 32, 6 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 61 * 32, 12 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 59 * 32, 8 * 32, "medtree"));
   }
 
   update() {
     this.bounding_boxes = [];
-
-    // // vertical walls
     this.bounding_boxes.push(new BoundingBox(this.x + 645, this.y + 510, 14, 810));
-    this.bounding_boxes.push(new BoundingBox(this.x + 1745, this.y + 510, 14, 810));
-
-    // middle platform vertical wall
-    this.bounding_boxes.push(new BoundingBox(this.x + 1391, this.y + 470, 14, 315));
-    this.bounding_boxes.push(new BoundingBox(this.x + 960, this.y + 470, 14, 315));
-
-    // middle platform vertical stairs
-    this.bounding_boxes.push(new BoundingBox(this.x + 1120, this.y + 670, 14, 180));
-    this.bounding_boxes.push(new BoundingBox(this.x + 1232, this.y + 670, 14, 180));
-
-    // bottom left platform
-    this.bounding_boxes.push(new BoundingBox(this.x + 1071, this.y + 960, 14, 230));
-
-    // horizontal walls
-    this.bounding_boxes.push(new BoundingBox(this.x + 645, this.y + 505, 315, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 1405, this.y + 505, 355, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 645, this.y + 1297, 1100, 14));
-
-    // middle platform horizontal walls
-    this.bounding_boxes.push(new BoundingBox(this.x + 960, this.y + 470, 448, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 960, this.y + 665, 175, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 1232, this.y + 665, 169, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 960, this.y + 775, 175, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 1232, this.y + 775, 169, 14));
-
-    // bottom left platform
-    this.bounding_boxes.push(new BoundingBox(this.x + 645, this.y + 948, 440, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 645, this.y + 1183, 440, 14));
   }
 
   draw(ctx) {
-    ctx.drawImage(
-      this.spritesheet,
-      0,
-      0,
-      1184,
-      880,
-      this.x - this.game.camera.x,
-      this.y - this.game.camera.y,
-      params.BLOCKWIDTH * (24.66 * 2),
-      params.BLOCKWIDTH * (18.1 * 2)
-    );
-
     if (params.DEBUG) {
+      ctx.drawImage(this.spritesheet, 0, 0, 3216, 1760, this.x - this.game.camera.x, this.y - this.game.camera.y, 3216 * 2, 1760 * 2);
       this.bounding_boxes.forEach((box) => {
         drawBoundingBox(box, ctx, this.game, "red");
       });

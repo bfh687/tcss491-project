@@ -147,6 +147,12 @@ class Knight {
       }
     }
 
+    if (this.potionLevel > 0) {
+      this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
+    } else {
+      this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
+    }
+
     // handle attacking state + animations
     if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
       this.updateBoundingBox();
@@ -200,12 +206,6 @@ class Knight {
     else if (right) this.direction = 1;
     else if (up) this.direction = 2;
     else if (down) this.direction = 3;
-
-    if (this.potionLevel > 0) {
-      this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
-    } else {
-      this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
-    }
 
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {

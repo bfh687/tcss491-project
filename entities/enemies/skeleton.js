@@ -26,9 +26,9 @@ class Skeleton {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 800;
-    this.health = 800;
-    this.attackDamage = 1;
+    this.maxHealth = 400;
+    this.health = 400;
+    this.attackDamage = 300;
     this.attackCooldown = 1;
 
     this.isBleeding = false;

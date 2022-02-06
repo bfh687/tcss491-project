@@ -21,9 +21,10 @@ class SceneManager {
 
   loadLevel(x, y, transition, title) {
     this.clearEntities();
-    for (var i = 0; i < 50; i++) this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
+    //for (var i = 0; i < 50; i++) this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
+    this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
 
     this.game.addEntity(new Eyeball(this.game, this.knight.x - 500, this.knight.y - 340));
     this.game.addEntity(new Eyeball(this.game, this.knight.x - 520, this.knight.y - 390));

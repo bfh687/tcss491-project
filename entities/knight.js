@@ -36,13 +36,14 @@ class Knight {
     this.gogglesMultiplier = 1.5;
 
     // information about player stats
-    this.attackDamage = 200;
+    this.attackDamage = 15000;
     this.critMultiplier = 5;
     this.critChance = 0;
     this.health = 100;
     this.maxHealth = 100;
     this.armor = 1;
     this.regenRate = 2;
+    this.damageCooldown = 0.1;
 
     // misc
 
@@ -134,6 +135,7 @@ class Knight {
       // update cooldowns
       if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
       if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
+      if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
     }
 
     // set death state upon losing all health
@@ -433,47 +435,48 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
-    // DAMAGE TO BE DEFLECTED
-    var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
-    var damage = attacker.attackDamage * this.game.clockTick;
+    if (attacked.damageCooldown <= 0) {
+      // DAMAGE TO BE DEFLECTED
+      var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
+      var damage = attacker.attackDamage * this.game.clockTick;
 
-    // calculate crit chance
-    var color = "red";
-    if (attacker instanceof Knight) {
-      var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
-      damage *= damageMultiplier;
-      if (Math.random() <= this.critChance) {
-        damage *= this.critMultiplier;
-        color = "yellow";
+      // calculate crit chance
+      var color = "red";
+      if (attacker instanceof Knight) {
+        var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
+        damage *= damageMultiplier;
+        if (Math.random() <= this.critChance) {
+          damage *= this.critMultiplier;
+          color = "yellow";
+        }
+        if (this.daggerLevel > 0 && !attacked.isBleeding) {
+          attacked.isBleeding = true;
+          setTimeout(() => {
+            attacked.isBleeding = false;
+          }, this.bleedDuration);
+          attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
+        }
+      } else if (attacked instanceof Knight) {
+        // ARMOR DEFLECTING DAMAGE BACK
+        let initDmg = damage;
+
+        damage *= deflectPercentage;
+        attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
       }
-      if (this.daggerLevel > 0 && !attacked.isBleeding) {
-        attacked.isBleeding = true;
-        setTimeout(() => {
-          attacked.isBleeding = false;
-        }, this.bleedDuration);
-        attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
+      attacked.health -= Math.max(0, damage);
+      attacked.damageCooldown = 0.1;
+      var flag = true;
+      for (var i = 0; i < attacked.textAnimations.length; i++) {
+        if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone() && attacked.textAnimations[i].color != "yellow") {
+          attacked.textAnimations[i].increment(damage);
+          flag = false;
+          break;
+        }
       }
-    } else if (attacked instanceof Knight) {
-      // ARMOR DEFLECTING DAMAGE BACK
-      let initDmg = damage;
 
-      damage *= deflectPercentage;
-      attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
-    }
-
-    attacked.health -= Math.max(0, damage);
-
-    var flag = true;
-    for (var i = 0; i < attacked.textAnimations.length; i++) {
-      if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone() && attacked.textAnimations[i].color != "yellow") {
-        attacked.textAnimations[i].increment(damage);
-        flag = false;
-        break;
+      if (flag) {
+        attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
       }
-    }
-
-    if (flag) {
-      attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
     }
   }
 

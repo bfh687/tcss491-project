@@ -29,6 +29,7 @@ class Eyeball {
     this.maxHealth = 500;
     this.attackDamage = 1500;
     this.attackCooldown = 2;
+    this.damageCooldown = 0.05;
 
     this.isBleeding = false;
     this.bleedingCooldown = 1;
@@ -78,6 +79,7 @@ class Eyeball {
     }
 
     if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
+    if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
 
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {

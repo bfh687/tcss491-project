@@ -30,6 +30,7 @@ class Skeleton {
     this.health = 400;
     this.attackDamage = 300;
     this.attackCooldown = 1;
+    this.damageCooldown = 0.05;
 
     this.isBleeding = false;
     this.bleedingCooldown = 1;
@@ -41,7 +42,7 @@ class Skeleton {
 
     // misc
     this.alpha = 1;
-    this.xpDropped = 25;
+    this.xpDropped = 250;
   }
 
   loadAnimations() {
@@ -75,6 +76,7 @@ class Skeleton {
     }
 
     if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
+    if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
 
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {

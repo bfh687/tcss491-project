@@ -55,8 +55,6 @@ class Knight {
 
     // potion
     this.potionLevel = 0;
-    this.potionRegen = 0.025;
-    this.potionCooldown = 1;
 
     // dagger
     this.daggerLevel = 0;
@@ -135,7 +133,6 @@ class Knight {
       // update cooldowns
       if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
       if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
-      if (this.potionCooldown > 0) this.potionCooldown -= this.game.clockTick;
     }
 
     // set death state upon losing all health
@@ -203,14 +200,8 @@ class Knight {
     else if (up) this.direction = 2;
     else if (down) this.direction = 3;
 
-    // handle hp / sec
-    if (this.potionCooldown <= 0 && this.health < this.maxHealth) {
-      this.health = Math.min(this.health + Math.floor(this.potionRegen * this.potionLevel * this.maxHealth), this.maxHealth);
-      this.potionCooldown = 1;
-    } else {
-      this.health += this.game.clockTick * this.regenRate;
-      this.health = Math.min(this.health, this.maxHealth);
-    }
+    this.health += this.game.clockTick * this.regenRate * (this.potionLevel + 1);
+    this.health = Math.min(this.health, this.maxHealth);
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;

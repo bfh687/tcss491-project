@@ -351,7 +351,7 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
-      } else if (entity instanceof Shop || entity instanceof Foilage || entity instanceof Prop) {
+      } else if (entity instanceof Shop || entity instanceof Foilage || entity instanceof Prop || entity instanceof Sign) {
         // handle sliding collisions
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;

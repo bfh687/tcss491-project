@@ -6,6 +6,8 @@ class Map {
 
     // add props... has to be a better way... .... .....
 
+    this.game.addEntity(new Sign(this.game, 128, 128, "eastsign", ["sample text", "sample text 1", "sample text 2", "sample text 3"]));
+
     // add pillars
     this.game.addEntity(new Prop(this.game, 19 * 32, 4 * 32, "pillar1"));
     this.game.addEntity(new Prop(this.game, 21 * 32, 62 * 32, "pillar1"));

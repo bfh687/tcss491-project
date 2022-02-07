@@ -212,7 +212,11 @@ class Skeleton {
         if (Math.abs(dist) < 1) {
           xVector = yVector = 0;
           this.state = 0;
-          this.direction = 0;
+          if (this.hurtBox.left >= knight.hurtBox.right) {
+            this.direction = 0;
+          } else if (this.hurtBox.right <= knight.hurtBox.left) {
+            this.direction = 1;
+          }
         }
       }
     }

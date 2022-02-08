@@ -20,9 +20,7 @@ class Map {
         "and so they prayed that a hero would come to cleanse what was left...",
       ])
     );
-    this.game.addEntity(
-      new Sign(this.game, 32 * 109, 32 * 18, "slab1", ["That hero never came...", "and they may never, but still they hoped..."])
-    );
+    this.game.addEntity(new Sign(this.game, 32 * 109, 32 * 18, "slab1", ["That hero never came...", "and they may never, but still they hoped..."]));
 
     // // add pillars
     this.game.addEntity(new Prop(this.game, 19 * 32, 4 * 32, "pillar1"));
@@ -54,12 +52,15 @@ class Map {
     this.game.addEntity(new Prop(this.game, 35 * 32, 72 * 32, "smallrock3"));
     this.game.addEntity(new Prop(this.game, 55 * 32, 66 * 32, "smallrock5"));
     this.game.addEntity(new Prop(this.game, 21 * 32, 82 * 32, "smallrock6"));
+    this.game.addEntity(new Prop(this.game, 75 * 32, 56 * 32, "smallrock6"));
+
     this.game.addEntity(new Prop(this.game, 21 * 32, 88 * 32, "smallrock4"));
     this.game.addEntity(new Prop(this.game, 27 * 32, 10 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 11 * 32, 54 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 17 * 32, 84 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 51 * 32, 62 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 11 * 32, 18 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 79 * 32, 58 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 45 * 32, 18 * 32, "bigrock"));
 
     // add misc props
@@ -84,6 +85,18 @@ class Map {
     this.game.addEntity(new Foilage(this.game, 45 * 32, 10 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 49 * 32, 6 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 61 * 32, 12 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 59 * 32, 30 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 57 * 32, 36 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 59 * 32, 44 * 32, "bigtree"));
+
+    this.game.addEntity(new Prop(this.game, 69 * 32, 50 * 32, "grave"));
+    this.game.addEntity(new Prop(this.game, 73 * 32, 52 * 32, "grave"));
+
+    this.game.addEntity(new Prop(this.game, 79 * 32, 62 * 32, "tombstone2"));
+    this.game.addEntity(new Prop(this.game, 87 * 32, 66 * 32, "tombstone2"));
+    this.game.addEntity(new Prop(this.game, 95 * 32, 64 * 32, "tombstone2"));
+    this.game.addEntity(new Prop(this.game, 101 * 32, 68 * 32, "tombstone2"));
+
     this.game.addEntity(new Foilage(this.game, 59 * 32, 8 * 32, "medtree"));
     this.game.addEntity(new Foilage(this.game, 21 * 32, 72 * 32, "medtree"));
     this.game.addEntity(new Foilage(this.game, 41 * 32, 44 * 32, "medtree"));
@@ -99,6 +112,14 @@ class Map {
 
     // x = (index + 1) * 2 - 1, y = index * 2
     this.game.addEntity(new Foilage(this.game, 23 * 32, 58 * 32, "bigtree"));
+
+    this.game.addEntity(new Foilage(this.game, 79 * 32, 52 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 87 * 32, 58 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 91 * 32, 56 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 95 * 32, 60 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 101 * 32, 58 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 81 * 32, 58 * 32, "smalltree"));
+    this.game.addEntity(new Foilage(this.game, 85 * 32, 56 * 32, "medtree"));
 
     // add shops
     this.game.addEntity(new Shop(this.game, 55 * 32, 10 * 32));
@@ -142,17 +163,7 @@ class Map {
       ctx.globalAlpha = 0.9;
       ctx.fillRect(0, 0, 4000, 4000);
       ctx.restore();
-      ctx.drawImage(
-        this.spritesheet,
-        0,
-        0,
-        3216,
-        1760,
-        this.x - this.game.camera.x,
-        this.y - this.game.camera.y,
-        3216 * 2,
-        1760 * 2
-      );
+      ctx.drawImage(this.spritesheet, 0, 0, 3216, 1760, this.x - this.game.camera.x, this.y - this.game.camera.y, 3216 * 2, 1760 * 2);
       this.bounding_boxes.forEach((box) => {
         drawBoundingBox(box, ctx, this.game, "red");
       });

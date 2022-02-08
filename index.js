@@ -3,6 +3,8 @@ const ASSET_MANAGER = new AssetManager();
 
 // sfx downloads
 ASSET_MANAGER.queueDownload("./sfx/sword_slash.mp3");
+ASSET_MANAGER.queueDownload("./sfx/click.wav");
+ASSET_MANAGER.queueDownload("./sfx/text.wav");
 
 // knight-related downloads
 ASSET_MANAGER.queueDownload("./sprites/entities/knight.png");

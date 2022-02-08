@@ -3,6 +3,7 @@ class Sign {
     Object.assign(this, { game, x, y, code, dialogue });
 
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/props.png");
+    this.icons = ASSET_MANAGER.getAsset("./sprites/hud/icons.png");
     this.init(code);
 
     this.drawIcon = false;
@@ -10,13 +11,15 @@ class Sign {
 
     this.alpha = 0;
     this.color = "red";
+
+    this.sound_cooldown = 0;
   }
 
   update() {
     const knight = this.game.knight;
 
     if (this.interaction_box.collide(knight.hurtBox)) {
-      this.alpha = Math.min(1, this.alpha + this.game.clockTick * 6);
+      this.alpha = Math.min(0.9, this.alpha + this.game.clockTick * 6);
 
       // enter sign dialogue
       if (this.game.keys.e && !this.isSignActive) {
@@ -47,6 +50,7 @@ class Sign {
         this.sprite_height = 32;
         this.interaction_box = new BoundingBox(this.x - 16, this.y, 96, 96);
         this.boundingBox = new BoundingBox(this.x + 6, this.y + 50, 48, 12);
+        this.icon_offset = -35;
         break;
       case "slab1":
         this.sprite_x = 7 * 32;
@@ -55,6 +59,28 @@ class Sign {
         this.sprite_height = 64;
         this.interaction_box = new BoundingBox(this.x - 16, this.y + 50, 96, 96);
         this.boundingBox = new BoundingBox(this.x + 7, this.y + 90, 48, 32);
+        this.icon_offset = 15;
+
+        break;
+      case "slab2":
+        this.sprite_x = 7 * 32;
+        this.sprite_y = 0 * 32;
+        this.sprite_width = 32;
+        this.sprite_height = 64;
+        this.interaction_box = new BoundingBox(this.x - 16, this.y + 50, 96, 96);
+        this.boundingBox = new BoundingBox(this.x + 7, this.y + 90, 48, 32);
+        this.icon_offset = -15;
+
+        break;
+      case "slab3":
+        this.sprite_x = 7 * 32;
+        this.sprite_y = 2 * 32;
+        this.sprite_width = 32;
+        this.sprite_height = 96;
+        this.interaction_box = new BoundingBox(this.x - 16, this.y + 50 + 60, 96, 96);
+        this.boundingBox = new BoundingBox(this.x + 7, this.y + 90 + 60, 48, 32);
+        this.icon_offset = 20;
+
         break;
     }
   }
@@ -75,56 +101,38 @@ class Sign {
       this.sprite_height * 2
     );
 
-    var center = this.boundingBox.left + (this.boundingBox.right - this.boundingBox.left) / 2;
+    ctx.drawImage(
+      this.spritesheet,
+      this.sprite_x + 32,
+      this.sprite_y,
+      this.sprite_width,
+      this.sprite_height,
+      this.x - this.game.camera.x,
+      this.y - this.game.camera.y,
+      this.sprite_width * 2,
+      this.sprite_height * 2
+    );
 
-    // draw icon
-    // ctx.save();
-    // if (this.drawIcon || this.alpha > 0) {
-    //   ctx.drawImage(
-    //     this.icons,
-    //     112,
-    //     32,
-    //     16,
-    //     16,
-    //     center - this.game.camera.x - 12,
-    //     this.y - this.game.camera.y + Math.sin(this.game.timer.gameTime * 2) * 4,
-    //     24,
-    //     24
-    //   );
-
-    var width = ctx.measureText("PRESS E TO READ").width / 2;
+    var center_x = this.boundingBox.left + (this.boundingBox.right - this.boundingBox.left) / 2;
+    var center_y = this.boundingBox.top + (this.boundingBox.bottom - this.boundingBox.top) / 2;
 
     // draw info text
     ctx.save();
     ctx.globalAlpha = this.alpha;
 
-    if (this.code == "slab1") {
-      ctx.drawImage(
-        this.spritesheet,
-        8 * 32,
-        6 * 32,
-        32,
-        32,
-        this.x - this.game.camera.x,
-        this.y - this.game.camera.y + 64,
-        this.sprite_width * 2,
-        this.sprite_height
-      );
-    }
-
-    ctx.fillStyle = "black";
-    ctx.fillText(
-      "PRESS E TO READ",
-      center - width - this.game.camera.x + 1,
-      this.y + 50 - this.game.camera.y + 1 + Math.sin(this.game.timer.gameTime * 2) * 4
+    ctx.drawImage(
+      this.icons,
+      16 * 6,
+      16 * 1,
+      16,
+      16,
+      this.x - this.game.camera.x + 19,
+      this.y + this.icon_offset - this.game.camera.y + Math.sin(this.game.timer.gameTime * 2) * 4,
+      24,
+      24
     );
 
-    ctx.fillStyle = "white";
-    ctx.fillText(
-      "PRESS E TO READ",
-      center - width - this.game.camera.x,
-      this.y + 50 - this.game.camera.y + Math.sin(this.game.timer.gameTime * 2) * 4
-    );
+    var width = ctx.measureText("PRESS E TO SHOP").width / 2;
 
     ctx.restore();
 
@@ -147,6 +155,7 @@ class SignUI {
     this.text_index = 1;
     this.text_cooldown = 0;
 
+    this.sound_cooldown = 0;
     this.interaction_cooldown = 0.1;
     this.current_text = this.dialogue[this.dialogue_index].charAt(0);
     console.log(this.current_text);
@@ -155,6 +164,7 @@ class SignUI {
   update() {
     this.updateText();
 
+    this.sound_cooldown -= this.game.clockTick;
     this.interaction_cooldown -= this.game.clockTick;
     if (
       this.game.keys[" "] &&
@@ -162,6 +172,7 @@ class SignUI {
       this.text_index > this.dialogue[this.dialogue_index].length - 1
     ) {
       if (this.dialogue_index == this.dialogue.length - 1) {
+        this.sign.isSignActive = false;
         this.removeFromWorld = true;
       } else {
         this.dialogue_index++;
@@ -178,10 +189,18 @@ class SignUI {
 
   updateText() {
     if (this.text_cooldown <= 0) {
+      if (this.sound_cooldown <= 0 && this.text_index < this.dialogue[this.dialogue_index].length) {
+        ASSET_MANAGER.setVolume(0.5);
+        ASSET_MANAGER.playAudio("./sfx/text.wav");
+        this.sound_cooldown = 0.05;
+      }
+
       this.current_text += this.dialogue[this.dialogue_index].charAt(this.text_index);
       this.text_cooldown = 0.0;
       this.text_index++;
     } else {
+      ASSET_MANAGER.getAsset("./sfx/text/wav").pause();
+      ASSET_MANAGER.getAsset("./sfx/text.wav").currentTime = 0;
       this.text_cooldown -= this.game.clockTick;
     }
   }
@@ -202,7 +221,7 @@ class SignUI {
       var text = this.current_text;
       ctx.fillStyle = "white";
       ctx.font = "24px bitpap";
-      ctx.fillText(text, 1366 / 2 - 335, 768 - 250 + 50);
+      ctx.fillText(text, 1366 / 2 - 335, 768 - 250 + 60);
       ctx.restore();
 
       var mouseBox = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);

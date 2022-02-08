@@ -8,11 +8,20 @@ class Map {
 
     this.game.addEntity(new Sign(this.game, 32 * 29, 32 * 20, "eastsign", ["Shop to the east..."]));
     this.game.addEntity(
-      new Sign(this.game, 32 * 109, 32 * 18, "slab1", [
+      new Sign(this.game, 32 * 91, 32 * 16, "slab2", [
         "This land was once occupied by humans and what they called pets...",
         "but as they all passed, all that remained was a shell of what once was...",
         "cursed to roam the land for eternity...",
       ])
+    );
+    this.game.addEntity(
+      new Sign(this.game, 32 * 103, 32 * 12, "slab3", [
+        "Neighboring towns were no longer safe...",
+        "and so they prayed that a hero would come to cleanse what was left...",
+      ])
+    );
+    this.game.addEntity(
+      new Sign(this.game, 32 * 109, 32 * 18, "slab1", ["That hero never came...", "and they may never, but still they hoped..."])
     );
 
     // // add pillars
@@ -102,6 +111,10 @@ class Map {
     this.game.addEntity(new Skeleton(this.game, 400 + 200, 650 + 700));
     this.game.addEntity(new Skeleton(this.game, 350 + 200, 690 + 700));
     this.game.addEntity(new Skeleton(this.game, 290 + 200, 640 + 700));
+
+    this.game.addEntity(new Skeleton(this.game, 400 + 1330, 650 + 1480));
+    this.game.addEntity(new Skeleton(this.game, 350 + 1330, 690 + 1480));
+    this.game.addEntity(new Skeleton(this.game, 290 + 1330, 640 + 1480));
   }
 
   update() {

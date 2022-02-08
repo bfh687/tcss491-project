@@ -120,7 +120,7 @@ class ShopUI {
     // refactor to draw shop item, where you pass sprite, x, y, item description, and item
     if (this.shop.isShopActive) {
       ctx.save();
-      ctx.font = "30px Arial";
+      ctx.font = "30px bitpap";
       var width = ctx.measureText("SHOP").width / 2;
       var widthSP = ctx.measureText("SP").width / 2;
       var widthPoints = ctx.measureText(this.shop.skillPoints).width / 2;

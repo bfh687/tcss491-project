@@ -10,7 +10,7 @@ class SceneManager {
     let midpoint_x = 1366 / 2 - 64 * 1.25;
     let midpoint_y = 768 / 2 - 64 * 1.25;
     // -10 to not spawn in rock :D
-    this.knight = new Knight(this.game, midpoint_x, midpoint_y - 10);
+    this.knight = new Knight(this.game, midpoint_x + 1700, midpoint_y + 200);
     this.loadLevel(0, 0, false, true);
   }
 

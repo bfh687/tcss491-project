@@ -6,9 +6,16 @@ class Map {
 
     // add props... has to be a better way... .... .....
 
-    this.game.addEntity(new Sign(this.game, 128, 128, "eastsign", ["sample text", "sample text 1", "sample text 2", "sample text 3"]));
+    this.game.addEntity(new Sign(this.game, 32 * 29, 32 * 20, "eastsign", ["Shop to the east..."]));
+    this.game.addEntity(
+      new Sign(this.game, 32 * 109, 32 * 18, "slab1", [
+        "This land was once occupied by humans and what they called pets...",
+        "but as they all passed, all that remained was a shell of what once was...",
+        "cursed to roam the land for eternity...",
+      ])
+    );
 
-    // add pillars
+    // // add pillars
     this.game.addEntity(new Prop(this.game, 19 * 32, 4 * 32, "pillar1"));
     this.game.addEntity(new Prop(this.game, 21 * 32, 62 * 32, "pillar1"));
     this.game.addEntity(new Prop(this.game, 29 * 32, 6 * 32, "pillar2"));
@@ -91,16 +98,48 @@ class Map {
     this.game.addEntity(new Skeleton(this.game, 400, 650));
     this.game.addEntity(new Skeleton(this.game, 350, 690));
     this.game.addEntity(new Skeleton(this.game, 290, 640));
+
+    this.game.addEntity(new Skeleton(this.game, 400 + 200, 650 + 700));
+    this.game.addEntity(new Skeleton(this.game, 350 + 200, 690 + 700));
+    this.game.addEntity(new Skeleton(this.game, 290 + 200, 640 + 700));
   }
 
   update() {
     this.bounding_boxes = [];
-    this.bounding_boxes.push(new BoundingBox(this.x + 645, this.y + 510, 14, 810));
+    this.bounding_boxes.push(new BoundingBox(this.x + 544, this.y + 193, 14, 7 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1042, this.y + 193, 14, 7 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 736, this.y + 192 + 256 + 32 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 736 + 116, this.y + 192 + 256 + 32 * 2, 14, 3 * 64));
+
+    this.bounding_boxes.push(new BoundingBox(this.x + 544, this.y + 193, 8 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 544, this.y + 512, 3 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 544, this.y + 512 + 115, 3 * 64, 14));
+
+    this.bounding_boxes.push(new BoundingBox(this.x + 544 + 5 * 64, this.y + 512, 3 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 544 + 5 * 64, this.y + 512 + 115, 3 * 64, 14));
+
+    this.bounding_boxes.push(new BoundingBox(this.x + 544 - 4 * 64, this.y + 512, 14, 11 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 544 - 3 * 64, this.y + 512 - 3 * 64, 14, 3 * 64));
   }
 
   draw(ctx) {
     if (params.DEBUG) {
-      ctx.drawImage(this.spritesheet, 0, 0, 3216, 1760, this.x - this.game.camera.x, this.y - this.game.camera.y, 3216 * 2, 1760 * 2);
+      ctx.save();
+      ctx.fillStyle = "#008ab7";
+      ctx.globalAlpha = 0.9;
+      ctx.fillRect(0, 0, 4000, 4000);
+      ctx.restore();
+      ctx.drawImage(
+        this.spritesheet,
+        0,
+        0,
+        3216,
+        1760,
+        this.x - this.game.camera.x,
+        this.y - this.game.camera.y,
+        3216 * 2,
+        1760 * 2
+      );
       this.bounding_boxes.forEach((box) => {
         drawBoundingBox(box, ctx, this.game, "red");
       });

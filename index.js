@@ -35,6 +35,10 @@ ASSET_MANAGER.queueDownload("./sprites/map/foilage_shadows.png");
 ASSET_MANAGER.queueDownload("./sprites/map/props.png");
 ASSET_MANAGER.queueDownload("./sprites/map/prop_shadows.png");
 
+for (var i = 1; i < 28; i++) {
+  ASSET_MANAGER.queueDownload("./sprites/death_transition/death_transition (" + i + ").png");
+}
+
 ASSET_MANAGER.downloadAll(() => {
   const canvas = document.getElementById("gameWorld");
   const ctx = canvas.getContext("2d");

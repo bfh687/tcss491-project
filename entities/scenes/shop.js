@@ -15,18 +15,11 @@ class Shop {
 
     this.alpha = 0;
     this.color = "red";
-    this.gogglesLevel = 0;
-    this.armorLevel = 0;
-    this.potionLevel = 0;
-    this.daggerLevel = 0;
-    this.skillPoints = 0;
   }
 
   update() {
     const knight = this.game.knight;
-    // if player collides with me, display the thing and make me interactable
-    // if interact, then
-    this.skillPoints = this.game.knight.xpSystem.skillPoints;
+
     if (this.interaction_box.collide(knight.hurtBox)) {
       this.alpha = Math.min(1, this.alpha + this.game.clockTick * 6);
 
@@ -51,7 +44,6 @@ class Shop {
   draw(ctx) {
     // draw shop keeper
     ctx.drawImage(this.spritesheet, 0, 0, 96, 96, this.x - this.game.camera.x, this.y - this.game.camera.y, 96 * 2, 96 * 2);
-
     var center = this.boundingBox.left + (this.boundingBox.right - this.boundingBox.left) / 2;
 
     // draw icon
@@ -69,23 +61,6 @@ class Shop {
         24,
         24
       );
-
-      var width = ctx.measureText("PRESS E TO SHOP").width / 2;
-
-      // draw info text
-      ctx.fillStyle = "black";
-      ctx.fillText(
-        "PRESS E TO SHOP",
-        center - width - this.game.camera.x + 1,
-        this.y + 130 - this.game.camera.y + 1 + Math.sin(this.game.timer.gameTime * 2) * 4
-      );
-
-      ctx.fillStyle = "white";
-      ctx.fillText(
-        "PRESS E TO SHOP",
-        center - width - this.game.camera.x,
-        this.y + 130 - this.game.camera.y + Math.sin(this.game.timer.gameTime * 2) * 4
-      );
     }
     ctx.restore();
 
@@ -101,12 +76,12 @@ class ShopUI {
     Object.assign(this, { game, shop });
     this.items = ASSET_MANAGER.getAsset("./sprites/items/shopitems.png");
 
-    this.itemStartX = 1366 / 2 - 96;
+    this.itemStartX = 1366 / 2 - 256 - 24;
     this.containerStartX = 1366 / 2 - 94;
-    this.nameStartX = 1366 / 2 - 24 + 6;
+    this.nameStartX = 1366 / 2 - 256 + 48 + 24;
     this.descriptionStartX = 1366 / 2 - 25 + 10;
     this.shopHeight = 500;
-    this.bubblesStart = 1366 / 2 + 2;
+    this.bubblesStart = 1366 / 2 + 72;
     this.skillPointsHeight = 100;
   }
 
@@ -120,75 +95,73 @@ class ShopUI {
     // refactor to draw shop item, where you pass sprite, x, y, item description, and item
     if (this.shop.isShopActive) {
       ctx.save();
+
+      ctx.globalAlpha = 0.6;
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, 1400, 800);
+      ctx.globalAlpha = 1;
+
       ctx.font = "30px bitpap";
       var width = ctx.measureText("SHOP").width / 2;
-      var widthSP = ctx.measureText("SP").width / 2;
-      var widthPoints = ctx.measureText(this.shop.skillPoints).width / 2;
+
       ctx.fillStyle = "black";
-      ctx.fillText("SHOP", 1366 / 2 - width + 1, 40 + 40 + 1);
+      ctx.fillText("SHOP", 1366 / 2 - width + 1, 61);
       ctx.fillStyle = "white";
-      ctx.fillText("SHOP", 1366 / 2 - width, 40 + 40);
+      ctx.fillText("SHOP", 1366 / 2 - width, 60);
 
+      // box one
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(1366 / 2 - 300, 100, 600, 110);
       ctx.fillStyle = "black";
-      ctx.fillText("SP", 1366 / 2 - widthSP + 1 - 170, 40 + 40 + 1);
+      ctx.globalAlpha = 0.4;
+      ctx.fillRect(1366 / 2 - 300, 100, 600, 110);
+      ctx.globalAlpha = 1;
       ctx.fillStyle = "white";
-      ctx.fillText("SP", 1366 / 2 - widthSP - 170, 40 + 40);
-
-      ctx.globalAlpha = 0.5;
-      ctx.fillStyle = "black";
-      //shop bg
-      ctx.fillRect(1366 / 2 - 100, 60 + 768 / 2 - 325, 200, this.shopHeight);
-
-      //sp background
-      ctx.fillRect(1366 / 2 - 100 - 120, 60 + 768 / 2 - 325, 100, this.skillPointsHeight);
-
-      ctx.restore();
-
-      //sp
-      ctx.font = "40px Arial";
-      ctx.fillStyle = "black";
-      ctx.fillText(this.shop.skillPoints, 1366 / 2 - widthPoints - 174 + 1, 70 + 768 / 2 - 325 + 52);
-      ctx.fillStyle = "white";
-      ctx.fillText(this.shop.skillPoints, 1366 / 2 - widthPoints - 174, 70 + 768 / 2 - 325 + 50);
+      ctx.font = "24px bitpap";
 
       var mouseBox = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
-      // GERONIMOS GOGGLES
 
-      //item
-      ctx.drawImage(this.items, 0, 0, 32, 32, this.itemStartX + 2, 70 + 768 / 2 - 325, 32 * 2, 32 * 2);
-      var itemBoxGoggles = new BoundingBox(this.itemStartX + 2, 70 + 768 / 2 - 325, 32 * 2, 32 * 2);
+      // draw item
+      ctx.drawImage(this.items, 0, 0, 32, 32, this.itemStartX + 2, 70 + 768 / 2 - 330, 32 * 2, 32 * 2);
+      var itemBoxGoggles = new BoundingBox(this.itemStartX + 2, 70 + 768 / 2 - 340, 32 * 2, 32 * 2);
       if (mouseBox.collide(itemBoxGoggles) && this.game.single_click) {
         this.levelGoggles();
       }
-      //container
-      // ctx.strokeStyle = "orange";
-      // ctx.strokeRect(this.containerStartX - 2, 130, 65, 60);
 
       //text
-      ctx.font = "12px Arial";
+      ctx.font = "18px bitpap";
       ctx.fillStyle = "#ddd";
-      ctx.fillText("Geronimo's Goggles", this.nameStartX, 70 + 768 / 2 - 313);
+      ctx.fillText("Geronimo's Goggles", this.nameStartX, 70 + 768 / 2 - 304);
       ctx.fillStyle = "white";
-      ctx.fillText("Deal 1.5x Damage!", this.descriptionStartX, 70 + 768 / 2 - 290);
+      ctx.fillText("Deal 1.5x Damage!", this.nameStartX, 70 + 768 / 2 - 281);
 
-      // levels
-      let gogglesLevel = this.shop.gogglesLevel;
+      // item 2
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(1366 / 2 - 300, 230, 600, 110);
+      ctx.fillStyle = "black";
+      ctx.globalAlpha = 0.4;
+      ctx.fillRect(1366 / 2 - 300, 230, 600, 110);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "white";
+
+      ctx.fillText("Current Level:", this.nameStartX + 190, 70 + 768 / 2 - 325 + 125 * 3.2 + 13 - 130 * 3);
+      let goggleLevel = this.game.knight.gogglesLevel;
       for (let i = 0; i < this.shop.itemLevels; i++) {
         ctx.beginPath();
-        ctx.arc(this.bubblesStart - (86 - 14 * i), 200, 5, 0, 2 * Math.PI, false);
-        if (gogglesLevel > 0) {
-          ctx.globalAlpha = 1;
-          ctx.fillStyle = "gold";
+        ctx.arc(this.bubblesStart + 40 - (86 - 14 * i), 556 - 130 * 3, 5, 0, 2 * Math.PI, false);
+        if (goggleLevel > 0) {
+          ctx.globalAlpha = 0.9;
+          ctx.fillStyle = "#ddd";
           ctx.fill();
           ctx.globalAlpha = 1;
-          gogglesLevel--;
+          goggleLevel--;
         }
         ctx.lineWidth = 1;
         ctx.strokeStyle = "white";
         ctx.stroke();
       }
-
-      // ARMOR
 
       //item
       ctx.drawImage(this.items, 32, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
@@ -204,17 +177,26 @@ class ShopUI {
 
       //text
       ctx.fillStyle = "cyan";
-      ctx.fillText("Rowan's Armor", this.nameStartX, 70 + 768 / 2 - 323 + 125);
+      ctx.fillText("Rowan's Armor", this.nameStartX, 70 + 768 / 2 - 323 + 138);
       ctx.fillStyle = "white";
-      ctx.fillText("Deflect 15%", this.descriptionStartX + 3, 70 + 768 / 2 - 300 + 125);
-      ctx.fillText("of damage to", this.descriptionStartX, 70 + 768 / 2 - 280 + 125);
-      ctx.fillText("nearby enemies", this.descriptionStartX - 5, 70 + 768 / 2 - 260 + 125);
+      ctx.fillText("Reflect 15% of damage", this.nameStartX, 70 + 768 / 2 - 300 + 138);
+      ctx.fillText("taken to the attacker", this.nameStartX, 70 + 768 / 2 - 280 + 138);
 
-      //levels
-      let armorLevel = this.shop.armorLevel;
+      // item 3
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(1366 / 2 - 300, 360, 600, 110);
+      ctx.fillStyle = "black";
+      ctx.globalAlpha = 0.4;
+      ctx.fillRect(1366 / 2 - 300, 360, 600, 110);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "white";
+
+      ctx.fillText("Current Level:", this.nameStartX + 190, 70 + 768 / 2 - 325 + 125 * 3.2 + 13 - 130 * 2);
+      let armorLevel = this.game.knight.armorLevel;
       for (let i = 0; i < this.shop.itemLevels; i++) {
         ctx.beginPath();
-        ctx.arc(this.bubblesStart - (86 - 14 * i), 330, 5, 0, 2 * Math.PI, false);
+        ctx.arc(this.bubblesStart + 40 - (86 - 14 * i), 556 - 130 * 2, 5, 0, 2 * Math.PI, false);
         if (armorLevel > 0) {
           ctx.globalAlpha = 0.9;
           ctx.fillStyle = "cyan";
@@ -227,25 +209,22 @@ class ShopUI {
         ctx.stroke();
       }
 
-      // POTION
-
-      //item
-      ctx.drawImage(this.items, 64, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2, 32 * 1.75, 32 * 1.75);
+      ctx.drawImage(this.items, 64, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2 + 5, 32 * 1.75, 32 * 1.75);
       var itemBoxPotion = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2, 32 * 1.75, 32 * 1.75);
       if (mouseBox.collide(itemBoxPotion) && this.game.single_click) {
         this.levelPotion();
       }
-      //text
-      ctx.fillStyle = "red";
-      ctx.fillText("Penelope's Potion", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 2);
-      ctx.fillStyle = "white";
-      ctx.fillText("Regen HP faster!", this.nameStartX - 4, 70 + 768 / 2 - 325 + 125 * 2.2);
 
-      // levels
-      let potionLevel = this.shop.potionLevel;
+      ctx.fillStyle = "red";
+      ctx.fillText("Penelope's Potion", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 2 + 30);
+      ctx.fillStyle = "white";
+      ctx.fillText("Regen HP faster!", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 2 + 20 + 25 + 7);
+
+      ctx.fillText("Current Level:", this.nameStartX + 190, 70 + 768 / 2 - 325 + 125 * 3.2 + 13 - 130);
+      let potionLevel = this.game.knight.potionLevel;
       for (let i = 0; i < this.shop.itemLevels; i++) {
         ctx.beginPath();
-        ctx.arc(this.bubblesStart - (86 - 14 * i), 455, 5, 0, 2 * Math.PI, false);
+        ctx.arc(this.bubblesStart + 40 - (86 - 14 * i), 556 - 130, 5, 0, 2 * Math.PI, false);
         if (potionLevel > 0) {
           ctx.globalAlpha = 0.9;
           ctx.fillStyle = "red";
@@ -258,27 +237,33 @@ class ShopUI {
         ctx.stroke();
       }
 
-      // DAGGER
+      // item 4
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 5;
+      ctx.strokeRect(1366 / 2 - 300, 490, 600, 110);
+      ctx.fillStyle = "black";
+      ctx.globalAlpha = 0.4;
+      ctx.fillRect(1366 / 2 - 300, 490, 600, 110);
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "white";
 
-      // item
-
-      ctx.drawImage(this.items, 96, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 3, 32 * 2, 32 * 2);
+      ctx.drawImage(this.items, 96, 0, 32, 32, this.itemStartX, 70 + 768 / 2 - 323 + 125 * 3 + 10, 32 * 2, 32 * 2);
       var itemBoxDagger = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 3, 32 * 2, 32 * 2);
       if (mouseBox.collide(itemBoxDagger) && this.game.single_click) {
         this.levelDagger();
       }
       // text
       ctx.fillStyle = "magenta";
-      ctx.fillText("Arlo's Dagger", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 3);
+      ctx.fillText("Arlo's Dagger", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 3.2 - 23 + 22);
       ctx.fillStyle = "white";
-      ctx.fillText("Make enemies bleed", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 3.2);
-      ctx.fillText("for 2% HP / sec", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 3.3);
+      ctx.fillText("Make enemies bleed", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 3.2 + 22);
+      ctx.fillText("for 2% HP / sec", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 3.2 + 20 + 22);
 
-      // levels
-      let daggerLevel = this.shop.daggerLevel;
+      ctx.fillText("Current Level:", this.nameStartX + 190, 70 + 768 / 2 - 325 + 125 * 3.2 + 13);
+      let daggerLevel = this.game.knight.daggerLevel;
       for (let i = 0; i < this.shop.itemLevels; i++) {
         ctx.beginPath();
-        ctx.arc(this.bubblesStart - (86 - 14 * i), 580, 5, 0, 2 * Math.PI, false);
+        ctx.arc(this.bubblesStart + 40 - (86 - 14 * i), 556, 5, 0, 2 * Math.PI, false);
         if (daggerLevel > 0) {
           ctx.globalAlpha = 0.9;
           ctx.fillStyle = "magenta";
@@ -290,6 +275,24 @@ class ShopUI {
         ctx.strokeStyle = "white";
         ctx.stroke();
       }
+
+      ctx.globalAlpha = 0.7;
+      ctx.fillStyle = "gray";
+      ctx.fillRect(850, 530, 55, 30);
+      ctx.fillRect(850, 530 - 130, 55, 30);
+      ctx.fillRect(850, 530 - 130 * 2, 55, 30);
+      ctx.fillRect(850, 530 - 130 * 3, 55, 30);
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "white";
+      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551);
+      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551 - 130);
+      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551 - 130 * 2);
+      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551 - 130 * 3);
+
+      ctx.restore();
+
+      // // levels
     } else {
       // remove from world if associated shop isnt active
       this.removeFromWorld = true;
@@ -297,19 +300,21 @@ class ShopUI {
   }
 
   levelGoggles() {
-    if (this.shop.skillPoints > 0 && this.shop.gogglesLevel < this.shop.itemLevels) {
-      if (this.shop.gogglesLevel == 0) {
-        this.shop.gogglesLevel++;
+    if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.gogglesLevel < this.shop.itemLevels) {
+      if (this.game.knight.gogglesLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
+        this.game.knight.gogglesLevel++;
         this.game.knight.xpSystem.skillPoints--;
-      } else if (this.shop.gogglesLevel == 1 && this.shop.skillPoints > 1) {
-        this.shop.gogglesLevel++;
+      } else if (this.game.knight.gogglesLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
+        this.game.knight.gogglesLevel++;
         this.game.knight.xpSystem.skillPoints -= 2;
-      } else if (this.shop.gogglesLevel == 2 && this.shop.skillPoints > 2) {
-        this.shop.gogglesLevel++;
+      } else if (this.game.knight.gogglesLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
+        this.game.knight.gogglesLevel++;
         this.game.knight.xpSystem.skillPoints -= 3;
-      } else if (this.shop.gogglesLevel == 3 && this.shop.skillPoints > 3) {
-        this.shop.gogglesLevel++;
+      } else if (this.game.knight.gogglesLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
+        this.game.knight.gogglesLevel++;
         this.game.knight.xpSystem.skillPoints -= 4;
+      } else {
+        console.log("REACHED HERE");
       }
     } else if (this.shop.gogglesLevel == this.shop.itemLevels) {
       console.log("MAX LEVEL");
@@ -317,11 +322,12 @@ class ShopUI {
       console.log("Not enough SP");
     }
     this.game.single_click = false;
-    this.game.knight.gogglesLevel = this.shop.gogglesLevel;
+    console.log("goggle level " + this.game.knight.gogglesLevel);
+    //this.game.knight.gogglesLevel = this.shop.gogglesLevel;
   }
 
   levelArmor() {
-    if (this.shop.skillPoints > 0 && this.shop.armorLevel < this.shop.itemLevels) {
+    if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.armorLevel < this.shop.itemLevels) {
       if (this.shop.armorLevel == 0) {
         this.shop.armorLevel++;
         this.game.knight.xpSystem.skillPoints--;
@@ -345,7 +351,7 @@ class ShopUI {
   }
 
   levelPotion() {
-    if (this.shop.skillPoints > 0 && this.shop.potionLevel < this.shop.itemLevels) {
+    if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.potionLevel < this.shop.itemLevels) {
       if (this.shop.potionLevel == 0) {
         this.shop.potionLevel++;
         this.game.knight.xpSystem.skillPoints--;
@@ -369,7 +375,7 @@ class ShopUI {
   }
 
   levelDagger() {
-    if (this.shop.skillPoints > 0 && this.shop.daggerLevel < this.shop.itemLevels) {
+    if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.daggerLevel < this.shop.itemLevels) {
       if (this.shop.daggerLevel == 0) {
         this.shop.daggerLevel++;
         this.game.knight.xpSystem.skillPoints--;

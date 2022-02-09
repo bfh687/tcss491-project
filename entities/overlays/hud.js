@@ -9,6 +9,7 @@ class HUD {
 
   draw(ctx) {
     // get time
+    ctx.save();
     var minutes = Math.floor(this.game.timer.gameTime / 60);
     var seconds = Math.floor(this.game.timer.gameTime % 60);
     var time = minutes + ":";
@@ -16,8 +17,12 @@ class HUD {
     time += seconds;
 
     // fps counter
-    // ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 20, 150);
-    // ctx.restore();
+    ctx.font = "16px bitpap";
+    ctx.fillStyle = "white";
+    ctx.fillText("FPS: " + Math.round(1.0 / this.game.clockTick), 15, 25);
+    ctx.fillText(time, 70, 25);
+    ctx.fillText("SP: " + this.game.knight.xpSystem.skillPoints, 15, 45);
+    ctx.restore();
 
     // xp bar
     var width = 250;

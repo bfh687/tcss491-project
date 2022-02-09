@@ -31,10 +31,6 @@ class Knight {
     // bounding box for collisions
     this.updateBoundingBox();
 
-    // goggles
-    this.gogglesLevel = 0;
-    this.gogglesMultiplier = 1.5;
-
     // information about player stats
     this.attackDamage = 200;
     this.critMultiplier = 5;
@@ -45,24 +41,24 @@ class Knight {
     this.regenRate = 2;
 
     // misc
-
     this.kills = 0;
     this.xpSystem = new XP(this);
 
-    // armor
+    // shop item info
+    this.gogglesLevel = 0;
+    this.gogglesMultiplier = 1;
+
     this.armorLevel = 0;
     this.armorDeflect = 1;
 
-    // potion
     this.potionLevel = 0;
     this.potionRegen = 0.025;
 
-    // dagger
     this.daggerLevel = 0;
     this.daggerBleed = 5;
     this.bleedDuration = 5000;
 
-    this.currency = 0;
+    // init droppable items
     this.items = [];
     this.loadPlayerItems();
 
@@ -476,17 +472,6 @@ class Knight {
       attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
     }
   }
-
-  //rand
-  // [0] -> Shatterproof Skull
-  // [1] -> Bone Thickener
-  // [2] -> Spare Heart
-  // [3] -> Wing
-  // [4] -> Scale
-  // [5] -> Clover 1
-  // [6] -> Clover 2
-  // [7] -> Clover 3
-  // [8] -> Clover 4
 
   collectSpareHeart() {
     this.health = this.maxHealth;

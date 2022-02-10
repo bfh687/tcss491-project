@@ -35,7 +35,7 @@ ASSET_MANAGER.queueDownload("./sprites/map/foilage_shadows.png");
 ASSET_MANAGER.queueDownload("./sprites/map/props.png");
 ASSET_MANAGER.queueDownload("./sprites/map/prop_shadows.png");
 
-for (var i = 1; i < 28; i++) {
+for (var i = 0; i <= 32; i++) {
   ASSET_MANAGER.queueDownload("./sprites/death_transition/death_transition (" + i + ").png");
 }
 

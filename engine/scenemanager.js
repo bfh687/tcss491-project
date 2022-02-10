@@ -13,7 +13,7 @@ class SceneManager {
     this.knight = new Knight(this.game, midpoint_x + 1700, midpoint_y + 200);
     this.loadLevel(0, 0, false, true);
 
-    this.transitionIndex = 1;
+    this.transitionIndex = 0;
     this.frameCooldown = 0.1;
     this.alpha = 0;
     this.textAlpha = 0;
@@ -57,7 +57,7 @@ class SceneManager {
       this.frameCooldown = 0.07;
       this.transitionIndex++;
     }
-    if (frame) ctx.drawImage(frame, 0, 0, 1300, 800);
+    if (frame) ctx.drawImage(frame, 0, 0, 1366, 780);
     if (this.transitionIndex > 6) {
       this.alpha = Math.min(this.alpha + this.game.clockTick, 1);
     }

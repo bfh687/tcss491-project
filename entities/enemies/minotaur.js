@@ -1,0 +1,341 @@
+class Minotaur {
+  constructor(game, x, y) {
+    Object.assign(this, { game, x, y });
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/minotaur.png");
+    this.animations = [];
+    this.loadAnimations();
+
+    this.scale = 4;
+
+    // skeleton spawn point
+    this.originX = this.x;
+    this.originY = this.y;
+
+    // states: idle (0), walking (1), attack (2), damaged (3), dying (4)
+    this.state = 0;
+
+    // directions: left (0), right (1)
+    this.direction = 1;
+
+    // damage number counters
+    this.textAnimations = [];
+
+    // bounding box for collisions
+    this.updateBoundingBox();
+    this.hitBox = null;
+
+    // remove from world
+    this.removeFromWorld = false;
+
+    // information about stats + attacking
+    this.maxHealth = 10000;
+    this.health = 10000;
+    this.attackDamage = 2000;
+    this.attackCooldown = 3;
+    this.damageCooldown = 0.05;
+
+    this.isBleeding = false;
+    this.bleedingCooldown = 1;
+
+    // information about skeleton movement
+    this.aggroDist = 500;
+    this.minSpeed = 125 + 25 * Math.random();
+    this.currSpeed = this.minSpeed;
+
+    // misc
+    this.alpha = 1;
+    this.xpDropped = 250;
+  }
+
+  loadAnimations() {
+    // left animations are right animations + 10
+    const idleRightIndex = 0;
+    const walkingRightIndex = 1;
+    const notSureRight = 2;
+    const attackRight = 3;
+    const weirdSwing = 4;
+    const staffDownRight = 5;
+    const specialAttackRight = 6;
+    const nothing = 7;
+    // not sure if this one is hurt or 7 based on sprite sheet.
+    const hurtRight = 8;
+    const dieRight = 9;
+    this.animations.push([], [], [], [], []);
+
+    // idle animations: left, right
+    this.animations[0].push(new Animator(this.spritesheet, 0, 96 * (idleRightIndex + 10), 96, 96, 5, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 96 * idleRightIndex, 96, 96, 5, 0.16, 0, 0, false, true));
+
+    // walking animations: left, right
+    this.animations[1].push(new Animator(this.spritesheet, 0, 96 * (walkingRightIndex + 10), 96, 96, 8, 0.13, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 0, 96 * walkingRightIndex, 96, 96, 8, 0.13, 0, 0, false, true));
+
+    // index 2
+    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * (notSureRight + 10), 96, 96, 5, 0.16, 0, 0, false, true));
+    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * notSureRight, 96, 96, 5, 0.16, 0, 0, false, true));
+
+    // attack animations: left, right
+    this.animations[2].push(new Animator(this.spritesheet, 0, 96 * (attackRight + 10), 96, 96, 9, 0.09, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 96 * attackRight, 96, 96, 9, 0.09, 0, 0, false, false));
+
+    // weird swing: left, right
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (weirdSwing + 10), 96, 96, 5, 0.16, 0, 0, false, true));
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * weirdSwing, 96, 96, 5, 0.16, 0, 0, false, true));
+
+    // staff down: left, right
+    this.animations[7].push(new Animator(this.spritesheet, 0, 96 * (staffDownRight + 10), 96, 96, 6, 0.16, 0, 0, false, true));
+    this.animations[7].push(new Animator(this.spritesheet, 0, 96 * staffDownRight, 96, 96, 6, 0.16, 0, 0, false, true));
+
+    // special attack: left, right
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (specialAttackRight + 10), 96, 96, 9, 0.16, 0, 0, false, true));
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * specialAttackRight, 96, 96, 9, 0.16, 0, 0, false, true));
+
+    // really not sure: left, right
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (nothing + 10), 96, 96, 3, 0.16, 0, 0, false, true));
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * nothing, 96, 96, 3, 0.16, 0, 0, false, true));
+
+    // damaged animations: left, right
+    this.animations[3].push(new Animator(this.spritesheet, 0, 96 * (hurtRight + 10), 96, 96, 3, 0.08, 0, 0, false, false));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 96 * hurtRight, 96, 96, 3, 0.08, 0, 0, false, false));
+
+    // death animations: left, right
+    this.animations[4].push(new Animator(this.spritesheet, 0, 96 * (dieRight + 10), 96, 96, 12, 0.12, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 96 * dieRight, 96, 96, 12, 0.12, 0, 0, false, false));
+  }
+
+  update() {
+    // decrement cooldowns
+    if (this.state != 2) {
+      this.attackCooldown -= this.game.clockTick;
+    }
+
+    if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
+    if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
+
+    if (this.isBleeding) {
+      if (this.bleedingCooldown <= 0) {
+        this.bleed();
+        console.log("TICK");
+        this.bleedingCooldown = 1;
+      }
+    }
+
+    // enraged !
+    if (this.health <= 40) {
+      this.currSpeed = 175;
+    }
+
+    // if dead, remove from world
+    if (this.health <= 0) {
+      this.state = 4;
+    }
+
+    // handle attacking state + animation
+    if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
+      var curr_frame = this.animations[this.state][this.direction].currentFrame();
+      this.updateHitBox();
+      return;
+    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
+      this.animations[this.state][this.direction].reset();
+      this.state = 0;
+    }
+
+    // handle damaged state + animation
+    else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
+      return;
+    } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
+      this.animations[this.state][this.direction].reset();
+      this.state = 0;
+    }
+
+    // if death animation is playing, let it play out, otherwise remove entity from world
+    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+      this.updateHitBox();
+      return;
+    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+      // calculate player center
+      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
+
+      // drop item on death
+      if (Math.floor(Math.random()) + 1 === 1) {
+        const item = new Item(this.game, center_x, center_y);
+        this.game.addEntity(item);
+      }
+
+      // increment knight kills on death
+      this.game.knight.kills += 1;
+      this.game.knight.xpSystem.incrementXP(this.xpDropped);
+      this.removeFromWorld = true;
+      return;
+    }
+
+    var knight = this.game.knight;
+
+    if (knight) {
+      // calculate distance towards knight
+      var dist = getDistance(knight.x, knight.y, this.x, this.y);
+
+      if (dist < this.aggroDist) {
+        var xVector = (knight.x - this.x) / dist;
+        var yVector = (knight.y - this.y) / dist;
+
+        // set direction based on player location
+        if (this.hurtBox.left >= knight.hurtBox.right) {
+          this.direction = 0;
+        } else if (this.hurtBox.right <= knight.hurtBox.left) {
+          this.direction = 1;
+        }
+
+        // set state based on vectors towards players
+        if (xVector != 0 || yVector != 0) {
+          this.state = 1;
+        } else {
+          this.state = 0;
+        }
+
+        // set distance away from the player that the eyeball must be to begin attacking
+        var attackDist = 30;
+        if (xVector < 0) attackDist *= -1;
+
+        // get bounding boxes of NEXT tick (assuming no major changes in fps)
+        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist, this.y + 80, 32, 24);
+        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
+
+        // check collisions and attack if there would be on on the vertical axis
+        if (verticalBox.collide(knight.hurtBox)) {
+          yVector = 0;
+          if (this.attackCooldown <= 0) {
+            this.state = 2;
+            this.attackCooldown = 1;
+          }
+        }
+
+        // check collisions and attack if there would be on on the horizontal axis
+        if (horizontalBox.collide(knight.hurtBox)) {
+          xVector = 0;
+          if (this.attackCooldown <= 0) {
+            this.state = 2;
+            this.attackCooldown = 1;
+          }
+        }
+
+        // if not moving, set state to idle
+        if (xVector == 0 && yVector == 0) this.state = 0;
+      }
+
+      // path towards origin/spawn point
+      else {
+        // calculate distance to spawn point
+        var dist = getDistance(this.originX, this.originY, this.x, this.y);
+
+        // calculate vector towards spawn point
+        var xVector = (this.originX - this.x) / dist;
+        var yVector = (this.originY - this.y) / dist;
+
+        // set direction based on location
+        if (xVector >= 0) this.direction = 1;
+        else this.direction = 0;
+
+        // set state based on vectors towards spawn point
+        if (xVector != 0 || yVector != 0) {
+          this.state = 1;
+        } else {
+          this.state = 0;
+        }
+
+        // set idle behavior + direction of skeleton
+        if (Math.abs(dist) < 1) {
+          xVector = yVector = 0;
+          this.state = 0;
+          this.direction = 0;
+        }
+      }
+    }
+
+    this.x += xVector * this.currSpeed * this.game.clockTick;
+    this.y += yVector * this.currSpeed * this.game.clockTick;
+    this.updateBoundingBox();
+  }
+
+  bleed() {
+    this.health = Math.max(this.health - this.bleedDamage, 0);
+    this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
+  }
+
+  deflected(damage) {
+    this.textAnimations.push(new TextAnimator(damage, "cyan", this.game, this));
+  }
+
+  updateBoundingBox() {
+    // looking left
+    if (this.direction == 0) {
+      this.boundingBox = new BoundingBox(this.x + 144, this.y + (104 * this.scale) / 2 - 32, (96 * this.scale) / 3, 96);
+      this.hurtBox = new BoundingBox(this.x + 138, this.y + 64, (96 * this.scale) / 3, (96 * this.scale) / 2);
+    }
+    // looking right
+    else {
+      this.boundingBox = new BoundingBox(this.x + 138, this.y + (104 * this.scale) / 2 - 32, (96 * this.scale) / 20, 96);
+      this.hurtBox = new BoundingBox(this.x + 144, this.y + 64, (96 * this.scale) / 2, (96 * this.scale) / 20);
+    }
+
+    this.updateHitBox();
+  }
+
+  // let blake handle ugly stuff
+  updateHitBox() {
+    var current_frame = this.animations[this.state][this.direction].currentFrame();
+    if (this.state == 2) {
+      if (current_frame == 4) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x, this.y + 15, 96, 56);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 96, this.y + 15, 96, 56);
+        }
+      } else if (current_frame == 5) {
+        this.hitBox = new BoundingBox(this.x + 96, this.y + 15, 64, 24);
+      } else if (current_frame == 8) {
+        this.hitBox = new BoundingBox(this.x, this.y + 32, 128, 48);
+      } else if (current_frame == 9) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 96, this.y + 32, 64, 32);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 4, this.y + 32, 64, 36);
+        }
+      } else {
+        this.hitBox = null;
+      }
+    } else {
+      this.hitBox = null;
+    }
+  }
+
+  draw(ctx) {
+    // draw shadows if not dying
+    if (this.state != 4) {
+      drawShadow(ctx, this.game, this);
+    }
+
+    this.animations[this.state][this.direction].drawFrame(
+      this.game.clockTick,
+      ctx,
+      this.x - this.game.camera.x,
+      this.y - this.game.camera.y,
+      this.scale
+    );
+
+    // draw hurt box and bounding box if parameter is on
+    if (params.DEBUG) {
+      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
+      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
+      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "blue");
+    }
+
+    // loop through and print all damage animations
+    for (var i = 0; i < this.textAnimations.length; i++) {
+      this.textAnimations[i].drawText(ctx);
+    }
+
+    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+  }
+}

@@ -288,7 +288,7 @@ class Knight {
   checkCollisions() {
     this.game.entities.forEach((entity) => {
       // prevent entity pass through for alive enemies
-      if ((entity instanceof Skeleton || entity instanceof Eyeball) && entity.state != 4 && entity.state != 5) {
+      if ((entity instanceof Skeleton || entity instanceof Eyeball || entity instanceof Minotaur) && entity.state != 4 && entity.state != 5) {
         // handle sliding collisions
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;
@@ -329,6 +329,21 @@ class Knight {
 
       // handle eyeball collisions
       else if (entity instanceof Eyeball) {
+        // handle case where player attacks the eyeball
+        if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
+          if (entity.state != 2) entity.state = 4;
+          this.handleAttackCollision(this, entity);
+        }
+
+        // handle case where eyeball attcks the player
+        if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+          if (this.state != 2) this.state = 3;
+          this.handleAttackCollision(entity, this);
+        }
+      }
+
+      // handle eyeball collisions
+      else if (entity instanceof Minotaur) {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
           if (entity.state != 2) entity.state = 4;

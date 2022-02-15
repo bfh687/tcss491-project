@@ -11,6 +11,7 @@ ASSET_MANAGER.queueDownload("./sprites/entities/knight_dash.png");
 // enemy-related downloads
 ASSET_MANAGER.queueDownload("./sprites/entities/skeleton.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/eyeball.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/minotaur.png");
 
 // cursor downloads
 ASSET_MANAGER.queueDownload("./sprites/hud/cursor.png");

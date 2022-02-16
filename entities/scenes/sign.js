@@ -43,9 +43,17 @@ class Sign {
   init(code) {
     switch (code) {
       case "eastsign":
-      case "westsign":
         this.sprite_x = 3 * 32;
         this.sprite_y = 5 * 32;
+        this.sprite_width = 32;
+        this.sprite_height = 32;
+        this.interaction_box = new BoundingBox(this.x - 16, this.y, 96, 96);
+        this.boundingBox = new BoundingBox(this.x + 6, this.y + 50, 48, 12);
+        this.icon_offset = -35;
+        break;
+      case "westsign":
+        this.sprite_x = 3 * 32;
+        this.sprite_y = 7 * 32;
         this.sprite_width = 32;
         this.sprite_height = 32;
         this.interaction_box = new BoundingBox(this.x - 16, this.y, 96, 96);
@@ -166,11 +174,7 @@ class SignUI {
 
     this.sound_cooldown -= this.game.clockTick;
     this.interaction_cooldown -= this.game.clockTick;
-    if (
-      this.game.keys[" "] &&
-      this.interaction_cooldown <= 0 &&
-      this.text_index > this.dialogue[this.dialogue_index].length - 1
-    ) {
+    if (this.game.keys[" "] && this.interaction_cooldown <= 0 && this.text_index > this.dialogue[this.dialogue_index].length - 1) {
       if (this.dialogue_index == this.dialogue.length - 1) {
         this.sign.isSignActive = false;
         this.removeFromWorld = true;

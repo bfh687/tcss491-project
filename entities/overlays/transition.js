@@ -33,7 +33,7 @@ class Transition {
     if (this.flipped) {
       ctx.save();
       ctx.scale(-1, -1);
-      ctx.drawImage(frame, 0 - 1366 + 4, 0 - 768 + 4, 1366 + 4, 768 + 4);
+      ctx.drawImage(frame, 0 - 1366, 0 - 768 + 4, 1366 + 4, 768 + 4);
       ctx.restore();
     } else {
       ctx.drawImage(frame, 0, 0, 1366 + 4, 768 + 4);

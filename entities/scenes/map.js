@@ -251,6 +251,39 @@ class Map {
     this.bounding_boxes.push(new BoundingBox(this.x + 1992 * 2, this.y + 672 * 2, 14, 7 * 64));
     this.bounding_boxes.push(new BoundingBox(this.x + 2195 * 2, this.y + 672 * 2, 14, 3 * 64));
     this.bounding_boxes.push(new BoundingBox(this.x + 2320 * 2, this.y + 737 * 2, 14, 3 * 64));
+
+    this.bounding_boxes.push(new BoundingBox(this.x + 1544 * 2, this.y + 1408 * 2, 14, 1 * 64)); // Bottom middle of the map going left, near the big group of trees.
+    this.bounding_boxes.push(new BoundingBox(this.x + 1617 * 2, this.y + 1408 * 2, 14, 1 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1512 * 2, this.y + 1441 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1416 * 2, this.y + 1536 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1264 * 2, this.y + 1471 * 2, 14, 3.2 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1329 * 2, this.y + 1568 * 2, 14, 2 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1360 * 2, this.y + 1313 * 2, 14, 5.1 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1160 * 2, this.y + 1536 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 848 * 2, this.y + 1568 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 528 * 2, this.y + 1472 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 240 * 2, this.y + 1248 * 2, 14, 7 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 208 * 2, this.y + 1217 * 2, 14, 1 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 144 * 2, this.y + 1120 * 2, 14, 3.05 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 112 * 2, this.y + 996 * 2, 14, 4 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 144 * 2, this.y + 832 * 2, 14, 5.35 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 208 * 2, this.y + 662 * 2, 14, 5.5 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 232 * 2, this.y + 576 * 2, 14, 2.7 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 457 * 2, this.y + 545 * 2, 14, 2.92* 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 528 * 2, this.y + 545 * 2, 14, 2.92* 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 585 * 2, this.y + 545 * 2, 14, 2.92* 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 616 * 2, this.y + 513 * 2, 14, 2.93 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 688 * 2, this.y + 513 * 2, 14, 5.95 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 720 * 2, this.y + 641 * 2, 14, 3.93 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 785 * 2, this.y + 704 * 2, 14, 5.95 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 816 * 2, this.y + 832 * 2, 14, 5 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 880 * 2, this.y + 928 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 912 * 2, this.y + 961 * 2, 14, 2.95 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 976 * 2, this.y + 992 * 2, 14, 5.2 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 880 * 2, this.y + 1152 * 2, 14, 6 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 944 * 2, this.y + 1280 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1168 * 2, this.y + 1312 * 2, 14, 3 * 64));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1225 * 2, this.y + 1312 * 2, 14, 3 * 64));
     // Horizontal Boxes
     this.bounding_boxes.push(new BoundingBox(this.x + 285, this.y + 510, 1.25 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 360, this.y + 320, 3 * 64, 14));
@@ -343,7 +376,7 @@ class Map {
     this.bounding_boxes.push(new BoundingBox(this.x + 1225 * 2, this.y + 865 * 2, 1 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 1072 * 2, this.y + 832 * 2, 5 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 1000 * 2, this.y + 864 * 2, 2.47 * 64, 14));
-    this.bounding_boxes.push(new BoundingBox(this.x + 969 * 2, this.y + 832 * 2, 1 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 969 * 2, this.y + 833 * 2, 0.95 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 969 * 2, this.y + 736 * 2, 2 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 1032 * 2, this.y + 576 * 2, 2.2 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 1096 * 2, this.y + 512 * 2, 4.3 * 64, 14));
@@ -356,7 +389,53 @@ class Map {
     this.bounding_boxes.push(new BoundingBox(this.x + 1992 * 2, this.y + 672 * 2, 6.5 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 2195 * 2, this.y + 737 * 2, 4 * 64, 14));
     this.bounding_boxes.push(new BoundingBox(this.x + 2320 * 2, this.y + 832 * 2, 2.1 * 64, 14));
+
+    this.bounding_boxes.push(new BoundingBox(this.x + 1544 * 2, this.y + 1408 * 2, 2.5 * 64, 14)); // Bottom middle of the map going left, near the big group of trees.
+    this.bounding_boxes.push(new BoundingBox(this.x + 1512 * 2, this.y + 1441 * 2, 1.2 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1416 * 2, this.y + 1536 * 2, 3.2 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1264 * 2, this.y + 1471 * 2, 3.2 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1270 * 2, this.y + 1568 * 2, 2.05 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1329 * 2, this.y + 1601* 2, 2.75 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1160 * 2, this.y + 1536* 2, 3.3 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 848 * 2, this.y + 1600* 2, 10 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 528 * 2, this.y + 1568* 2, 10 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 240 * 2, this.y + 1472* 2, 9 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 208 * 2, this.y + 1248* 2, 1 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 144 * 2, this.y + 1217* 2, 2.1 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 112 * 2, this.y + 1120* 2, 1 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 112 * 2, this.y + 996* 2, 1 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 144 * 2, this.y + 832 * 2, 2.2 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 208 * 2, this.y + 662 * 2, 1 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 144 * 2, this.y + 609 * 2, 3 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 232 * 2, this.y + 576 * 2, 7 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 232 * 2, this.y + 632 * 2, 7.2 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 457 * 2, this.y + 545 * 2, 2.43 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 457 * 2, this.y + 600 * 2, 2.3 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 593 * 2, this.y + 600 * 2, 0.9 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 593 * 2, this.y + 545 * 2, 0.9 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 616 * 2, this.y + 513 * 2, 2.46 * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 616 * 2, this.y + 567 * 2, 2.3   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 688 * 2, this.y + 641 * 2, 1   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 688 * 2, this.y + 696 * 2, 1   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 721 * 2, this.y + 704 * 2, 2.2   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 722 * 2, this.y + 761 * 2, 2.1   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 785 * 2, this.y + 832 * 2, 1   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 785 * 2, this.y + 888 * 2, 1   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 816 * 2, this.y + 928 * 2, 2.22   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 816 * 2, this.y + 985 * 2, 2.22   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 880 * 2, this.y + 961 * 2, 1.22   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 880 * 2, this.y + 1017 * 2, 1.22   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 912 * 2, this.y + 992 * 2, 2   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 912 * 2, this.y + 1049 * 2, 2   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 880 * 2, this.y + 1152 * 2, 3.2   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 880 * 2, this.y + 1280 * 2, 2.15   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 880 * 2, this.y + 1337 * 2, 2.15   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 944 * 2, this.y + 1312 * 2, 7.22   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 944 * 2, this.y + 1369 * 2, 7   * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1225 * 2, this.y + 1312 * 2, 4.4  * 64, 14));
+    this.bounding_boxes.push(new BoundingBox(this.x + 1225 * 2, this.y + 1369 * 2, 4.4  * 64, 14));
   }
+
   update() {}
 
   draw(ctx) {

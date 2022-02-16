@@ -29,6 +29,7 @@ class Skeleton {
     this.maxHealth = 400;
     this.health = 400;
     this.attackDamage = 2000;
+
     this.attackCooldown = 1;
     this.damageCooldown = 0.05;
 
@@ -214,7 +215,11 @@ class Skeleton {
         if (Math.abs(dist) < 1) {
           xVector = yVector = 0;
           this.state = 0;
-          this.direction = 0;
+          if (this.hurtBox.left >= knight.hurtBox.right) {
+            this.direction = 0;
+          } else if (this.hurtBox.right <= knight.hurtBox.left) {
+            this.direction = 1;
+          }
         }
       }
     }

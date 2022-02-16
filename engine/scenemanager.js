@@ -12,6 +12,7 @@ class SceneManager {
 
     this.title = true;
     this.level = null;
+
     let midpoint_x = 1366 / 2;
     let midpoint_y = 768 / 2;
     this.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
@@ -34,7 +35,7 @@ class SceneManager {
 
     // add knight
     this.game.addEntity(this.knight);
-
+    
     if (level == 1) {
       if (!boss) {
         // add map and teleporter
@@ -55,21 +56,12 @@ class SceneManager {
     }
   }
 
+
   update() {
     this.shakeDuration -= this.game.clockTick;
     if (this.shakeDuration >= 0) {
       this.y_offset = Math.random() * 10 - 5;
       this.x_offset = Math.random() * 10 - 5;
-    }
-
-    if (this.game.entities.length < 4) {
-      this.respawnTimer -= this.game.clockTick;
-      if (this.respawnTimer <= 0) {
-        for (var i = 0; i < 5; i++) {
-          this.game.addEntity(new Skeleton(this.game, this.knight.x + 290, this.knight.y + 150));
-        }
-        this.respawnTimer = 10;
-      }
     }
 
     let midpoint_x = 1366 / 2 - 48;

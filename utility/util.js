@@ -1,33 +1,12 @@
 /** Global Parameters Object */
 const params = {
-    DEBUG: true,
-    SCALE: 3,
-    BITWIDTH: 16,
+  DEBUG: true,
+  SCALE: 3,
+  BITWIDTH: 16,
 };
 
 /** Easy access to math functions */
-const {
-    pow,
-    ceil,
-    floor,
-    round,
-    log,
-    log2: lg,
-    max,
-    min,
-    random,
-    sqrt,
-    abs,
-    PI,
-    E,
-    sin,
-    cos,
-    tan,
-    asin,
-    acos,
-    atan,
-    atan2,
-} = Math;
+const { pow, ceil, floor, round, log, log2: lg, max, min, random, sqrt, abs, PI, E, sin, cos, tan, asin, acos, atan, atan2 } = Math;
 
 /** Easy access to logging :) (Python syntax XD) */
 const { log: print } = console;
@@ -65,21 +44,21 @@ const hsl = (h, s, l) => `hsl(${h}, ${s}, ${l})`;
 
 /** Creates an alias for requestAnimationFrame for backwards compatibility */
 window.requestAnimFrame = (() => {
-    return (
-        window.requestAnimationFrame ||
-        window.webkitRequestAnimationFrame ||
-        window.mozRequestAnimationFrame ||
-        window.oRequestAnimationFrame ||
-        window.msRequestAnimationFrame ||
-        /**
-         * Compatibility for requesting animation frames in older browsers
-         * @param {Function} callback Function
-         * @param {DOM} element DOM ELEMENT
-         */
-        ((callback, element) => {
-            window.setTimeout(callback, 1000 / 60);
-        })
-    );
+  return (
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    window.mozRequestAnimationFrame ||
+    window.oRequestAnimationFrame ||
+    window.msRequestAnimationFrame ||
+    /**
+     * Compatibility for requesting animation frames in older browsers
+     * @param {Function} callback Function
+     * @param {DOM} element DOM ELEMENT
+     */
+    ((callback, element) => {
+      window.setTimeout(callback, 1000 / 60);
+    })
+  );
 })();
 
 /**
@@ -116,7 +95,7 @@ const deepObjectCopy = (object) => JSON.parse(JSON.stringify(object));
  * @returns Distance between the two points
  */
 const getDistance = (x1, y1, x2, y2) => {
-    return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
+  return sqrt(pow(x2 - x1, 2) + pow(y2 - y1, 2));
 };
 
 /**

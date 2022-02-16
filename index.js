@@ -3,6 +3,8 @@ const ASSET_MANAGER = new AssetManager();
 
 // sfx downloads
 ASSET_MANAGER.queueDownload("./sfx/sword_slash.mp3");
+ASSET_MANAGER.queueDownload("./sfx/click.wav");
+ASSET_MANAGER.queueDownload("./sfx/text.wav");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx0.mp3");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx1.mp3");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx2.mp3");
@@ -29,11 +31,22 @@ ASSET_MANAGER.queueDownload("./sprites/items/shopitems.png");
 ASSET_MANAGER.queueDownload("./sprites/items/goggles.png");
 
 // level downloads
-ASSET_MANAGER.queueDownload("./sprites/map/prototype_hub.png");
+ASSET_MANAGER.queueDownload("./sprites/map/level_1.png");
 ASSET_MANAGER.queueDownload("./sprites/map/alt_hub.png");
 ASSET_MANAGER.queueDownload("./sprites/map/shop.png");
 ASSET_MANAGER.queueDownload("./sprites/map/teleporter.png");
 ASSET_MANAGER.queueDownload("./sprites/map/bossroom.png");
+
+// foilage + props
+ASSET_MANAGER.queueDownload("./sprites/map/foilage.png");
+ASSET_MANAGER.queueDownload("./sprites/map/foilage_shadows.png");
+
+ASSET_MANAGER.queueDownload("./sprites/map/props.png");
+ASSET_MANAGER.queueDownload("./sprites/map/prop_shadows.png");
+
+for (var i = 0; i <= 32; i++) {
+  ASSET_MANAGER.queueDownload("./sprites/death_transition/death_transition (" + i + ").png");
+}
 
 ASSET_MANAGER.downloadAll(() => {
   const canvas = document.getElementById("gameWorld");

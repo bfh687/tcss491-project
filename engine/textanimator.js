@@ -8,7 +8,7 @@ class TextAnimator {
     });
 
     // max capacity for current text animator
-    this.max = 12 + Math.floor(Math.random() * 10);
+    this.max = 25 + Math.floor(Math.random() * 10);
 
     // calculate random x offset value for the tex
     this.x_rand = Math.random() * 40 - 20;
@@ -43,7 +43,7 @@ class TextAnimator {
     }
 
     // set font of text
-    ctx.font = "15px Arial";
+    ctx.font = "15px bitpap";
 
     // draw text background
     ctx.fillStyle = "black";

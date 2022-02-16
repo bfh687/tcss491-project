@@ -2,6 +2,8 @@ class SceneManager {
   constructor(game) {
     this.game = game;
     this.game.camera = this;
+
+    // initialize camera coords
     this.x = 0;
     this.y = 0;
 
@@ -15,8 +17,9 @@ class SceneManager {
 
     let midpoint_x = 1366 / 2;
     let midpoint_y = 768 / 2;
+
     this.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
-    this.knight.direction = 2;
+    // load first level
     this.loadLevel(1, false);
   }
 
@@ -44,6 +47,12 @@ class SceneManager {
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0));
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
+
+        this.minX = 32;
+        this.minY = 0;
+
+        this.maxX = 3216 + 32 * 57;
+        this.maxY = 45 * 60;
       } else {
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
@@ -75,8 +84,9 @@ class SceneManager {
 
     let midpoint_x = 1366 / 2 - 48;
     let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
-    this.x = this.knight.x - midpoint_x;
-    this.y = this.knight.y - midpoint_y;
+
+    this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX);
+    this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY);
   }
 
   draw(ctx) {}

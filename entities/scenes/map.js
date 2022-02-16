@@ -25,28 +25,87 @@ class Map {
       ])
     );
     this.game.addEntity(new Sign(this.game, 32 * 109, 32 * 18, "slab1", ["That hero never came...", "and they may never, but still they hoped..."]));
+    this.game.addEntity(new Sign(this.game, 32 * 177, 32 * 28, "slab1", ["Here lies the graves of those who have failed to pass..."]));
+
+    this.game.addEntity(new Sign(this.game, 32 * 71, 32 * 86, "eastsign", ["This way..."]));
+    this.game.addEntity(new Sign(this.game, 32 * 77, 32 * 86, "westsign", ["This way..."]));
+
+    this.game.addEntity(new Sign(this.game, 32 * 163, 32 * 30, "slab2", ["Boss ahead...", "Are you sure you're ready?"]));
+    this.game.addEntity(new Sign(this.game, 32 * 173, 32 * 26, "slab2", ["One last chance to turn back..."]));
+    this.game.addEntity(
+      new Sign(this.game, 32 * 167, 32 * 24, "slab3", [
+        "For thousands of years challengers have faced the Minotaur...",
+        "For thousands of years the Minotaur has gone undefeated...",
+      ])
+    );
 
     // // add pillars
     this.game.addEntity(new Prop(this.game, 19 * 32, 4 * 32, "pillar1"));
+    this.game.addEntity(new Prop(this.game, 163 * 32, 16 * 32, "pillar1"));
+
+    this.game.addEntity(new Prop(this.game, 161 * 32, 38 * 32, "pillar1"));
+
+    this.game.addEntity(new Prop(this.game, 97 * 32, 36 * 32, "pillar1"));
+    this.game.addEntity(new Prop(this.game, 111 * 32, 42 * 32, "pillar1"));
+
     this.game.addEntity(new Prop(this.game, 21 * 32, 62 * 32, "pillar1"));
     this.game.addEntity(new Prop(this.game, 29 * 32, 6 * 32, "pillar2"));
+    this.game.addEntity(new Prop(this.game, 99 * 32, 46 * 32, "pillar2"));
+    this.game.addEntity(new Prop(this.game, 175 * 32, 46 * 32, "pillar2"));
+    this.game.addEntity(new Prop(this.game, 177 * 32, 18 * 32, "pillar2"));
+
+    this.game.addEntity(new Prop(this.game, 111 * 32, 36 * 32, "pillar2"));
+
     this.game.addEntity(new Prop(this.game, 37 * 32, 76 * 32, "pillar2"));
 
     // add bushes
     this.game.addEntity(new Foilage(this.game, 27 * 32, 8 * 32, "medbush"));
+
+    this.game.addEntity(new Foilage(this.game, 175 * 32, 20 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 177 * 32, 10 * 32, "medbush"));
+
+    this.game.addEntity(new Foilage(this.game, 173 * 32, 12 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 165 * 32, 8 * 32, "medbush"));
+
+    this.game.addEntity(new Foilage(this.game, 127 * 32, 66 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 137 * 32, 64 * 32, "medbush"));
+
+    this.game.addEntity(new Foilage(this.game, 93 * 32, 66 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 97 * 32, 68 * 32, "smallbush"));
+
     this.game.addEntity(new Foilage(this.game, 15 * 32, 48 * 32, "medbush"));
     this.game.addEntity(new Foilage(this.game, 11 * 32, 66 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 77 * 32, 94 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 191 * 32, 50 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 149 * 32, 82 * 32, "medbush"));
+    this.game.addEntity(new Foilage(this.game, 145 * 32, 76 * 32, "medbush"));
+
     this.game.addEntity(new Foilage(this.game, 43 * 32, 18 * 32, "smallbush"));
     this.game.addEntity(new Foilage(this.game, 69 * 32, 20 * 32, "smallbush"));
+    this.game.addEntity(new Foilage(this.game, 93 * 32, 46 * 32, "smallbush"));
 
     // add rocks
     this.game.addEntity(new Prop(this.game, 9 * 32, 54 * 32, "smallrock1"));
     this.game.addEntity(new Prop(this.game, 15 * 32, 58 * 32, "smallrock6"));
+    this.game.addEntity(new Prop(this.game, 139 * 32, 80 * 32, "smallrock6"));
+
+    this.game.addEntity(new Prop(this.game, 121 * 32, 50 * 32, "smallrock5"));
+    this.game.addEntity(new Prop(this.game, 115 * 32, 44 * 32, "smallrock3"));
+
+    // here
+    this.game.addEntity(new Prop(this.game, 167 * 32, 6 * 32, "smallrock6"));
+    this.game.addEntity(new Prop(this.game, 167 * 32, 10 * 32, "smallrock5"));
+    this.game.addEntity(new Prop(this.game, 163 * 32, 12 * 32, "smallrock3"));
+
     this.game.addEntity(new Prop(this.game, 21 * 32, 8 * 32, "smallrock3"));
+    this.game.addEntity(new Prop(this.game, 109 * 32, 70 * 32, "smallrock3"));
+
     this.game.addEntity(new Prop(this.game, 53 * 32, 16 * 32, "smallrock3"));
     this.game.addEntity(new Prop(this.game, 49 * 32, 60 * 32, "smallrock1"));
     this.game.addEntity(new Prop(this.game, 15 * 32, 86 * 32, "smallrock1"));
     this.game.addEntity(new Prop(this.game, 19 * 32, 12 * 32, "smallrock4"));
+    this.game.addEntity(new Prop(this.game, 63 * 32, 24 * 32, "smallrock4"));
+
     this.game.addEntity(new Prop(this.game, 17 * 32, 52 * 32, "smallrock4"));
     this.game.addEntity(new Prop(this.game, 11 * 32, 62 * 32, "smallrock3"));
     this.game.addEntity(new Prop(this.game, 23 * 32, 64 * 32, "smallrock6"));
@@ -54,59 +113,184 @@ class Map {
     this.game.addEntity(new Prop(this.game, 37 * 32, 66 * 32, "smallrock3"));
     this.game.addEntity(new Prop(this.game, 49 * 32, 68 * 32, "smallrock4"));
     this.game.addEntity(new Prop(this.game, 35 * 32, 72 * 32, "smallrock3"));
+    this.game.addEntity(new Prop(this.game, 185 * 32, 58 * 32, "smallrock3"));
+
     this.game.addEntity(new Prop(this.game, 55 * 32, 66 * 32, "smallrock5"));
+    this.game.addEntity(new Prop(this.game, 91 * 32, 94 * 32, "smallrock5"));
+    this.game.addEntity(new Prop(this.game, 191 * 32, 60 * 32, "smallrock5"));
+
     this.game.addEntity(new Prop(this.game, 21 * 32, 82 * 32, "smallrock6"));
     this.game.addEntity(new Prop(this.game, 75 * 32, 56 * 32, "smallrock6"));
+    this.game.addEntity(new Prop(this.game, 187 * 32, 64 * 32, "smallrock6"));
 
     this.game.addEntity(new Prop(this.game, 21 * 32, 88 * 32, "smallrock4"));
+    this.game.addEntity(new Prop(this.game, 97 * 32, 82 * 32, "smallrock4"));
+
+    this.game.addEntity(new Prop(this.game, 109 * 32, 80 * 32, "smallrock2"));
+
     this.game.addEntity(new Prop(this.game, 27 * 32, 10 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 103 * 32, 66 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 135 * 32, 60 * 32, "bigrock"));
+
     this.game.addEntity(new Prop(this.game, 11 * 32, 54 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 17 * 32, 84 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 51 * 32, 62 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 11 * 32, 18 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 119 * 32, 44 * 32, "bigrock"));
+
+    this.game.addEntity(new Prop(this.game, 103 * 32, 84 * 32, "bigrock"));
+
     this.game.addEntity(new Prop(this.game, 79 * 32, 58 * 32, "bigrock"));
     this.game.addEntity(new Prop(this.game, 45 * 32, 18 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 79 * 32, 94 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 91 * 32, 86 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 155 * 32, 76 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 147 * 32, 76 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 189 * 32, 62 * 32, "bigrock"));
+    this.game.addEntity(new Prop(this.game, 173 * 32, 8 * 32, "bigrock"));
+
+    this.game.addEntity(new Prop(this.game, 67 * 32, 78 * 32, "bigrock"));
 
     // add misc props
     this.game.addEntity(new Prop(this.game, 33 * 32, 8 * 32, "barrel"));
+    this.game.addEntity(new Prop(this.game, 127 * 32, 60 * 32, "barrel"));
+
     this.game.addEntity(new Prop(this.game, 15 * 32, 38 * 32, "barrel"));
+    this.game.addEntity(new Prop(this.game, 57 * 32, 82 * 32, "barrel"));
+    this.game.addEntity(new Prop(this.game, 57 * 32, 74 * 32, "barrel"));
+
+    this.game.addEntity(new Prop(this.game, 161 * 32, 66 * 32, "barrel"));
+    this.game.addEntity(new Prop(this.game, 177 * 32, 64 * 32, "barrel"));
+
+    this.game.addEntity(new Prop(this.game, 63 * 32, 70 * 32, "barrel"));
+
+    this.game.addEntity(new Prop(this.game, 65 * 32, 84 * 32, "barrel"));
+
     this.game.addEntity(new Prop(this.game, 35 * 32, 66 * 32, "barrel"));
     this.game.addEntity(new Prop(this.game, 45 * 32, 90 * 32, "barrel"));
     this.game.addEntity(new Prop(this.game, 59 * 32, 64 * 32, "barrel"));
     this.game.addEntity(new Prop(this.game, 17 * 32, 38 * 32, "vase1"));
+    this.game.addEntity(new Prop(this.game, 67 * 32, 86 * 32, "vase2"));
+    this.game.addEntity(new Prop(this.game, 81 * 32, 86 * 32, "vase2"));
+
     this.game.addEntity(new Prop(this.game, 15 * 32, 42 * 32, "vase2"));
+    this.game.addEntity(new Prop(this.game, 181 * 32, 68 * 32, "vase2"));
+
     this.game.addEntity(new Prop(this.game, 35 * 32, 10 * 32, "box"));
+    this.game.addEntity(new Prop(this.game, 121 * 32, 60 * 32, "box"));
+
     this.game.addEntity(new Prop(this.game, 55 * 32, 10 * 32, "box"));
+    this.game.addEntity(new Prop(this.game, 83 * 32, 84 * 32, "box"));
+
     this.game.addEntity(new Prop(this.game, 23 * 32, 70 * 32, "box"));
     this.game.addEntity(new Prop(this.game, 35 * 32, 78 * 32, "box"));
 
     // add trees
     this.game.addEntity(new Foilage(this.game, 9 * 32, 8 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 143 * 32, 42 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 131 * 32, 40 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 145 * 32, 22 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 151 * 32, 18 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 159 * 32, 20 * 32, "bigtree"));
+
+    this.game.addEntity(new Foilage(this.game, 189 * 32, 50 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 81 * 32, 14 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 95 * 32, 12 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 113 * 32, 20 * 32, "bigtree"));
+
     this.game.addEntity(new Foilage(this.game, 43 * 32, 28 * 32, "bigtree"));
+
+    this.game.addEntity(new Foilage(this.game, 185 * 32, 28 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 181 * 32, 18 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 181 * 32, 22 * 32, "medtree"));
+
     this.game.addEntity(new Foilage(this.game, 33 * 32, 10 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 13 * 32, 14 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 5 * 32, 56 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 45 * 32, 10 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 49 * 32, 6 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 117 * 32, 76 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 163 * 32, 90 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 167 * 32, 90 * 32, "bigtree"));
+
     this.game.addEntity(new Foilage(this.game, 61 * 32, 12 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 59 * 32, 30 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 175 * 32, 86 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 177 * 32, 80 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 173 * 32, 82 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 153 * 32, 68 * 32, "bigtree"));
+
     this.game.addEntity(new Foilage(this.game, 57 * 32, 36 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 59 * 32, 44 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 187 * 32, 40 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 121 * 32, 56 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 139 * 32, 58 * 32, "bigtree"));
 
     this.game.addEntity(new Prop(this.game, 69 * 32, 50 * 32, "grave"));
     this.game.addEntity(new Prop(this.game, 73 * 32, 52 * 32, "grave"));
 
+    this.game.addEntity(new Prop(this.game, 125 * 32, 66 * 32, "tombstone1"));
+    this.game.addEntity(new Prop(this.game, 139 * 32, 64 * 32, "tombstone3"));
+
     this.game.addEntity(new Prop(this.game, 79 * 32, 62 * 32, "tombstone2"));
+    this.game.addEntity(new Prop(this.game, 191 * 32, 36 * 32, "tombstone2"));
+
+    this.game.addEntity(new Prop(this.game, 109 * 32, 64 * 32, "tombstone2"));
+    this.game.addEntity(new Prop(this.game, 181 * 32, 30 * 32, "tombstone2"));
+
+    this.game.addEntity(new Prop(this.game, 153 * 32, 26 * 32, "tombstone2"));
+    this.game.addEntity(new Prop(this.game, 159 * 32, 28 * 32, "tombstone2"));
+
     this.game.addEntity(new Prop(this.game, 87 * 32, 66 * 32, "tombstone2"));
     this.game.addEntity(new Prop(this.game, 95 * 32, 64 * 32, "tombstone2"));
     this.game.addEntity(new Prop(this.game, 101 * 32, 68 * 32, "tombstone2"));
 
     this.game.addEntity(new Foilage(this.game, 59 * 32, 8 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 177 * 32, 12 * 32, "medtree"));
+
+    this.game.addEntity(new Foilage(this.game, 119 * 32, 52 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 121 * 32, 60 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 137 * 32, 54 * 32, "medtree"));
+
     this.game.addEntity(new Foilage(this.game, 21 * 32, 72 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 173 * 32, 88 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 179 * 32, 54 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 193 * 32, 44 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 93 * 32, 10 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 111 * 32, 16 * 32, "medtree"));
+
+    //here
+    this.game.addEntity(new Foilage(this.game, 137 * 32, 44 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 139 * 32, 36 * 32, "medtree"));
+
+    this.game.addEntity(new Foilage(this.game, 79 * 32, 38 * 32, "medtree"));
+
     this.game.addEntity(new Foilage(this.game, 41 * 32, 44 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 151 * 32, 72 * 32, "medtree"));
+
+    this.game.addEntity(new Foilage(this.game, 133 * 32, 74 * 32, "medtree"));
+
     this.game.addEntity(new Foilage(this.game, 49 * 32, 48 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 107 * 32, 88 * 32, "medtree"));
+
+    this.game.addEntity(new Foilage(this.game, 79 * 32, 86 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 87 * 32, 86 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 143 * 32, 20 * 32, "medtree"));
+
     this.game.addEntity(new Foilage(this.game, 17 * 32, 66 * 32, "smalltree"));
+    this.game.addEntity(new Foilage(this.game, 141 * 32, 24 * 32, "smalltree"));
+    this.game.addEntity(new Foilage(this.game, 177 * 32, 4 * 32, "smalltree"));
+
+    this.game.addEntity(new Foilage(this.game, 159 * 32, 14 * 32, "smalltree"));
+
+    this.game.addEntity(new Foilage(this.game, 109 * 32, 80 * 32, "smalltree"));
+    this.game.addEntity(new Foilage(this.game, 171 * 32, 84 * 32, "smalltree"));
+
+    this.game.addEntity(new Foilage(this.game, 83 * 32, 84 * 32, "smalltree"));
+
     this.game.addEntity(new Foilage(this.game, 39 * 32, 62 * 32, "smalltree"));
+    this.game.addEntity(new Foilage(this.game, 91 * 32, 84 * 32, "smalltree"));
+
     this.game.addEntity(new Foilage(this.game, 43 * 32, 34 * 32, "smalltree"));
     this.game.addEntity(new Foilage(this.game, 35 * 32, 68 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 11 * 32, 38 * 32, "smalltree"));
@@ -114,19 +298,36 @@ class Map {
     this.game.addEntity(new Foilage(this.game, 27 * 32, 32 * 32, "smalltree"));
     this.game.addEntity(new Foilage(this.game, 37 * 32, 30 * 32, "medtree"));
 
-    // x = (index + 1) * 2 - 1, y = index * 2
+    // x = (index * 2) + 1, y = index * 2
     this.game.addEntity(new Foilage(this.game, 23 * 32, 58 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 55 * 32, 68 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 57 * 32, 72 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 79 * 32, 34 * 32, "bigtree"));
 
     this.game.addEntity(new Foilage(this.game, 79 * 32, 52 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 87 * 32, 58 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 91 * 32, 56 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 95 * 32, 60 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 101 * 32, 58 * 32, "bigtree"));
+
+    this.game.addEntity(new Foilage(this.game, 81 * 32, 90 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 159 * 32, 2 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 173 * 32, 0 * 32, "bigtree"));
+
+    this.game.addEntity(new Foilage(this.game, 83 * 32, 80 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 99 * 32, 26 * 32, "bigtree"));
+
     this.game.addEntity(new Foilage(this.game, 81 * 32, 58 * 32, "smalltree"));
+    this.game.addEntity(new Foilage(this.game, 85 * 32, 36 * 32, "smalltree"));
+
+    this.game.addEntity(new Foilage(this.game, 63 * 32, 70 * 32, "smalltree"));
+
     this.game.addEntity(new Foilage(this.game, 85 * 32, 56 * 32, "medtree"));
+    this.game.addEntity(new Foilage(this.game, 53 * 32, 76 * 32, "medtree"));
 
     // add shops
     this.game.addEntity(new Shop(this.game, 55 * 32, 10 * 32));
+    this.game.addEntity(new Shop(this.game, 129 * 32, 56 * 32));
 
     //add enemies
     this.game.addEntity(new Skeleton(this.game, 400, 650));

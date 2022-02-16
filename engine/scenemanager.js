@@ -39,12 +39,7 @@ class SceneManager {
     if (level == 1) {
       if (!boss) {
         this.knight.direction = 3;
-        //this.knight.y = 244;
-
-        // remove for actual demo
-        this.knight.y = 1000;
-        this.knight.x = 4700;
-        //
+        this.knight.y = 244;
 
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0));

@@ -128,10 +128,10 @@ class Minotaur {
     }
 
     // handle attacking state + animation
-    if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
+    if ((this.state == 2 || this.state == 3) && !this.animations[this.state][this.direction].isDone()) {
       this.updateHitBox();
       return;
-    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
+    } else if ((this.state == 2 || this.state == 3) && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
     }
@@ -220,7 +220,8 @@ class Minotaur {
         if (verticalBox.collide(knight.hurtBox)) {
           yVector = 0;
           if (this.attackCooldown <= 0) {
-            this.state = 2;
+            console.log(this.state);
+            this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
             this.attackCooldown = 3;
           }
         }
@@ -229,7 +230,8 @@ class Minotaur {
         if (horizontalBox.collide(knight.hurtBox)) {
           xVector = 0;
           if (this.attackCooldown <= 0) {
-            this.state = 2;
+            this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
+            console.log(this.state);
             this.attackCooldown = 3;
           }
         }

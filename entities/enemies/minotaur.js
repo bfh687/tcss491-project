@@ -37,8 +37,8 @@ class Minotaur {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 1000;
-    this.health = 1000;
+    this.maxHealth = 5000;
+    this.health = 5000;
     this.attackDamage = 2000;
     this.attackCooldown = 3;
     this.damageCooldown = 0.05;
@@ -136,8 +136,16 @@ class Minotaur {
       this.state = 0;
     }
 
+    // if death animation is playing, let it play out, otherwise remove entity from world
+    else if (this.state == 6 && !this.animations[this.state][this.direction].isDone()) {
+      return;
+    } else if (this.state == 6 && this.animations[this.state][this.direction].isDone()) {
+      this.removeFromWorld = true;
+      this.game.boss = null;
+    }
+
     // check if minotaur should enter lightning spell attack state
-    if (this.damageTaken >= this.maxHealth / 4 && this.health >= 0) {
+    if (this.damageTaken >= 200 && this.health >= 0) {
       this.damageTaken = 0;
       this.spellState = true;
       this.spellStateDuration = 5;
@@ -238,15 +246,6 @@ class Minotaur {
     //   this.animations[this.state][this.direction].reset();
     //   this.state = 0;
     // }
-
-    // // if death animation is playing, let it play out, otherwise remove entity from world
-    // if (this.state == 6 && !this.animations[this.state][this.direction].isDone()) {
-    //   this.updateHitBox();
-    //   return;
-    // } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
-    //   // calculate player center
-    //   var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
-    //   var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
 
     //   // drop item on death
     //   if (Math.floor(Math.random()) + 1 === 1) {

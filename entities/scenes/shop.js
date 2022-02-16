@@ -85,11 +85,7 @@ class ShopUI {
     this.skillPointsHeight = 100;
   }
 
-  update() {
-    // things you should be able to buy
-    // buy back health,
-    // buy certain items?
-  }
+  update() {}
 
   draw(ctx) {
     // refactor to draw shop item, where you pass sprite, x, y, item description, and item

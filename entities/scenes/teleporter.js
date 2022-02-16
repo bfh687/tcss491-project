@@ -8,19 +8,23 @@ class Teleporter {
   }
 
   update() {
+    if (!this.level || !this.boss) return;
+
     const knight = this.game.knight;
 
     if (this.interaction_box.collide(knight.hurtBox)) {
       // enter shop
       if (this.game.keys.e && !this.isShopActive) {
-        this.game.camera.loadLevel(this.level, this.boss);
+        this.game.addEntity(new Transition(this.game, false));
+        setTimeout(() => {
+          this.game.camera.loadLevel(this.level, this.boss);
+        }, 1100);
       }
     }
   }
 
   draw(ctx) {
     ctx.drawImage(this.spritesheet, 0, 0, 32 * 4, 32 * 3, this.x - this.game.camera.x, this.y - this.game.camera.y, 32 * 8, 32 * 6);
-
     if (params.DEBUG) {
       drawBoundingBox(this.interaction_box, ctx, this.game, "blue");
     }

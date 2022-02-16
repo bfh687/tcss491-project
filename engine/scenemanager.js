@@ -35,16 +35,26 @@ class SceneManager {
 
     // add knight
     this.game.addEntity(this.knight);
-    
+
     if (level == 1) {
       if (!boss) {
-        // add map and teleporter
-        this.game.addEntity(new Map2(this.game, 0, 0));
-        this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
-      } else {
+        this.knight.direction = 3;
+        this.knight.y = 244;
+
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0));
-        this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
+        this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
+      } else {
+        this.knight.direction = 2;
+        this.knight.currSpeed = this.knight.minSpeed;
+        this.knight.x = 750;
+        this.knight.y = 2200;
+
+        this.game.addEntity(new Transition(this.game, true));
+
+        // add map and teleporter
+        this.game.addEntity(new Map2(this.game, 0, 0));
+        //this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
 
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
@@ -56,7 +66,6 @@ class SceneManager {
     }
   }
 
-
   update() {
     this.shakeDuration -= this.game.clockTick;
     if (this.shakeDuration >= 0) {
@@ -66,8 +75,8 @@ class SceneManager {
 
     let midpoint_x = 1366 / 2 - 48;
     let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
-    this.x = Math.max(Math.min(this.knight.x - midpoint_x, 7 * 32), 0) + this.x_offset;
-    this.y = this.knight.y - midpoint_y + this.y_offset;
+    this.x = this.knight.x - midpoint_x;
+    this.y = this.knight.y - midpoint_y;
   }
 
   draw(ctx) {}

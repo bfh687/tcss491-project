@@ -33,7 +33,7 @@ class Knight {
     this.updateBoundingBox();
 
     // information about player stats
-    this.attackDamage = 5000;
+    this.attackDamage = 400;
     this.critMultiplier = 5;
     this.critChance = 0;
     this.health = 100;
@@ -381,7 +381,6 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
-   
       } else if (entity instanceof Shop || entity instanceof Foilage || entity instanceof Prop || entity instanceof Sign) {
         // handle sliding collisions
         var slideMultiplier = 1;
@@ -466,7 +465,7 @@ class Knight {
   handleAttackCollision(attacker, attacked) {
     if (attacked instanceof Knight && attacked.state == 5) return;
 
-    if (attacked.damageCooldown <= 0) {
+    if (attacked.damageCooldown <= 0 || !(attacked instanceof Knight)) {
       // DAMAGE TO BE DEFLECTED
       var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
       var damage = attacker.attackDamage * this.game.clockTick;

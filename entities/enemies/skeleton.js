@@ -26,10 +26,12 @@ class Skeleton {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 250;
-    this.health = 250;
-    this.attackDamage = 10011;
+    this.maxHealth = 400;
+    this.health = 400;
+    this.attackDamage = 2000;
+
     this.attackCooldown = 1;
+    this.damageCooldown = 0.05;
 
     this.isBleeding = false;
     this.bleedingCooldown = 1;
@@ -41,7 +43,7 @@ class Skeleton {
 
     // misc
     this.alpha = 1;
-    this.xpDropped = 25;
+    this.xpDropped = 250;
   }
 
   loadAnimations() {
@@ -75,6 +77,7 @@ class Skeleton {
     }
 
     if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
+    if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
 
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {
@@ -229,6 +232,10 @@ class Skeleton {
   bleed() {
     this.health = Math.max(this.health - this.bleedDamage, 0);
     this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
+  }
+
+  deflected(damage) {
+    this.textAnimations.push(new TextAnimator(damage, "cyan", this.game, this));
   }
 
   updateBoundingBox() {

@@ -152,9 +152,9 @@ class GameEngine {
 
     // sort entities to give 3d look, if e1 < e2 return -1
     this.entities.sort((e1, e2) => {
-      if (e1 instanceof Map) {
+      if (e1 instanceof Map || e1 instanceof Map2) {
         return -1;
-      } else if (e2 instanceof Map) {
+      } else if (e2 instanceof Map || e2 instanceof Map2) {
         return 1;
       } else if (e1 instanceof Cursor) {
         return 1;

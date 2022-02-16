@@ -3,9 +3,10 @@ class Knight {
     Object.assign(this, { game, x, y });
 
     // load knight spritesheets and sounds
-    this.swordslash = ASSET_MANAGER.getAsset("./sfx/sword_slash.png");
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight.png");
     this.slide_spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight_dash.png");
+
+    this.removeFromWorld = false;
 
     // load/initialize animations
     this.textAnimations = [];
@@ -32,13 +33,14 @@ class Knight {
     this.updateBoundingBox();
 
     // information about player stats
-    this.attackDamage = 200;
+    this.attackDamage = 5000;
     this.critMultiplier = 5;
     this.critChance = 0;
     this.health = 100;
     this.maxHealth = 100;
-    this.armor = 1;
+    this.armor = 1.0;
     this.regenRate = 2;
+    this.damageCooldown = 0.1;
 
     // misc
     this.kills = 0;
@@ -53,6 +55,7 @@ class Knight {
 
     this.potionLevel = 0;
     this.potionRegen = 0.025;
+    this.regenCooldown = 1;
 
     this.daggerLevel = 0;
     this.daggerBleed = 5;
@@ -65,13 +68,13 @@ class Knight {
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
     this.slideLength = 200;
-    this.slideCooldown = 0.25;
+    this.slideCooldown = 0.7;
 
     // information about attacking
     this.attackCooldown = 0.25;
 
     // information about player movement
-    this.speed = 250;
+    this.speed = 325;
   }
 
   loadPlayerItems() {
@@ -130,6 +133,8 @@ class Knight {
       // update cooldowns
       if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
       if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
+      if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
+      if (this.regenCooldown > 0) this.regenCooldown -= this.game.clockTick;
     }
 
     // set death state upon losing all health
@@ -140,6 +145,14 @@ class Knight {
       } else {
         this.state = 4;
         this.health = 0;
+      }
+    }
+
+    if (this.regenCooldown <= 0) {
+      if (this.potionLevel > 0) {
+        this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
+      } else {
+        this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
       }
     }
 
@@ -173,8 +186,14 @@ class Knight {
     // handle sliding state + animations
     if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
       this.checkCollisions();
-      this.x += 6 * this.velocity.x * this.game.clockTick;
-      this.y += 6 * this.velocity.y * this.game.clockTick;
+
+      var slideMult = 4;
+      if (this.velocity.x != 0 && this.velocity.y != 0) {
+        slideMult = Math.sqrt(8);
+      }
+
+      this.x += slideMult * this.velocity.x * this.game.clockTick;
+      this.y += slideMult * this.velocity.y * this.game.clockTick;
       this.updateBoundingBox();
       return;
     } else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
@@ -197,16 +216,10 @@ class Knight {
     else if (up) this.direction = 2;
     else if (down) this.direction = 3;
 
-    if (this.potionLevel > 0) {
-      this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
-    } else {
-      this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
-    }
-
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
-      this.slideCooldown = 0.25;
+      this.slideCooldown = 0.7;
     }
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {
@@ -278,7 +291,7 @@ class Knight {
   checkCollisions() {
     this.game.entities.forEach((entity) => {
       // prevent entity pass through for alive enemies
-      if ((entity instanceof Skeleton || entity instanceof Eyeball) && entity.state != 4 && entity.state != 5) {
+      if ((entity instanceof Skeleton || entity instanceof Eyeball || entity instanceof Minotaur) && entity.state != 4 && entity.state != 5) {
         // handle sliding collisions
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;
@@ -332,6 +345,27 @@ class Knight {
         }
       }
 
+      // handle minotaur collisions
+      else if (entity instanceof Minotaur) {
+        // handle case where player attacks the eyeball
+        if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
+          this.handleAttackCollision(this, entity);
+        }
+
+        // handle case where eyeball attcks the player
+        if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+          this.handleAttackCollision(entity, this);
+        }
+      }
+
+      // handle lightning spell collisions
+      else if (entity instanceof LightningSpell) {
+        if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+          this.handleAttackCollision(entity, this);
+          this.state = 3;
+        }
+      }
+
       // handle map collisions
       else if (entity instanceof Map) {
         entity.bounding_boxes.forEach((box) => {
@@ -347,6 +381,7 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
+   
       } else if (entity instanceof Shop || entity instanceof Foilage || entity instanceof Prop || entity instanceof Sign) {
         // handle sliding collisions
         var slideMultiplier = 1;
@@ -429,47 +464,58 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
-    // DAMAGE TO BE DEFLECTED
-    var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
-    var damage = attacker.attackDamage * this.game.clockTick;
+    if (attacked instanceof Knight && attacked.state == 5) return;
 
-    // calculate crit chance
-    var color = "red";
-    if (attacker instanceof Knight) {
-      var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
-      damage *= damageMultiplier;
-      if (Math.random() <= this.critChance) {
-        damage *= this.critMultiplier;
-        color = "yellow";
+    if (attacked.damageCooldown <= 0) {
+      // DAMAGE TO BE DEFLECTED
+      var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
+      var damage = attacker.attackDamage * this.game.clockTick;
+
+      // calculate crit chance
+      var color = "red";
+      if (attacker instanceof Knight) {
+        var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
+        damage *= damageMultiplier;
+        if (Math.random() <= this.critChance) {
+          damage *= this.critMultiplier;
+          color = "yellow";
+        }
+        if (this.daggerLevel > 0 && !attacked.isBleeding) {
+          attacked.isBleeding = true;
+          setTimeout(() => {
+            attacked.isBleeding = false;
+          }, this.bleedDuration);
+          attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
+        }
+      } else if (attacked instanceof Knight && !attacker instanceof LightningSpell) {
+        // ARMOR DEFLECTING DAMAGE BACK
+        let initDmg = damage;
+
+        damage *= deflectPercentage;
+        damage -= this.armor;
+        attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
+        this.regenCooldown = 1;
       }
-      if (this.daggerLevel > 0 && !attacked.isBleeding) {
-        attacked.isBleeding = true;
-        setTimeout(() => {
-          attacked.isBleeding = false;
-        }, this.bleedDuration);
-        attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
+
+      attacked.health -= Math.max(0, damage);
+      attacked.damageCooldown = 0.1;
+
+      if (attacked instanceof Minotaur) {
+        attacked.damageTaken += damage;
       }
-    } else if (attacked instanceof Knight) {
-      // ARMOR DEFLECTING DAMAGE BACK
-      let initDmg = damage;
 
-      damage *= deflectPercentage;
-      attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
-    }
-
-    attacked.health -= Math.max(0, damage);
-
-    var flag = true;
-    for (var i = 0; i < attacked.textAnimations.length; i++) {
-      if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone() && attacked.textAnimations[i].color != "yellow") {
-        attacked.textAnimations[i].increment(damage);
-        flag = false;
-        break;
+      var flag = true;
+      for (var i = 0; i < attacked.textAnimations.length; i++) {
+        if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone() && attacked.textAnimations[i].color != "yellow") {
+          attacked.textAnimations[i].increment(damage);
+          flag = false;
+          break;
+        }
       }
-    }
 
-    if (flag) {
-      attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
+      if (flag) {
+        attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
+      }
     }
   }
 

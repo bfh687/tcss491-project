@@ -84,7 +84,7 @@ class Item {
     this.spareHeart = {
       code: "Spare Heart",
       x: 64,
-      y: 10,
+      y: 0,
       dropChance: 10, // 10% chance
       desc: "Instantly Regen to Max Health",
     };

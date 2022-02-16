@@ -5,78 +5,76 @@ class SceneManager {
     this.x = 0;
     this.y = 0;
 
+    // screenshake details
+    this.shakeDuration = -0.01;
+    this.x_offset = 0;
+    this.y_offset = 0;
+
     this.title = true;
     this.level = null;
-    let midpoint_x = 1366 / 2 - 64 * 1.25;
-    let midpoint_y = 768 / 2 - 64 * 1.25;
-    // -10 to not spawn in rock :D
-    this.knight = new Knight(this.game, midpoint_x + 1700, midpoint_y + 200);
-    this.loadLevel(0, 0, false, true);
 
-    this.transitionIndex = 0;
-    this.frameCooldown = 0.1;
-    this.alpha = 0;
-    this.textAlpha = 0;
+    let midpoint_x = 1366 / 2;
+    let midpoint_y = 768 / 2;
+    this.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
+    this.knight.direction = 2;
+    this.loadLevel(1, false);
   }
 
+  // remove all entities from the game engine
   clearEntities() {
-    this.game.entities.forEach(function (entity) {
-      entity.removeFromWorld = true;
-    });
+    this.game.entities = [];
   }
 
-  loadLevel(x, y, transition, title) {
+  loadLevel(level, boss) {
     this.clearEntities();
-    let midpoint_x = 1366 / 2 - 64 * 1.25;
-    let midpoint_y = 768 / 2 - 64 * 1.25;
-    this.knight = new Knight(this.game, midpoint_x + 1700, midpoint_y + 200);
-    this.game.addEntity(new Map(this.game, 0, 0));
+    this.boss = null;
+
+    // add hud elements
     this.game.addEntity(new Cursor(this.game));
     this.game.addEntity(new HUD(this.game, this.knight));
 
+    // add knight
     this.game.addEntity(this.knight);
-    this.game.addEntity(this);
-    //this.game.addEntity(new Shop(this.game, 1366 / 2 + 50 * 16 - 85, 670));
+    
+    if (level == 1) {
+      if (!boss) {
+        // add map and teleporter
+        this.game.addEntity(new Map2(this.game, 0, 0));
+        this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
+      } else {
+        // add map and teleporter
+        this.game.addEntity(new Map(this.game, 0, 0));
+        this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
+
+        // add boss
+        this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
+      }
+    } else if (level == 2) {
+      if (boss) {
+      } else {
+      }
+    }
   }
+
 
   update() {
-    this.frameCooldown -= this.game.clockTick;
-    let midpoint_x = 1366 / 2 - 35;
-    let midpoint_y = 768 / 2 - (62 * 2.5) / 2 - 20;
-    this.x = this.knight.x - midpoint_x;
-    this.y = this.knight.y - midpoint_y;
-    if (this.knight.state == 4 && this.knight.animations[this.knight.state][this.knight.direction].isDone()) {
-      this.loadLevel(0, 0, true, true);
+    this.shakeDuration -= this.game.clockTick;
+    if (this.shakeDuration >= 0) {
+      this.y_offset = Math.random() * 10 - 5;
+      this.x_offset = Math.random() * 10 - 5;
     }
-    console.log(this.game.entities);
+
+    let midpoint_x = 1366 / 2 - 48;
+    let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
+    this.x = Math.max(Math.min(this.knight.x - midpoint_x, 7 * 32), 0) + this.x_offset;
+    this.y = this.knight.y - midpoint_y + this.y_offset;
   }
 
-  draw(ctx) {
-    const frame = ASSET_MANAGER.getAsset("./sprites/death_transition/death_transition (" + this.transitionIndex + ").png");
-    if (frame && this.frameCooldown <= 0) {
-      this.frameCooldown = 0.07;
-      this.transitionIndex++;
-    }
-    if (frame) ctx.drawImage(frame, 0, 0, 1366, 780);
-    if (this.transitionIndex > 6) {
-      this.alpha = Math.min(this.alpha + this.game.clockTick, 1);
-    }
-    if (this.transitionIndex > 8) {
-      this.textAlpha = Math.min(this.textAlpha + this.game.clockTick, 1);
-    }
-    ctx.save();
-    ctx.fillStyle = "black";
-    ctx.globalAlpha = this.alpha;
-    ctx.fillRect(0, 0, 1400, 800);
-    ctx.restore();
+  draw(ctx) {}
 
-    if (this.transitionIndex > 8) {
-      ctx.save();
-      ctx.globalAlpha = this.textAlpha;
-      ctx.font = "32px bitpap";
-      ctx.fillStyle = "white";
-      ctx.fillText("YOU DIED.", 1366 / 2 - ctx.measureText("YOU DIED.").width / 2, 768 / 2 + 8);
-      ctx.restore();
+  screenshake() {
+    if (this.shakeDuration <= 0) {
+      this.shakeDuration = 0.2;
     }
   }
 }

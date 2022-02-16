@@ -32,6 +32,7 @@ ASSET_MANAGER.queueDownload("./sprites/items/goggles.png");
 ASSET_MANAGER.queueDownload("./sprites/map/prototype_hub.png");
 ASSET_MANAGER.queueDownload("./sprites/map/alt_hub.png");
 ASSET_MANAGER.queueDownload("./sprites/map/shop.png");
+ASSET_MANAGER.queueDownload("./sprites/map/teleporter.png");
 ASSET_MANAGER.queueDownload("./sprites/map/bossroom.png");
 
 ASSET_MANAGER.downloadAll(() => {

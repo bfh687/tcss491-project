@@ -3,9 +3,10 @@ class Knight {
     Object.assign(this, { game, x, y });
 
     // load knight spritesheets and sounds
-    this.swordslash = ASSET_MANAGER.getAsset("./sfx/sword_slash.png");
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight.png");
     this.slide_spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight_dash.png");
+
+    this.removeFromWorld = false;
 
     // load/initialize animations
     this.textAnimations = [];

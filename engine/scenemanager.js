@@ -16,58 +16,43 @@ class SceneManager {
     let midpoint_y = 768 / 2;
     this.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
     this.knight.direction = 2;
-    this.loadLevel(0, 0, false, true);
+    this.loadLevel(1, false);
   }
 
+  // remove all entities from the game engine
   clearEntities() {
-    this.game.entities.forEach(function (entity) {
-      entity.removeFromWorld = true;
-    });
+    this.game.entities = [];
   }
 
-  loadLevel(x, y, transition, title) {
+  loadLevel(level, boss) {
     this.clearEntities();
-    //for (var i = 0; i < 50; i++) this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
-    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
+    this.boss = null;
 
-    // this.game.addEntity(new Eyeball(this.game, this.knight.x - 500, this.knight.y - 340));
-    // this.game.addEntity(new Eyeball(this.game, this.knight.x - 520, this.knight.y - 390));
-    // this.game.addEntity(new Eyeball(this.game, this.knight.x - 490, this.knight.y - 380));
+    // add hud elements
     this.game.addEntity(new Cursor(this.game));
     this.game.addEntity(new HUD(this.game, this.knight));
 
+    // add knight
     this.game.addEntity(this.knight);
-    this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
 
-    //this.game.addEntity(new Shop(this.game, 1366 / 2 + 50 * 16 - 85, 670));
-    this.game.addEntity(new Map(this.game, 0, 0));
+    if (level == 1) {
+      if (!boss) {
+        // add map and teleporter
+        this.game.addEntity(new Map2(this.game, 0, 0));
+        this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
+      } else {
+        // add map and teleporter
+        this.game.addEntity(new Map(this.game, 0, 0));
+        this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
 
-    this.title = title;
-    // this.level = level;
-    // this.clearEntities();
-    this.x = 0;
-    this.y = 0;
-    console.log("In Load Level");
-
-    // if (transition) {
-    //     this.game.addEntity(new TransitionScreen(this.game, level, x, y, title));
-    // } else {
-    //     //  if (level.map) {
-    //     // //     // for (var i = 0; i < level.map.length; i++) {
-    //     // //         let map = level.map[i];
-    //     //          this.game.addEntity(new Map(this.game, 0 * params.BLOCKWIDTH, 0 * params.BLOCKWIDTH, 0 * params.BLOCKWIDTH));
-    //     // //     // }
-    //     //  }
-
-    //     this.knight.x = x;
-    //     this.knight.y = y;
-    //     this.knight.removeFromWorld = false;
-    //     this.knight.velocity = { x: 0, y: 0 };
-    // };
-    // this.knight.x = x;
-    // this.knight.y = y;
+        // add boss
+        this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
+      }
+    } else if (level == 2) {
+      if (boss) {
+      } else {
+      }
+    }
   }
 
   update() {

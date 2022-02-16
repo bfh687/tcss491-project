@@ -9,6 +9,42 @@ class HUD {
   update() {}
 
   draw(ctx) {
+    // draw boss health bar
+    if (this.game.boss) {
+      ctx.save();
+      ctx.font = "16px Arial";
+      ctx.fillStyle = "black";
+      ctx.globalAlpha = 0.5;
+      ctx.fillRect(1366 / 2 - 400, 40, 800, 15);
+
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = "#e62224";
+      ctx.fillRect(1366 / 2 - 400, 40, (this.game.boss.health / this.game.boss.maxHealth) * 800, 15);
+
+      ctx.fillStyle = "black";
+      ctx.font = "22px bitpap";
+      ctx.globalAlpha = 0.7;
+
+      ctx.fillText("MINOTAUR", 1366 / 2 - ctx.measureText("MINOTAUR").width / 2 + 2, 30 + 2);
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "white";
+      ctx.fillText("MINOTAUR", 1366 / 2 - ctx.measureText("MINOTAUR").width / 2, 30);
+
+      ctx.fillStyle = "black";
+      ctx.font = "15px bitpap";
+      ctx.globalAlpha = 0.7;
+
+      const health = this.game.boss.health + "/" + this.game.boss.maxHealth;
+      ctx.fillText(health, 1366 / 2 - ctx.measureText(health).width / 2 + 1, 52 + 1);
+      ctx.globalAlpha = 1;
+
+      ctx.fillStyle = "white";
+      ctx.fillText(health, 1366 / 2 - ctx.measureText(health).width / 2, 52);
+
+      ctx.restore();
+    }
+
     // get time
     var minutes = Math.floor(this.game.timer.gameTime / 60);
     var seconds = Math.floor(this.game.timer.gameTime % 60);

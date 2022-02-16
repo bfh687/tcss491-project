@@ -5,11 +5,17 @@ class SceneManager {
     this.x = 0;
     this.y = 0;
 
+    // screenshake details
+    this.shakeDuration = -0.01;
+    this.x_offset = 0;
+    this.y_offset = 0;
+
     this.title = true;
     this.level = null;
     let midpoint_x = 1366 / 2;
     let midpoint_y = 768 / 2;
-    this.knight = new Knight(this.game, midpoint_x + 50 * params.BITWIDTH, midpoint_y + 57 * params.BITWIDTH);
+    this.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
+    this.knight.direction = 2;
     this.loadLevel(0, 0, false, true);
   }
 
@@ -22,20 +28,21 @@ class SceneManager {
   loadLevel(x, y, transition, title) {
     this.clearEntities();
     //for (var i = 0; i < 50; i++) this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
-    this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
-    this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
-    this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
+    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 340, this.knight.y - 340));
+    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 370, this.knight.y - 390));
+    // this.game.addEntity(new Skeleton(this.game, this.knight.x + 320, this.knight.y - 380));
 
-    this.game.addEntity(new Eyeball(this.game, this.knight.x - 500, this.knight.y - 340));
-    this.game.addEntity(new Eyeball(this.game, this.knight.x - 520, this.knight.y - 390));
-    this.game.addEntity(new Eyeball(this.game, this.knight.x - 490, this.knight.y - 380));
+    // this.game.addEntity(new Eyeball(this.game, this.knight.x - 500, this.knight.y - 340));
+    // this.game.addEntity(new Eyeball(this.game, this.knight.x - 520, this.knight.y - 390));
+    // this.game.addEntity(new Eyeball(this.game, this.knight.x - 490, this.knight.y - 380));
     this.game.addEntity(new Cursor(this.game));
     this.game.addEntity(new HUD(this.game, this.knight));
 
     this.game.addEntity(this.knight);
-    this.game.addEntity(new Shop(this.game, 1366 / 2 + 50 * 16 - 85, 670));
+    this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
 
-    this.game.addEntity(new Map(this.game, 310, 270));
+    //this.game.addEntity(new Shop(this.game, 1366 / 2 + 50 * 16 - 85, 670));
+    this.game.addEntity(new Map(this.game, 0, 0));
 
     this.title = title;
     // this.level = level;
@@ -64,6 +71,12 @@ class SceneManager {
   }
 
   update() {
+    this.shakeDuration -= this.game.clockTick;
+    if (this.shakeDuration >= 0) {
+      this.y_offset = Math.random() * 10 - 5;
+      this.x_offset = Math.random() * 10 - 5;
+    }
+
     if (this.game.entities.length < 4) {
       this.respawnTimer -= this.game.clockTick;
       if (this.respawnTimer <= 0) {
@@ -74,11 +87,17 @@ class SceneManager {
       }
     }
 
-    let midpoint_x = 1366 / 2 - 29 / 2;
+    let midpoint_x = 1366 / 2 - 48;
     let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
-    this.x = this.knight.x - midpoint_x;
-    this.y = this.knight.y - midpoint_y;
+    this.x = Math.max(Math.min(this.knight.x - midpoint_x, 7 * 32), 0) + this.x_offset;
+    this.y = this.knight.y - midpoint_y + this.y_offset;
   }
 
   draw(ctx) {}
+
+  screenshake() {
+    if (this.shakeDuration <= 0) {
+      this.shakeDuration = 0.2;
+    }
+  }
 }

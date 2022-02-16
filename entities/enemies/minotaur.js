@@ -5,17 +5,26 @@ class Minotaur {
     this.animations = [];
     this.loadAnimations();
 
-    this.scale = 4;
+    this.game.boss = this;
 
-    // skeleton spawn point
+    // scale of minotaur
+    this.scale = 3;
+
+    // minotaur spawn point, goes here to channel lightning
     this.originX = this.x;
     this.originY = this.y;
 
     // states: idle (0), walking (1), attack (2), damaged (3), dying (4)
     this.state = 0;
 
+    // spell state info
+    this.spellState = false;
+    this.spellStateDuration = 5;
+    this.damageTaken = 0;
+    this.fxcount = 0;
+
     // directions: left (0), right (1)
-    this.direction = 1;
+    this.direction = 0;
 
     // damage number counters
     this.textAnimations = [];
@@ -28,8 +37,8 @@ class Minotaur {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 10000;
-    this.health = 10000;
+    this.maxHealth = 1000;
+    this.health = 1000;
     this.attackDamage = 2000;
     this.attackCooldown = 3;
     this.damageCooldown = 0.05;
@@ -38,101 +47,88 @@ class Minotaur {
     this.bleedingCooldown = 1;
 
     // information about skeleton movement
-    this.aggroDist = 500;
-    this.minSpeed = 125 + 25 * Math.random();
+    this.aggroDist = 1000;
+    this.minSpeed = 200;
     this.currSpeed = this.minSpeed;
 
     // misc
     this.alpha = 1;
     this.xpDropped = 250;
+
+    // lightning spell
+    this.spellCooldown = 0;
   }
 
   loadAnimations() {
-    // left animations are right animations + 10
-    const idleRightIndex = 0;
-    const walkingRightIndex = 1;
-    const notSureRight = 2;
-    const attackRight = 3;
-    const weirdSwing = 4;
-    const staffDownRight = 5;
-    const specialAttackRight = 6;
-    const nothing = 7;
-    // not sure if this one is hurt or 7 based on sprite sheet.
-    const hurtRight = 8;
-    const dieRight = 9;
-    this.animations.push([], [], [], [], []);
+    // indices of animations in spritesheet
+    const idle = 0;
+    const walking = 1;
+    const attack1 = 3;
+    const attack2 = 6;
+    const staffSlam = 5;
+    const hurt = 8;
+    const death = 9;
+
+    // offset between left/right animations in spritesheet
+    const offset = 10;
+
+    this.animations.push([], [], [], [], [], [], [], [], []);
 
     // idle animations: left, right
-    this.animations[0].push(new Animator(this.spritesheet, 0, 96 * (idleRightIndex + 10), 96, 96, 5, 0.16, 0, 0, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 96 * idleRightIndex, 96, 96, 5, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 96 * (idle + offset), 96, 96, 5, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 96 * idle, 96, 96, 5, 0.16, 0, 0, false, true));
 
     // walking animations: left, right
-    this.animations[1].push(new Animator(this.spritesheet, 0, 96 * (walkingRightIndex + 10), 96, 96, 8, 0.13, 0, 0, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 0, 96 * walkingRightIndex, 96, 96, 8, 0.13, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 0, 96 * (walking + offset), 96, 96, 8, 0.1, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 0, 96 * walking, 96, 96, 8, 0.1, 0, 0, false, true));
 
-    // index 2
-    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * (notSureRight + 10), 96, 96, 5, 0.16, 0, 0, false, true));
-    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * notSureRight, 96, 96, 5, 0.16, 0, 0, false, true));
+    // attack1 animations: left, right
+    this.animations[2].push(new Animator(this.spritesheet, 0, 96 * (attack1 + offset), 96, 96, 9, 0.09, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 96 * attack1, 96, 96, 9, 0.09, 0, 0, false, false));
 
-    // attack animations: left, right
-    this.animations[2].push(new Animator(this.spritesheet, 0, 96 * (attackRight + 10), 96, 96, 9, 0.09, 0, 0, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 96 * attackRight, 96, 96, 9, 0.09, 0, 0, false, false));
+    // attack2 animations: left, right
+    this.animations[3].push(new Animator(this.spritesheet, 0, 96 * (attack2 + offset), 96, 96, 9, 0.09, 0, 0, false, false));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 96 * attack2, 96, 96, 9, 0.09, 0, 0, false, false));
 
-    // weird swing: left, right
-    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (weirdSwing + 10), 96, 96, 5, 0.16, 0, 0, false, true));
-    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * weirdSwing, 96, 96, 5, 0.16, 0, 0, false, true));
-
-    // staff down: left, right
-    this.animations[7].push(new Animator(this.spritesheet, 0, 96 * (staffDownRight + 10), 96, 96, 6, 0.16, 0, 0, false, true));
-    this.animations[7].push(new Animator(this.spritesheet, 0, 96 * staffDownRight, 96, 96, 6, 0.16, 0, 0, false, true));
-
-    // special attack: left, right
-    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (specialAttackRight + 10), 96, 96, 9, 0.16, 0, 0, false, true));
-    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * specialAttackRight, 96, 96, 9, 0.16, 0, 0, false, true));
-
-    // really not sure: left, right
-    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (nothing + 10), 96, 96, 3, 0.16, 0, 0, false, true));
-    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * nothing, 96, 96, 3, 0.16, 0, 0, false, true));
+    // staff down / lightning channel: left, right
+    this.animations[4].push(new Animator(this.spritesheet, 0, 96 * (staffSlam + offset), 96, 96, 6, 0.16, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 96 * staffSlam, 96, 96, 6, 0.16, 0, 0, false, false));
 
     // damaged animations: left, right
-    this.animations[3].push(new Animator(this.spritesheet, 0, 96 * (hurtRight + 10), 96, 96, 3, 0.08, 0, 0, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 96 * hurtRight, 96, 96, 3, 0.08, 0, 0, false, false));
+    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * (hurt + offset), 96, 96, 3, 0.08, 0, 0, false, true));
+    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * hurt, 96, 96, 3, 0.08, 0, 0, false, true));
 
     // death animations: left, right
-    this.animations[4].push(new Animator(this.spritesheet, 0, 96 * (dieRight + 10), 96, 96, 12, 0.12, 0, 0, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 96 * dieRight, 96, 96, 12, 0.12, 0, 0, false, false));
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (death + offset), 96, 96, 12, 0.12, 0, 0, false, false));
+    this.animations[6].push(new Animator(this.spritesheet, 0, 96 * death, 96, 96, 12, 0.12, 0, 0, false, false));
   }
 
   update() {
-    // decrement cooldowns
-    if (this.state != 2) {
-      this.attackCooldown -= this.game.clockTick;
-    }
-
+    // update cooldowns
     if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
     if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
 
+    // calculate bleed
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {
         this.bleed();
-        console.log("TICK");
         this.bleedingCooldown = 1;
       }
     }
 
-    // enraged !
-    if (this.health <= 40) {
-      this.currSpeed = 175;
-    }
-
     // if dead, remove from world
     if (this.health <= 0) {
-      this.state = 4;
+      this.state = 6;
+      this.spellState = false;
+    }
+
+    // decrement attack cooldown if not attacking
+    if (this.state != 2 && this.state != 3) {
+      this.attackCooldown -= this.game.clockTick;
     }
 
     // handle attacking state + animation
     if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
-      var curr_frame = this.animations[this.state][this.direction].currentFrame();
       this.updateHitBox();
       return;
     } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
@@ -140,45 +136,55 @@ class Minotaur {
       this.state = 0;
     }
 
-    // handle damaged state + animation
-    else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
-      return;
-    } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
-      this.animations[this.state][this.direction].reset();
-      this.state = 0;
+    // check if minotaur should enter lightning spell attack state
+    if (this.damageTaken >= this.maxHealth / 4 && this.health >= 0) {
+      this.damageTaken = 0;
+      this.spellState = true;
+      this.spellStateDuration = 5;
     }
 
-    // if death animation is playing, let it play out, otherwise remove entity from world
-    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
-      this.updateHitBox();
-      return;
-    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
-      // calculate player center
-      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
-      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
-
-      // drop item on death
-      if (Math.floor(Math.random()) + 1 === 1) {
-        const item = new Item(this.game, center_x, center_y);
-        this.game.addEntity(item);
+    // enter spell state
+    if (this.spellState && this.spellStateDuration >= 0) {
+      // do stomping animation, then start
+      if (this.spellStateDuration == 5) {
+        this.state = 4;
       }
 
-      // increment knight kills on death
-      this.game.knight.kills += 1;
-      this.game.knight.xpSystem.incrementXP(this.xpDropped);
-      this.removeFromWorld = true;
-      return;
+      if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+        return;
+      } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+        this.animations[this.state][this.direction].reset();
+        this.state = 0;
+      }
+
+      this.spellStateDuration -= this.game.clockTick;
+      this.spellCooldown -= this.game.clockTick;
+      if (this.spellCooldown <= 0) {
+        this.game.addEntity(new LightningSpell(this.game, this.game.knight.x, this.game.knight.y));
+        this.spellCooldown = 0.6;
+
+        setTimeout(() => {
+          ASSET_MANAGER.setVolume(0.07);
+          ASSET_MANAGER.playAudio("./sfx/thunderfx" + this.fxcount + ".mp3");
+          this.game.camera.screenshake();
+        }, 380);
+
+        this.fxcount = (this.fxcount + 1) % 4;
+      }
     }
 
+    // walk toward player
     var knight = this.game.knight;
+    var xVector = 0;
+    var yVector = 0;
 
     if (knight) {
       // calculate distance towards knight
       var dist = getDistance(knight.x, knight.y, this.x, this.y);
 
       if (dist < this.aggroDist) {
-        var xVector = (knight.x - this.x) / dist;
-        var yVector = (knight.y - this.y) / dist;
+        xVector = (knight.x - this.x) / dist;
+        yVector = (knight.y - this.y) / dist;
 
         // set direction based on player location
         if (this.hurtBox.left >= knight.hurtBox.right) {
@@ -207,7 +213,7 @@ class Minotaur {
           yVector = 0;
           if (this.attackCooldown <= 0) {
             this.state = 2;
-            this.attackCooldown = 1;
+            this.attackCooldown = 3;
           }
         }
 
@@ -216,42 +222,44 @@ class Minotaur {
           xVector = 0;
           if (this.attackCooldown <= 0) {
             this.state = 2;
-            this.attackCooldown = 1;
+            this.attackCooldown = 3;
           }
         }
 
         // if not moving, set state to idle
         if (xVector == 0 && yVector == 0) this.state = 0;
       }
-
-      // path towards origin/spawn point
-      else {
-        // calculate distance to spawn point
-        var dist = getDistance(this.originX, this.originY, this.x, this.y);
-
-        // calculate vector towards spawn point
-        var xVector = (this.originX - this.x) / dist;
-        var yVector = (this.originY - this.y) / dist;
-
-        // set direction based on location
-        if (xVector >= 0) this.direction = 1;
-        else this.direction = 0;
-
-        // set state based on vectors towards spawn point
-        if (xVector != 0 || yVector != 0) {
-          this.state = 1;
-        } else {
-          this.state = 0;
-        }
-
-        // set idle behavior + direction of skeleton
-        if (Math.abs(dist) < 1) {
-          xVector = yVector = 0;
-          this.state = 0;
-          this.direction = 0;
-        }
-      }
     }
+
+    // // handle damaged state + animation
+    // else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
+    //   return;
+    // } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
+    //   this.animations[this.state][this.direction].reset();
+    //   this.state = 0;
+    // }
+
+    // // if death animation is playing, let it play out, otherwise remove entity from world
+    // if (this.state == 6 && !this.animations[this.state][this.direction].isDone()) {
+    //   this.updateHitBox();
+    //   return;
+    // } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+    //   // calculate player center
+    //   var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+    //   var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
+
+    //   // drop item on death
+    //   if (Math.floor(Math.random()) + 1 === 1) {
+    //     const item = new Item(this.game, center_x, center_y);
+    //     this.game.addEntity(item);
+    //   }
+
+    //   // increment knight kills on death
+    //   this.game.knight.kills += 1;
+    //   this.game.knight.xpSystem.incrementXP(this.xpDropped);
+    //   this.removeFromWorld = true;
+    //   return;
+    // }
 
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
@@ -260,6 +268,7 @@ class Minotaur {
 
   bleed() {
     this.health = Math.max(this.health - this.bleedDamage, 0);
+    this.damageTaken += this.bleedDamage;
     this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
   }
 
@@ -270,37 +279,86 @@ class Minotaur {
   updateBoundingBox() {
     // looking left
     if (this.direction == 0) {
-      this.boundingBox = new BoundingBox(this.x + 144, this.y + (104 * this.scale) / 2 - 32, (96 * this.scale) / 3, 96);
-      this.hurtBox = new BoundingBox(this.x + 138, this.y + 64, (96 * this.scale) / 3, (96 * this.scale) / 2);
+      this.boundingBox = new BoundingBox(this.x + 112, this.y + 96 * 1.5, 80, 48);
+      this.hurtBox = new BoundingBox(this.x + 108, this.y + 64, 90, 96 + 36);
     }
+
     // looking right
     else {
-      this.boundingBox = new BoundingBox(this.x + 138, this.y + (104 * this.scale) / 2 - 32, (96 * this.scale) / 20, 96);
-      this.hurtBox = new BoundingBox(this.x + 144, this.y + 64, (96 * this.scale) / 2, (96 * this.scale) / 20);
+      this.boundingBox = new BoundingBox(this.x + 96, this.y + 96 * 1.5, 80, 48);
+      this.hurtBox = new BoundingBox(this.x + 92, this.y + 64, 90, 96 + 36);
     }
 
     this.updateHitBox();
   }
 
-  // let blake handle ugly stuff
+  // update hitbox based on attack state
   updateHitBox() {
     var current_frame = this.animations[this.state][this.direction].currentFrame();
     if (this.state == 2) {
-      if (current_frame == 4) {
+      if (current_frame == 1) {
         if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x, this.y + 15, 96, 56);
+          this.hitBox = new BoundingBox(this.x + 28, this.y + 16, 96, 96 * 2);
         } else {
-          this.hitBox = new BoundingBox(this.x + 96, this.y + 15, 96, 56);
+          this.hitBox = new BoundingBox(this.x + 28 + 138, this.y + 16, 96, 96 * 2);
+        }
+      } else if (current_frame == 2) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 28, this.y + 16, 96, 96 * 2);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 28 + 138, this.y + 16, 96, 96 * 2);
+        }
+      } else if (current_frame == 3) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 28, this.y + 48, 96, 96 * 2 - 32);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 28 + 138, this.y + 48, 96, 96 * 2 - 32);
+        }
+      } else if (current_frame == 4) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 28, this.y + 90, 96, 96 * 2 - 74);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 28 + 138, this.y + 90, 96, 96 * 2 - 74);
         }
       } else if (current_frame == 5) {
-        this.hitBox = new BoundingBox(this.x + 96, this.y + 15, 64, 24);
-      } else if (current_frame == 8) {
-        this.hitBox = new BoundingBox(this.x, this.y + 32, 128, 48);
-      } else if (current_frame == 9) {
         if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x + 96, this.y + 32, 64, 32);
+          this.hitBox = new BoundingBox(this.x + 28 + 32, this.y + 128 + 32, 64, 80 - 32);
         } else {
-          this.hitBox = new BoundingBox(this.x + 4, this.y + 32, 64, 36);
+          this.hitBox = new BoundingBox(this.x + 28 + 138, this.y + 128 + 32, 64, 80 - 32);
+        }
+      } else {
+        this.hitBox = null;
+      }
+    } else if (this.state == 3) {
+      if (current_frame == 3) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 64, this.y + 96 + 48, 96 * 2, 48);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 32, this.y + 96 + 48, 96 * 2, 48);
+        }
+      } else if (current_frame == 4) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 128 + 12, this.y + 96 + 48, 96 * 1.5 + 4, 48);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 128 + 12 - 136, this.y + 96 + 48, 96 * 1.5 + 4, 48);
+        }
+      } else if (current_frame == 5) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 12, this.y + 96 + 48 + 12, 96 * 1.5, 54);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 12 + 128, this.y + 96 + 48 + 12, 96 * 1.5, 54);
+        }
+      } else if (current_frame == 6) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 32, this.y + 96 + 48 + 12, 96 * 1.5 - 36, 54);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 32 + 128, this.y + 96 + 48 + 12, 96 * 1.5 - 36, 54);
+        }
+      } else if (current_frame == 7) {
+        if (this.direction == 0) {
+          this.hitBox = new BoundingBox(this.x + 56, this.y + 96 + 48 + 12, 96 * 1.5 - 36 - 32, 54);
+        } else {
+          this.hitBox = new BoundingBox(this.x + 56 + 128 - 24, this.y + 96 + 48 + 12, 96 * 1.5 - 36 - 32, 54);
         }
       } else {
         this.hitBox = null;
@@ -313,7 +371,7 @@ class Minotaur {
   draw(ctx) {
     // draw shadows if not dying
     if (this.state != 4) {
-      drawShadow(ctx, this.game, this);
+      drawShadow(ctx, this.game, this, 2);
     }
 
     this.animations[this.state][this.direction].drawFrame(
@@ -335,7 +393,54 @@ class Minotaur {
     for (var i = 0; i < this.textAnimations.length; i++) {
       this.textAnimations[i].drawText(ctx);
     }
+  }
+}
 
-    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+class LightningSpell {
+  constructor(game, x, y) {
+    Object.assign(this, { game, x, y });
+    console.log("new spell");
+    // load spritesheet
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/thunder_spell.png");
+    this.animation = new Animator(this.spritesheet, 0, 0, 64, 64, 12, 0.1, 0, 0, false, false);
+
+    // set bounding box for correct draw order
+    this.boundingBox = new BoundingBox(this.x + 24, this.y + 104, 128 - 48, 16);
+
+    // set scale of spell
+    this.scale = 2;
+
+    this.attackDamage = 500;
+  }
+
+  update() {
+    if (this.animation.isDone()) {
+      this.removeFromWorld = true;
+    }
+
+    // update hitbox of spell
+    var current_frame = this.animation.currentFrame();
+    if (current_frame == 5) {
+      this.hitBox = new BoundingBox(this.x + 24, this.y + 16 + 24, 128 - 48, 124 - 16 - 24);
+    } else if (current_frame == 6) {
+      this.hitBox = new BoundingBox(this.x + 24, this.y + 12 + 16 + 24, 128 - 48, 112 - 16 - 24);
+    } else if (current_frame == 7) {
+      this.hitBox = new BoundingBox(this.x + 24, this.y + 12 + 16 + 24, 128 - 48, 104 - 16 - 24);
+    } else if (current_frame == 8) {
+      this.hitBox = new BoundingBox(this.x + 24, this.y + 12 + 16 + 24, 128 - 48, 104 - 16 - 24);
+    } else {
+      this.hitBox = null;
+    }
+  }
+
+  draw(ctx) {
+    // draw current animation frame
+    this.animation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, this.scale);
+
+    // draw hurt box and bounding box if debug is on
+    if (params.DEBUG) {
+      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
+      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "red");
+    }
   }
 }

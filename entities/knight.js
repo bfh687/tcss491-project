@@ -36,7 +36,7 @@ class Knight {
     this.gogglesMultiplier = 1.5;
 
     // information about player stats
-    this.attackDamage = 15000;
+    this.attackDamage = 5000;
     this.critMultiplier = 5;
     this.critChance = 0;
     this.health = 100;
@@ -46,7 +46,6 @@ class Knight {
     this.damageCooldown = 0.1;
 
     // misc
-
     this.kills = 0;
     this.xpSystem = new XP(this);
 
@@ -71,13 +70,13 @@ class Knight {
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
     this.slideLength = 200;
-    this.slideCooldown = 1.5;
+    this.slideCooldown = 0.7;
 
     // information about attacking
     this.attackCooldown = 0.25;
 
     // information about player movement
-    this.speed = 250;
+    this.speed = 325;
   }
 
   loadPlayerItems() {
@@ -189,8 +188,14 @@ class Knight {
     // handle sliding state + animations
     if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
       this.checkCollisions();
-      this.x += 6 * this.velocity.x * this.game.clockTick;
-      this.y += 6 * this.velocity.y * this.game.clockTick;
+
+      var slideMult = 4;
+      if (this.velocity.x != 0 && this.velocity.y != 0) {
+        slideMult = Math.sqrt(8);
+      }
+
+      this.x += slideMult * this.velocity.x * this.game.clockTick;
+      this.y += slideMult * this.velocity.y * this.game.clockTick;
       this.updateBoundingBox();
       return;
     } else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
@@ -216,7 +221,7 @@ class Knight {
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
-      this.slideCooldown = 1.5;
+      this.slideCooldown = 0.7;
     }
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {
@@ -342,18 +347,24 @@ class Knight {
         }
       }
 
-      // handle eyeball collisions
+      // handle minotaur collisions
       else if (entity instanceof Minotaur) {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) entity.state = 4;
           this.handleAttackCollision(this, entity);
         }
 
         // handle case where eyeball attcks the player
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
-          if (this.state != 2) this.state = 3;
           this.handleAttackCollision(entity, this);
+        }
+      }
+
+      // handle lightning spell collisions
+      else if (entity instanceof LightningSpell) {
+        if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
+          this.handleAttackCollision(entity, this);
+          this.state = 3;
         }
       }
 
@@ -372,7 +383,10 @@ class Knight {
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
-      } else if (entity instanceof Shop) {
+      }
+
+      // handle shop collision
+      else if (entity instanceof Shop) {
         // handle sliding collisions
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 6;
@@ -454,6 +468,8 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
+    if (attacked instanceof Knight && attacked.state == 5) return;
+
     if (attacked.damageCooldown <= 0) {
       // DAMAGE TO BE DEFLECTED
       var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
@@ -475,7 +491,7 @@ class Knight {
           }, this.bleedDuration);
           attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
         }
-      } else if (attacked instanceof Knight) {
+      } else if (attacked instanceof Knight && !attacker instanceof LightningSpell) {
         // ARMOR DEFLECTING DAMAGE BACK
         let initDmg = damage;
 
@@ -484,8 +500,14 @@ class Knight {
         attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
         this.regenCooldown = 1;
       }
+
       attacked.health -= Math.max(0, damage);
       attacked.damageCooldown = 0.1;
+
+      if (attacked instanceof Minotaur) {
+        attacked.damageTaken += damage;
+      }
+
       var flag = true;
       for (var i = 0; i < attacked.textAnimations.length; i++) {
         if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone() && attacked.textAnimations[i].color != "yellow") {

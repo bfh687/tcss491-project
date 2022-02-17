@@ -479,7 +479,6 @@ class Knight {
       // DAMAGE TO BE DEFLECTED
       var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
       var damage = attacker.attackDamage;
-      console.log(`damage: ${damage}, clocktick: ${this.game.clockTick}`);
 
       // calculate crit chance
       var color = "red";

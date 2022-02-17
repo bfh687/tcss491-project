@@ -56,6 +56,7 @@ class SceneManager {
       } else {
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
+
         this.knight.x = 750;
         this.knight.y = 2200;
 

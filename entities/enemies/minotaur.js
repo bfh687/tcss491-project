@@ -38,7 +38,7 @@ class Minotaur {
 
     // information about stats + attacking
     this.maxHealth = 5000;
-    this.health = 50000;
+    this.health = 5000;
     this.attackDamage = 2000;
     this.attackCooldown = 3;
     this.damageCooldown = 1;
@@ -278,7 +278,6 @@ class Minotaur {
 
   bleed() {
     this.health = Math.max(this.health - this.bleedDamage, 0);
-    this.damageTaken += this.bleedDamage;
     this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
   }
 

@@ -9,7 +9,6 @@ class Map {
   }
 
   loadEntities() {
-    // add props... has to be a better way... .... .....
     this.game.addEntity(new Sign(this.game, 32 * 29, 32 * 20, "eastsign", ["Shop to the east..."]));
     this.game.addEntity(
       new Sign(this.game, 32 * 91, 32 * 16, "slab2", [
@@ -187,6 +186,8 @@ class Map {
 
     // add trees
     this.game.addEntity(new Foilage(this.game, 9 * 32, 8 * 32, "bigtree"));
+    this.game.addEntity(new Foilage(this.game, 73 * 32, 28 * 32, "bigtree"));
+
     this.game.addEntity(new Foilage(this.game, 143 * 32, 42 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 131 * 32, 40 * 32, "bigtree"));
     this.game.addEntity(new Foilage(this.game, 145 * 32, 22 * 32, "bigtree"));
@@ -341,6 +342,32 @@ class Map {
     this.game.addEntity(new Skeleton(this.game, 400 + 1330, 650 + 1480));
     this.game.addEntity(new Skeleton(this.game, 350 + 1330, 690 + 1480));
     this.game.addEntity(new Skeleton(this.game, 290 + 1330, 640 + 1480));
+
+    this.game.addEntity(new Skeleton(this.game, 25 * 32, 66 * 32));
+    this.game.addEntity(new Skeleton(this.game, 35 * 32, 74 * 32));
+    this.game.addEntity(new Skeleton(this.game, 31 * 32, 66 * 32));
+
+    this.game.addEntity(new Skeleton(this.game, 53 * 32, 94 * 32));
+    this.game.addEntity(new Skeleton(this.game, 49 * 32, 92 * 32));
+
+    this.game.addEntity(new Skeleton(this.game, 67 * 32, 56 * 32));
+    this.game.addEntity(new Skeleton(this.game, 73 * 32, 58 * 32));
+    this.game.addEntity(new Skeleton(this.game, 73 * 32, 22 * 32));
+    this.game.addEntity(new Skeleton(this.game, 75 * 32, 24 * 32));
+    this.game.addEntity(new Skeleton(this.game, 69 * 32, 28 * 32));
+    this.game.addEntity(new Skeleton(this.game, 103 * 32, 22 * 32));
+    this.game.addEntity(new Skeleton(this.game, 113 * 32, 28 * 32));
+    this.game.addEntity(new Skeleton(this.game, 173 * 32, 40 * 32));
+    this.game.addEntity(new Skeleton(this.game, 165 * 32, 42 * 32));
+    this.game.addEntity(new Skeleton(this.game, 171 * 32, 48 * 32));
+
+    this.game.addEntity(new Eyeball(this.game, 33 * 32, 19 * 32));
+    this.game.addEntity(new Eyeball(this.game, 34 * 32, 21 * 32));
+    this.game.addEntity(new Eyeball(this.game, 32 * 32, 20 * 32));
+
+    this.game.addEntity(new Eyeball(this.game, 15 * 32, 54 * 32));
+    this.game.addEntity(new Eyeball(this.game, 16 * 32, 56 * 32));
+    this.game.addEntity(new Eyeball(this.game, 14 * 32, 55 * 32));
   }
 
   // load via json probably

@@ -38,10 +38,11 @@ class Minotaur {
 
     // information about stats + attacking
     this.maxHealth = 5000;
-    this.health = 5000;
+    this.health = 50000;
     this.attackDamage = 2000;
     this.attackCooldown = 3;
-    this.damageCooldown = 0.05;
+    this.damageCooldown = 1;
+    this.bleedDamage = this.maxHealth * 0.02;
 
     this.isBleeding = false;
     this.bleedingCooldown = 1;
@@ -95,8 +96,8 @@ class Minotaur {
     this.animations[4].push(new Animator(this.spritesheet, 0, 96 * staffSlam, 96, 96, 6, 0.16, 0, 0, false, false));
 
     // damaged animations: left, right
-    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * (hurt + offset), 96, 96, 3, 0.08, 0, 0, false, true));
-    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * hurt, 96, 96, 3, 0.08, 0, 0, false, true));
+    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * (hurt + offset), 96, 96, 3, 0.08, 0, 0, false, false));
+    this.animations[5].push(new Animator(this.spritesheet, 0, 96 * hurt, 96, 96, 3, 0.08, 0, 0, false, false));
 
     // death animations: left, right
     this.animations[6].push(new Animator(this.spritesheet, 0, 96 * (death + offset), 96, 96, 12, 0.12, 0, 0, false, false));
@@ -142,6 +143,14 @@ class Minotaur {
     } else if (this.state == 6 && this.animations[this.state][this.direction].isDone()) {
       this.removeFromWorld = true;
       this.game.boss = null;
+    }
+
+    // if damaged animation is playing, let it play out, otherwise remove entity from world
+    else if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
+      return;
+    } else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
+      this.animations[this.state][this.direction].reset();
+      this.state = 0;
     }
 
     // check if minotaur should enter lightning spell attack state

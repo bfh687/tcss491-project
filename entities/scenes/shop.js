@@ -118,21 +118,21 @@ class ShopUI {
 
       var mouseBox = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
 
-      // draw item
+      // item 1
       ctx.drawImage(this.items, 0, 0, 32, 32, this.itemStartX + 2, 70 + 768 / 2 - 330, 32 * 2, 32 * 2);
-      var itemBoxGoggles = new BoundingBox(this.itemStartX + 2, 70 + 768 / 2 - 340, 32 * 2, 32 * 2);
+      var itemBoxGoggles = new BoundingBox(850, 530 - 130 * 3, 55, 30);
       if (mouseBox.collide(itemBoxGoggles) && this.game.single_click) {
         this.levelGoggles();
       }
 
-      //text
+      // description text
       ctx.font = "18px bitpap";
       ctx.fillStyle = "#ddd";
       ctx.fillText("Geronimo's Goggles", this.nameStartX, 70 + 768 / 2 - 304);
       ctx.fillStyle = "white";
       ctx.fillText("Deal 1.5x Damage!", this.nameStartX, 70 + 768 / 2 - 281);
 
-      // item 2
+      // container
       ctx.strokeStyle = "white";
       ctx.lineWidth = 5;
       ctx.strokeRect(1366 / 2 - 300, 230, 600, 110);
@@ -142,6 +142,7 @@ class ShopUI {
       ctx.globalAlpha = 1;
       ctx.fillStyle = "white";
 
+      //
       ctx.fillText("Current Level:", this.nameStartX + 190, 70 + 768 / 2 - 325 + 125 * 3.2 + 13 - 130 * 3);
       let goggleLevel = this.game.knight.gogglesLevel;
       for (let i = 0; i < this.shop.itemLevels; i++) {
@@ -159,17 +160,12 @@ class ShopUI {
         ctx.stroke();
       }
 
-      //item
+      //item 2
       ctx.drawImage(this.items, 32, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
-      var itemBoxArmor = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
+      var itemBoxArmor = new BoundingBox(850, 530 - 130 * 2, 55, 30);
       if (mouseBox.collide(itemBoxArmor) && this.game.single_click) {
         this.levelArmor();
       }
-
-      //container
-      // ctx.strokeStyle = "orange";
-      // ctx.strokeRect(this.containerStartX, 70 + 768 / 2 - 326 + 122, 65, 65);
-      // ctx.fillStyle = "orange";
 
       //text
       ctx.fillStyle = "cyan";
@@ -206,7 +202,7 @@ class ShopUI {
       }
 
       ctx.drawImage(this.items, 64, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2 + 5, 32 * 1.75, 32 * 1.75);
-      var itemBoxPotion = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2, 32 * 1.75, 32 * 1.75);
+      var itemBoxPotion = new BoundingBox(850, 530 - 130, 55, 30);
       if (mouseBox.collide(itemBoxPotion) && this.game.single_click) {
         this.levelPotion();
       }
@@ -244,7 +240,7 @@ class ShopUI {
       ctx.fillStyle = "white";
 
       ctx.drawImage(this.items, 96, 0, 32, 32, this.itemStartX, 70 + 768 / 2 - 323 + 125 * 3 + 10, 32 * 2, 32 * 2);
-      var itemBoxDagger = new BoundingBox(this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 3, 32 * 2, 32 * 2);
+      var itemBoxDagger = new BoundingBox(850, 530, 55, 30);
       if (mouseBox.collide(itemBoxDagger) && this.game.single_click) {
         this.levelDagger();
       }
@@ -281,10 +277,22 @@ class ShopUI {
 
       ctx.globalAlpha = 1;
       ctx.fillStyle = "white";
-      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551);
-      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551 - 130);
-      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551 - 130 * 2);
-      ctx.fillText("2 SP", 850 + 55 / 2 - ctx.measureText("2 SP").width / 2, 551 - 130 * 3);
+
+      // dagger skill point level
+      ctx.fillText(this.game.knight.daggerLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.daggerLevel + " SP").width / 2, 551);
+
+      // potion level
+      ctx.fillText(this.game.knight.potionLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.potionLevel + " SP").width / 2, 551 - 130);
+
+      // armor level
+      ctx.fillText(this.game.knight.armorLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.armorLevel + " SP").width / 2, 551 - 130 * 2);
+
+      // goggles sp cost
+      ctx.fillText(
+        this.game.knight.gogglesLevel + " SP",
+        850 + 55 / 2 - ctx.measureText(this.game.knight.gogglesLevel + " SP").width / 2,
+        551 - 130 * 3
+      );
 
       ctx.restore();
 
@@ -312,85 +320,81 @@ class ShopUI {
       } else {
         console.log("REACHED HERE");
       }
-    } else if (this.shop.gogglesLevel == this.shop.itemLevels) {
+    } else if (this.game.knight.gogglesLevel == this.shop.itemLevels) {
       console.log("MAX LEVEL");
     } else {
       console.log("Not enough SP");
     }
     this.game.single_click = false;
     console.log("goggle level " + this.game.knight.gogglesLevel);
-    //this.game.knight.gogglesLevel = this.shop.gogglesLevel;
   }
 
   levelArmor() {
     if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.armorLevel < this.shop.itemLevels) {
-      if (this.shop.armorLevel == 0) {
-        this.shop.armorLevel++;
+      if (this.game.knight.armorLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
+        this.game.knight.armorLevel++;
         this.game.knight.xpSystem.skillPoints--;
-      } else if (this.shop.armorLevel == 1 && this.shop.skillPoints > 1) {
-        this.shop.armorLevel++;
+      } else if (this.game.knight.armorLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
+        this.game.knight.armorLevel++;
         this.game.knight.xpSystem.skillPoints -= 2;
-      } else if (this.shop.armorLevel == 2 && this.shop.skillPoints > 2) {
-        this.shop.armorLevel++;
+      } else if (this.game.knight.armorLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
+        this.game.knight.armorLevel++;
         this.game.knight.xpSystem.skillPoints -= 3;
-      } else if (this.shop.armorLevel == 3 && this.shop.skillPoints > 3) {
-        this.shop.armorLevel++;
+      } else if (this.game.knight.armorLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
+        this.game.knight.armorLevel++;
         this.game.knight.xpSystem.skillPoints -= 4;
       }
-    } else if (this.shop.armorLevel == this.shop.itemLevels) {
+    } else if (this.game.knight.armorLevel == this.shop.itemLevels) {
       console.log("MAX LEVEL");
     } else {
       console.log("Not enough SP");
     }
     this.game.single_click = false;
-    this.game.knight.armorLevel = this.shop.armorLevel;
   }
 
   levelPotion() {
     if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.potionLevel < this.shop.itemLevels) {
-      if (this.shop.potionLevel == 0) {
-        this.shop.potionLevel++;
+      if (this.game.knight.potionLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
+        this.game.knight.potionLevel++;
         this.game.knight.xpSystem.skillPoints--;
-      } else if (this.shop.potionLevel == 1 && this.shop.skillPoints > 1) {
-        this.shop.potionLevel++;
+      } else if (this.game.knight.potionLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
+        this.game.knight.potionLevel++;
         this.game.knight.xpSystem.skillPoints -= 2;
-      } else if (this.shop.potionLevel == 2 && this.shop.skillPoints > 2) {
-        this.shop.potionLevel++;
+      } else if (this.game.knight.potionLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
+        this.game.knight.potionLevel++;
         this.game.knight.xpSystem.skillPoints -= 3;
-      } else if (this.shop.potionLevel == 3 && this.shop.skillPoints > 3) {
-        this.shop.potionLevel++;
+      } else if (this.game.knight.potionLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
+        this.game.knight.potionLevel++;
         this.game.knight.xpSystem.skillPoints -= 4;
       }
-    } else if (this.shop.potionLevel == this.shop.itemLevels) {
+    } else if (this.game.knight.potionLevel == this.shop.itemLevels) {
       console.log("MAX LEVEL");
     } else {
       console.log("Not enough SP");
     }
     this.game.single_click = false;
-    this.game.knight.potionLevel = this.shop.potionLevel;
   }
 
   levelDagger() {
     if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.daggerLevel < this.shop.itemLevels) {
-      if (this.shop.daggerLevel == 0) {
-        this.shop.daggerLevel++;
+      if (this.game.knight.daggerLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
+        this.game.knight.daggerLevel++;
         this.game.knight.xpSystem.skillPoints--;
-      } else if (this.shop.daggerLevel == 1 && this.shop.skillPoints > 1) {
-        this.shop.daggerLevel++;
+      } else if (this.game.knight.daggerLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
+        this.game.knight.daggerLevel++;
         this.game.knight.xpSystem.skillPoints -= 2;
-      } else if (this.shop.daggerLevel == 2 && this.shop.skillPoints > 2) {
-        this.shop.daggerLevel++;
+      } else if (this.game.knight.daggerLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
+        this.game.knight.daggerLevel++;
         this.game.knight.xpSystem.skillPoints -= 3;
-      } else if (this.shop.daggerLevel == 3 && this.shop.skillPoints > 3) {
-        this.shop.daggerLevel++;
+      } else if (this.game.knight.daggerLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
+        this.game.knight.daggerLevel++;
         this.game.knight.xpSystem.skillPoints -= 4;
       }
-    } else if (this.shop.daggerLevel == this.shop.itemLevels) {
+    } else if (this.game.knight.daggerLevel == this.shop.itemLevels) {
       console.log("MAX LEVEL");
     } else {
       console.log("Not enough SP");
     }
     this.game.single_click = false;
-    this.game.knight.daggerLevel = this.shop.daggerLevel;
   }
 }

@@ -43,7 +43,7 @@ class Skeleton {
 
     // misc
     this.alpha = 1;
-    this.xpDropped = 250;
+    this.xpDropped = 270;
   }
 
   loadAnimations() {

@@ -5,7 +5,7 @@ class XP {
     this.currLevel = 1;
     this.currXP = 0;
     this.xpNeeded = this.baseXP;
-    this.skillPoints = 50;
+    this.skillPoints = 0;
   }
 
   incrementXP(xp) {

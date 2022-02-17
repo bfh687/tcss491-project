@@ -9,6 +9,7 @@ ASSET_MANAGER.queueDownload("./sfx/thunderfx0.mp3");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx1.mp3");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx2.mp3");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx3.mp3");
+ASSET_MANAGER.queueDownload("./sfx/level1_music.mp3");
 
 // knight-related downloads
 ASSET_MANAGER.queueDownload("./sprites/entities/knight.png");

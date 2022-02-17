@@ -28,10 +28,10 @@ class Skeleton {
     // information about stats + attacking
     this.maxHealth = 400;
     this.health = 400;
-    this.attackDamage = 2000;
+    this.attackDamage = 10;
 
     this.attackCooldown = 1;
-    this.damageCooldown = 0.05;
+    this.damageCooldown = 0.5;
 
     this.isBleeding = false;
     this.bleedingCooldown = 1;

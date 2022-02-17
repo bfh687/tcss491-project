@@ -33,7 +33,7 @@ class Knight {
     this.updateBoundingBox();
 
     // information about player stats
-    this.attackDamage = 400;
+    this.attackDamage = 10;
     this.critMultiplier = 5;
     this.critChance = 0;
     this.health = 100;
@@ -471,10 +471,15 @@ class Knight {
   handleAttackCollision(attacker, attacked) {
     if (attacked instanceof Knight && attacked.state == 5) return;
 
-    if (attacked.damageCooldown <= 0 || !(attacked instanceof Knight)) {
+    if (attacked instanceof Knight) {
+      this.regenCooldown = 1;
+    }
+
+    if (attacked.damageCooldown <= 0) {
       // DAMAGE TO BE DEFLECTED
       var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
-      var damage = attacker.attackDamage * this.game.clockTick;
+      var damage = attacker.attackDamage;
+      console.log(`damage: ${damage}, clocktick: ${this.game.clockTick}`);
 
       // calculate crit chance
       var color = "red";

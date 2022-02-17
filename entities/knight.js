@@ -122,10 +122,10 @@ class Knight {
     this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.2, 15, 15, false, false));
 
     // slide animations: front-left, front-right, back-left, back-right
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.02, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.02, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.02, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.02, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false));
   }
 
   update() {
@@ -187,7 +187,7 @@ class Knight {
     if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
       this.checkCollisions();
 
-      var slideMult = 4;
+      var slideMult = 3;
       if (this.velocity.x != 0 && this.velocity.y != 0) {
         slideMult = Math.sqrt(8);
       }
@@ -294,7 +294,7 @@ class Knight {
       if ((entity instanceof Skeleton || entity instanceof Eyeball || entity instanceof Minotaur) && entity.state != 4 && entity.state != 5) {
         // handle sliding collisions
         var slideMultiplier = 1;
-        if (this.state == 5) slideMultiplier = 6;
+        if (this.state == 5) slideMultiplier = 3;
 
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
         var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
@@ -377,7 +377,7 @@ class Knight {
         entity.bounding_boxes.forEach((box) => {
           // handle sliding collisions
           var slideMultiplier = 1;
-          if (this.state == 5) slideMultiplier = 4;
+          if (this.state == 5) slideMultiplier = 3;
 
           // get bounding boxes of NEXT tick (assuming no major changes in fps)
           var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
@@ -390,7 +390,7 @@ class Knight {
       } else if (entity instanceof Shop || entity instanceof Foilage || entity instanceof Prop || entity instanceof Sign) {
         // handle sliding collisions
         var slideMultiplier = 1;
-        if (this.state == 5) slideMultiplier = 6;
+        if (this.state == 5) slideMultiplier = 3;
 
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
         var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);

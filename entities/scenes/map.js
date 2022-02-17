@@ -744,6 +744,8 @@ class Map2 {
     this.game.addEntity(new Prop(this.game, 40 * 32, 28 * 32, "smallrock6"));
     this.game.addEntity(new Prop(this.game, 32 * 32, 4 * 32, "smallrock4"));
     this.game.addEntity(new Prop(this.game, 8 * 32, 10 * 32, "smallrock3"));
+
+    this.game.addEntity(new Teleporter(this.game, 22 * 32, 70 * 32));
   }
 
   // Loading Bounding Boxes for Boss of Level 1

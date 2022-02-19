@@ -224,7 +224,10 @@ class Knight {
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {
       ASSET_MANAGER.setVolume(0.25);
-      ASSET_MANAGER.playAudio("./sfx/sword_slash.mp3");
+      ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+      setTimeout(() => {
+        ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+      }, 250);
       this.state = 2;
       this.attackCooldown = 0.25;
     }
@@ -492,6 +495,21 @@ class Knight {
       // calculate crit chance
       var color = "red";
       if (attacker instanceof Knight) {
+        var frame = this.animations[this.state][this.direction].currentFrame();
+        if (frame == 0 || frame == 4) {
+          var path1 = "./sfx/klang1.mp3";
+          var path2 = "./sfx/klang2.mp3";
+
+          ASSET_MANAGER.getAsset(path1).volume = 0.03;
+          ASSET_MANAGER.playAudio(path1);
+          ASSET_MANAGER.getAsset(path2).volume = 0.05;
+          ASSET_MANAGER.playAudio(path2);
+
+          // var path = "./sfx/klang" + Math.ceil(Math.random() * 2) + ".mp3";
+          // ASSET_MANAGER.getAsset(path).volume = 0.05;
+          // ASSET_MANAGER.playAudio(path);
+        }
+
         var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
         damage *= damageMultiplier;
         if (Math.random() <= this.critChance) {

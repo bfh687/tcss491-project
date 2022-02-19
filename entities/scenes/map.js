@@ -3,7 +3,7 @@ class Map {
     Object.assign(this, { game, x, y });
 
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/level_1.png");
-
+    this.mobCluster = new MobCluster(this.game);
     this.loadEntities();
     this.loadBoundingBoxes();
   }
@@ -331,9 +331,10 @@ class Map {
     this.game.addEntity(new Shop(this.game, 129 * 32, 56 * 32));
 
     //add enemies
-    this.game.addEntity(new Skeleton(this.game, 400, 650));
-    this.game.addEntity(new Skeleton(this.game, 350, 690));
-    this.game.addEntity(new Skeleton(this.game, 290, 640));
+    this.mobCluster.makeCluster(290, 640, 8, "mixed");
+    // this.game.addEntity(new Skeleton(this.game, 400, 650));
+    // this.game.addEntity(new Skeleton(this.game, 350, 690));
+    // this.game.addEntity(new Skeleton(this.game, 290, 640));
 
     this.game.addEntity(new Skeleton(this.game, 400 + 200, 650 + 700));
     this.game.addEntity(new Skeleton(this.game, 350 + 200, 690 + 700));

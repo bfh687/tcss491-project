@@ -292,27 +292,30 @@ class Knight {
     this.game.entities.forEach((entity) => {
       // prevent entity pass through for alive enemies
       if ((entity instanceof Skeleton || entity instanceof Eyeball || entity instanceof Minotaur) && entity.state != 4 && entity.state != 5) {
-        // handle sliding collisions
-        var slideMultiplier = 1;
-        if (this.state == 5) slideMultiplier = 3;
+        if (!this.boundingBox.collide(entity.boundingBox)) {
+          // handle sliding collisions
 
-        // get bounding boxes of NEXT tick (assuming no major changes in fps)
-        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+          var slideMultiplier = 1;
+          if (this.state == 5) slideMultiplier = 3;
 
-        // check collisions
-        var flag = false;
-        if (verticalBox.collide(entity.boundingBox)) {
-          this.velocity.y = 0;
-          entity.currSpeed = 0;
-          flag = true;
+          // get bounding boxes of NEXT tick (assuming no major changes in fps)
+          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+
+          // check collisions
+          var flag = false;
+          if (verticalBox.collide(entity.boundingBox)) {
+            this.velocity.y = 0;
+            entity.currSpeed = 0;
+            flag = true;
+          }
+          if (horizontalBox.collide(entity.boundingBox)) {
+            this.velocity.x = 0;
+            entity.currSpeed = 0;
+            flag = true;
+          }
+          if (!flag) entity.currSpeed = entity.minSpeed;
         }
-        if (horizontalBox.collide(entity.boundingBox)) {
-          this.velocity.x = 0;
-          entity.currSpeed = 0;
-          flag = true;
-        }
-        if (!flag) entity.currSpeed = entity.minSpeed;
       }
 
       // handle skeleton collisions
@@ -469,6 +472,9 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
+    console.log("here");
+    this.game.camera.screenshake();
+    console.log("here2");
     if (attacked instanceof Knight && attacked.state == 5) return;
 
     if (attacked instanceof Knight) {

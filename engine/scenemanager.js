@@ -9,6 +9,7 @@ class SceneManager {
 
     // screenshake details
     this.shakeDuration = -0.01;
+    this.shakeCooldown = -0.01;
     this.x_offset = 0;
     this.y_offset = 0;
 
@@ -78,23 +79,27 @@ class SceneManager {
 
   update() {
     this.shakeDuration -= this.game.clockTick;
+    this.shakeCooldown -= this.game.clockTick;
     if (this.shakeDuration >= 0) {
-      this.y_offset = Math.random() * 10 - 5;
-      this.x_offset = Math.random() * 10 - 5;
+      this.y_offset = Math.random() * 15 - 7.5;
+      this.x_offset = Math.random() * 15 - 7.5;
+    } else {
+      this.x_offset = this.y_offset = 0;
     }
 
     let midpoint_x = 1366 / 2 - 48;
     let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
 
-    this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX);
-    this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY);
+    this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX) + this.x_offset;
+    this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) + this.y_offset;
   }
 
   draw(ctx) {}
 
   screenshake() {
-    if (this.shakeDuration <= 0) {
-      this.shakeDuration = 0.2;
+    if (this.shakeDuration <= 0 && this.shakeCooldown <= 0) {
+      this.shakeDuration = 0.05;
+      this.shakeCooldown = 0.3;
     }
   }
 }

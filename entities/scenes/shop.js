@@ -279,17 +279,25 @@ class ShopUI {
       ctx.fillStyle = "white";
 
       // dagger skill point level
-      ctx.fillText(this.game.knight.daggerLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.daggerLevel + " SP").width / 2, 551);
+      ctx.fillText(this.game.knight.daggerLevel + 1 + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.daggerLevel + " SP").width / 2, 551);
 
       // potion level
-      ctx.fillText(this.game.knight.potionLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.potionLevel + " SP").width / 2, 551 - 130);
+      ctx.fillText(
+        this.game.knight.potionLevel + 1 + " SP",
+        850 + 55 / 2 - ctx.measureText(this.game.knight.potionLevel + " SP").width / 2,
+        551 - 130
+      );
 
       // armor level
-      ctx.fillText(this.game.knight.armorLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.armorLevel + " SP").width / 2, 551 - 130 * 2);
+      ctx.fillText(
+        this.game.knight.armorLevel + 1 + " SP",
+        850 + 55 / 2 - ctx.measureText(this.game.knight.armorLevel + " SP").width / 2,
+        551 - 130 * 2
+      );
 
       // goggles sp cost
       ctx.fillText(
-        this.game.knight.gogglesLevel + " SP",
+        this.game.knight.gogglesLevel + 1 + " SP",
         850 + 55 / 2 - ctx.measureText(this.game.knight.gogglesLevel + " SP").width / 2,
         551 - 130 * 3
       );
@@ -306,16 +314,16 @@ class ShopUI {
   levelGoggles() {
     if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.gogglesLevel < this.shop.itemLevels) {
       if (this.game.knight.gogglesLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints--;
       } else if (this.game.knight.gogglesLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints -= 2;
       } else if (this.game.knight.gogglesLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints -= 3;
       } else if (this.game.knight.gogglesLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints -= 4;
       } else {
         console.log("REACHED HERE");
@@ -332,16 +340,16 @@ class ShopUI {
   levelArmor() {
     if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.armorLevel < this.shop.itemLevels) {
       if (this.game.knight.armorLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints--;
       } else if (this.game.knight.armorLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints -= 2;
       } else if (this.game.knight.armorLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints -= 3;
       } else if (this.game.knight.armorLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints -= 4;
       }
     } else if (this.game.knight.armorLevel == this.shop.itemLevels) {

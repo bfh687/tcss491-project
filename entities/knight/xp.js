@@ -22,7 +22,7 @@ class XP {
     this.xpNeeded = Math.pow(1.1, this.currLevel - 1) * this.baseXP;
 
     // testing hp scaling by level
-    this.knight.maxHealth = Math.round(this.knight.maxHealth * 1.1);
+    this.knight.levelUp();
   }
 
   purchaseSkill(levels) {

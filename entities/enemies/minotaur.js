@@ -39,7 +39,7 @@ class Minotaur {
     // information about stats + attacking
     this.maxHealth = 5000;
     this.health = 5000;
-    this.attackDamage = 2000;
+    this.attackDamage = 50;
     this.attackCooldown = 3;
     this.damageCooldown = 1;
     this.bleedDamage = this.maxHealth * 0.02;
@@ -419,7 +419,7 @@ class LightningSpell {
     // set scale of spell
     this.scale = 2;
 
-    this.attackDamage = 500;
+    this.attackDamage = 50;
   }
 
   update() {

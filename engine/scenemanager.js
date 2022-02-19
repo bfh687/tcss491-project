@@ -3,6 +3,8 @@ class SceneManager {
     this.game = game;
     this.game.camera = this;
 
+    this.vignette = ASSET_MANAGER.getAsset("./vignette.png");
+
     // initialize camera coords
     this.x = 0;
     this.y = 0;
@@ -94,7 +96,12 @@ class SceneManager {
     this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) + this.y_offset;
   }
 
-  draw(ctx) {}
+  draw(ctx) {
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.drawImage(this.vignette, 0, 0, 1366, 768);
+    ctx.restore();
+  }
 
   screenshake() {
     if (this.shakeDuration <= 0 && this.shakeCooldown <= 0) {

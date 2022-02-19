@@ -269,7 +269,10 @@ class Knight {
     drawShadow(ctx, this.game, this);
 
     // draw sprite
-    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
+    var tick = this.game.clockTick;
+    if (this.game.hitStopDuration > 0) tick = 0;
+
+    this.animations[this.state][this.direction].drawFrame(tick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
 
     // draw hurt box, hit box, and bounding box
     if (params.DEBUG) {
@@ -530,6 +533,14 @@ class Knight {
 
       if (flag) {
         attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
+      }
+
+      if (attacked instanceof Skeleton && color == "red") {
+        ASSET_MANAGER.getAsset("./sfx/skeleton_hit.mp3").volume = 0.03;
+        ASSET_MANAGER.playAudio("./sfx/skeleton_hit.mp3");
+      } else if (attacked instanceof Skeleton && color == "yellow") {
+        ASSET_MANAGER.getAsset("./sfx/skeleton_crit.mp3").volume = 0.03;
+        ASSET_MANAGER.playAudio("./sfx/skeleton_crit.mp3");
       }
     }
   }

@@ -10,6 +10,8 @@ ASSET_MANAGER.queueDownload("./sfx/thunderfx1.mp3");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx2.mp3");
 ASSET_MANAGER.queueDownload("./sfx/thunderfx3.mp3");
 ASSET_MANAGER.queueDownload("./sfx/level1_music.mp3");
+ASSET_MANAGER.queueDownload("./sfx/skeleton_hit.mp3");
+ASSET_MANAGER.queueDownload("./sfx/skeleton_crit.mp3");
 
 // knight-related downloads
 ASSET_MANAGER.queueDownload("./sprites/entities/knight.png");
@@ -48,6 +50,8 @@ ASSET_MANAGER.queueDownload("./sprites/map/prop_shadows.png");
 for (var i = 0; i <= 32; i++) {
   ASSET_MANAGER.queueDownload("./sprites/death_transition/death_transition (" + i + ").png");
 }
+
+ASSET_MANAGER.queueDownload("./vignette.png");
 
 ASSET_MANAGER.downloadAll(() => {
   const canvas = document.getElementById("gameWorld");

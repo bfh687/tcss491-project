@@ -170,13 +170,15 @@ class GameEngine {
         e1.priority - e2.priority;
       }
     });
-    this.camera.update();
   }
 
   loop() {
     this.clockTick = this.timer.tick();
     this.update();
     this.draw();
+
+    this.camera.update();
+    this.camera.draw(this.ctx);
   }
 
   get ["deltaTime"]() {

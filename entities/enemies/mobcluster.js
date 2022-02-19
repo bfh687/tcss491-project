@@ -11,7 +11,6 @@ class MobCluster {
   }
 
   makeCluster(x, y, mobs, type) {
-    console.log(mobs);
     if (type == "skeleton") {
       for (let i = 0; i < mobs; i++) {
         this.game.addEntity(
@@ -48,7 +47,6 @@ class MobCluster {
             )
           );
         }
-        console.log("mixed");
       }
     }
   }

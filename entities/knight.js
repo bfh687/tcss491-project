@@ -497,17 +497,11 @@ class Knight {
       if (attacker instanceof Knight) {
         var frame = this.animations[this.state][this.direction].currentFrame();
         if (frame == 0 || frame == 4) {
-          var path1 = "./sfx/klang1.mp3";
-          var path2 = "./sfx/klang2.mp3";
-
-          ASSET_MANAGER.getAsset(path1).volume = 0.03;
-          ASSET_MANAGER.playAudio(path1);
-          ASSET_MANAGER.getAsset(path2).volume = 0.05;
-          ASSET_MANAGER.playAudio(path2);
-
-          // var path = "./sfx/klang" + Math.ceil(Math.random() * 2) + ".mp3";
-          // ASSET_MANAGER.getAsset(path).volume = 0.05;
-          // ASSET_MANAGER.playAudio(path);
+          var path = "./sfx/klang2.mp3";
+          if (!(attacked instanceof Skeleton)) {
+            ASSET_MANAGER.getAsset(path).volume = 0.03;
+            ASSET_MANAGER.playAudio(path);
+          }
         }
 
         var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
@@ -554,10 +548,10 @@ class Knight {
       }
 
       if (attacked instanceof Skeleton && color == "red") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_hit.mp3").volume = 0.03;
+        ASSET_MANAGER.getAsset("./sfx/skeleton_hit.mp3").volume = 0.1;
         ASSET_MANAGER.playAudio("./sfx/skeleton_hit.mp3");
       } else if (attacked instanceof Skeleton && color == "yellow") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_crit.mp3").volume = 0.03;
+        ASSET_MANAGER.getAsset("./sfx/skeleton_crit.mp3").volume = 0.1;
         ASSET_MANAGER.playAudio("./sfx/skeleton_crit.mp3");
       }
     }

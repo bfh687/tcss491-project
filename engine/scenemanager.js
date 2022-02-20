@@ -23,12 +23,20 @@ class SceneManager {
 
     this.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
     // load first level
-    this.loadLevel(1, false);
+    this.loadMainMenu();
   }
 
   // remove all entities from the game engine
   clearEntities() {
     this.game.entities = [];
+  }
+
+  loadMainMenu() {
+    this.clearEntities();
+    this.boss = null;
+
+    this.game.addEntity(new MainMenu(this.game));
+    this.game.addEntity(new Cursor(this.game));
   }
 
   loadLevel(level, boss) {

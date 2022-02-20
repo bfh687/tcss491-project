@@ -185,11 +185,11 @@ class GameEngine {
     return this.clockTick;
   }
 
-  get ["width"]() {
+  width() {
     return this.ctx?.canvas?.width || 0;
   }
 
-  get ["height"]() {
+  height() {
     return this.ctx?.canvas?.height || 0;
   }
 }

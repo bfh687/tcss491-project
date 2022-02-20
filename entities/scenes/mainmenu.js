@@ -2,13 +2,23 @@ class MainMenu {
   constructor(game) {
     Object.assign(this, { game });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/level_1.png");
-    this.x = 400;
-    this.y = 850;
+
+    this.startX = 450;
+    this.startY = 800;
+
+    this.x = this.startX;
+    this.y = this.startY;
+    this.alpha = 0;
+    this.speed = 120;
   }
 
   update() {
-    this.alpha += this.game.clockTick;
-    this.x += this.game.clockTick * 150;
+    this.alpha += 2 * this.game.clockTick;
+    this.x += this.game.clockTick * this.speed;
+    this.y += this.game.clockTick * 20;
+    if (this.x > 4800) this.x = this.startX;
+
+    if (this.game.keys[" "]) this.game.camera.loadLevel(1, false);
   }
 
   draw(ctx) {
@@ -34,9 +44,11 @@ class MainMenu {
     // draw continue
     ctx.save();
     ctx.globalAlpha = Math.abs(Math.sin(this.alpha));
-    ctx.font = "32px bitpap";
+    console.log(this.alpha);
+    console.log(Math.abs(Math.sin(this.alpha)));
+    ctx.font = "24px bitpap";
     ctx.fillStyle = "white";
-    ctx.fillText("Press Space to continue...", this.game.width() / 2 - width, this.game.height() / 2 + 50);
+    ctx.fillText("PRESS SPACE TO CONTINUE", this.game.width() / 2 - width, this.game.height() / 2 + 40);
     ctx.restore();
   }
 }

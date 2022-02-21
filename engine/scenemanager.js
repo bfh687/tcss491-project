@@ -37,7 +37,6 @@ class SceneManager {
 
     this.game.addEntity(new MainMenu(this.game));
     this.game.addEntity(new Cursor(this.game));
-    this.playMusic("./music/homescreen.mp3");
   }
 
   loadLevel(level, boss) {
@@ -96,8 +95,7 @@ class SceneManager {
 
     ASSET_MANAGER.muteAudio(mute);
     ASSET_MANAGER.setVolume(volume);
-
-};
+  }
 
   update() {
     this.shakeDuration -= this.game.clockTick;
@@ -131,9 +129,9 @@ class SceneManager {
       this.shakeCooldown = 0.3;
     }
   }
-  
+
   playMusic(path) {
-    ASSET_MANAGER.pauseAudio;
+    ASSET_MANAGER.pauseAudio();
     ASSET_MANAGER.playAudio(path);
     ASSET_MANAGER.autoRepeat(path);
   }

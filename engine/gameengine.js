@@ -11,6 +11,8 @@ class GameEngine {
     // Entities to be added at the end of each update
     this.entitiesToAdd = [];
 
+    this.interactionCount = 0;
+
     // Information on the input
     this.click = false;
     this.left_click = false;
@@ -82,6 +84,8 @@ class GameEngine {
       if (document.pointerLockElement === self.ctx.canvas || document.mozPointerLockElement === self.ctx.canvas) {
         document.addEventListener("mousemove", updatePosition, false);
         self.locked = true;
+        self.interactionCount++;
+        if (self.interactionCount == 1) self.camera.playMusic("./music/homescreen.mp3");
       } else {
         document.removeEventListener("mousemove", updatePosition, false);
         self.locked = false;

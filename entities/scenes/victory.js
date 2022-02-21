@@ -1,8 +1,8 @@
-class Restart {
+class Victory {
   constructor(game) {
     Object.assign(this, { game });
     this.game.camera.death_offset = 1366 / 4 + 49;
-    this.defaultTimer = 15;
+    this.defaultTimer = 30;
     this.selections = ["restart", "mainmenu"];
     this.selectedOption = "default";
     this.message = "";
@@ -10,6 +10,7 @@ class Restart {
     this.dots = 0;
     this.dotString = "";
     this.dotCooldown = 0.5;
+    this.time = this.game.timer.gameTime;
   }
 
   update() {
@@ -50,10 +51,13 @@ class Restart {
     ctx.globalAlpha = 1;
 
     ctx.font = "30px bitpap";
+    ctx.fillStyle = "green";
+    var victoryString = "VICTORY";
+    var victoryTime = " - " + this.time.toFixed(2) + " seconds";
+    var widthVictoryString = ctx.measureText(victoryString).width / 2;
+    ctx.fillText(victoryString, 1366 / 2 - 485 + widthVictoryString + 10, 61);
     ctx.fillStyle = "white";
-    var deathString = "YOU HAVE DIED";
-    var widthDeathString = ctx.measureText(deathString).width / 2;
-    ctx.fillText(deathString, 1366 / 2 - 450 + widthDeathString + 10, 61);
+    ctx.fillText(victoryTime, 1366 / 2 - 395 + widthVictoryString, 61);
 
     var deathString2 = this.message;
     ctx.fillText(deathString2 + this.dotString, 1366 / 2 - 850 + 258 + 30, 120);

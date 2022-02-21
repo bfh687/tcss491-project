@@ -39,9 +39,9 @@ class Minotaur {
     // information about stats + attacking
     this.maxHealth = 5000;
     this.health = 5000;
-    this.attackDamage = 2000;
+    this.attackDamage = 1;
     this.attackCooldown = 3;
-    this.damageCooldown = 1;
+    this.damageCooldown = 0;
     this.bleedDamage = this.maxHealth * 0.02;
 
     this.isBleeding = false;
@@ -141,6 +141,8 @@ class Minotaur {
     else if (this.state == 6 && !this.animations[this.state][this.direction].isDone()) {
       return;
     } else if (this.state == 6 && this.animations[this.state][this.direction].isDone()) {
+      this.game.addEntity(new Victory(this.game));
+      console.log("hello");
       this.removeFromWorld = true;
       this.game.boss = null;
     }
@@ -171,6 +173,7 @@ class Minotaur {
         return;
       } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
         this.animations[this.state][this.direction].reset();
+
         this.state = 0;
       }
 

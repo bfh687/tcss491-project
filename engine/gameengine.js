@@ -95,6 +95,7 @@ class GameEngine {
 
     // key listeners
     window.addEventListener("keydown", (e) => {
+      if (e.key == " ") e.preventDefault();
       this.keys[e.key] = true;
       if (this.keys.c) params.DEBUG = !params.DEBUG;
     });

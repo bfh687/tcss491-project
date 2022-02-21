@@ -44,8 +44,6 @@ class MainMenu {
     // draw continue
     ctx.save();
     ctx.globalAlpha = Math.abs(Math.sin(this.alpha));
-    console.log(this.alpha);
-    console.log(Math.abs(Math.sin(this.alpha)));
     ctx.font = "24px bitpap";
     ctx.fillStyle = "white";
     ctx.fillText("PRESS SPACE TO CONTINUE", this.game.width() / 2 - width, this.game.height() / 2 + 40);

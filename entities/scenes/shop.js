@@ -279,17 +279,25 @@ class ShopUI {
       ctx.fillStyle = "white";
 
       // dagger skill point level
-      ctx.fillText(this.game.knight.daggerLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.daggerLevel + " SP").width / 2, 551);
+      ctx.fillText(this.game.knight.daggerLevel + 1 + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.daggerLevel + " SP").width / 2, 551);
 
       // potion level
-      ctx.fillText(this.game.knight.potionLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.potionLevel + " SP").width / 2, 551 - 130);
+      ctx.fillText(
+        this.game.knight.potionLevel + 1 + " SP",
+        850 + 55 / 2 - ctx.measureText(this.game.knight.potionLevel + " SP").width / 2,
+        551 - 130
+      );
 
       // armor level
-      ctx.fillText(this.game.knight.armorLevel + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.armorLevel + " SP").width / 2, 551 - 130 * 2);
+      ctx.fillText(
+        this.game.knight.armorLevel + 1 + " SP",
+        850 + 55 / 2 - ctx.measureText(this.game.knight.armorLevel + " SP").width / 2,
+        551 - 130 * 2
+      );
 
       // goggles sp cost
       ctx.fillText(
-        this.game.knight.gogglesLevel + " SP",
+        this.game.knight.gogglesLevel + 1 + " SP",
         850 + 55 / 2 - ctx.measureText(this.game.knight.gogglesLevel + " SP").width / 2,
         551 - 130 * 3
       );

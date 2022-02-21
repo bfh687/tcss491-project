@@ -145,7 +145,7 @@ class Knight {
         this.state = 4;
         this.health = 0;
         if (!this.game.restart) {
-          this.game.addEntity(new Restart(this.game, this.x));
+          this.game.addEntity(new Restart(this.game));
         }
       }
     }
@@ -359,7 +359,6 @@ class Knight {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
           if (entity.state != 2 && entity.state != 3 && entity.damageCooldown <= 0) {
-            entity.damageCooldown = 1;
             entity.state = 5;
           }
 

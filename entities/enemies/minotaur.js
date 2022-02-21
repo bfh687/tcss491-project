@@ -39,7 +39,7 @@ class Minotaur {
     // information about stats + attacking
     this.maxHealth = 5000;
     this.health = 5000;
-    this.attackDamage = 1;
+    this.attackDamage = 50;
     this.attackCooldown = 3;
     this.damageCooldown = 0;
     this.bleedDamage = this.maxHealth * 0.02;

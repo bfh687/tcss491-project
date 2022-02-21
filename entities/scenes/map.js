@@ -673,7 +673,7 @@ class Map {
       ctx.save();
       ctx.fillStyle = "#008ab7";
       ctx.globalAlpha = 0.9;
-      ctx.fillRect(0, 0, 4000, 4000);
+      ctx.fillRect(-200, 0, 4000, 4000);
       ctx.restore();
       ctx.drawImage(this.spritesheet, 0, 0, 3216, 1760, this.x - this.game.camera.x, this.y - this.game.camera.y, 3216 * 2, 1760 * 2);
       this.bounding_boxes.forEach((box) => {

@@ -16,15 +16,22 @@ class Animator {
 
     this.elapsedTime = 0;
     this.totalTime = this.frameCount * this.frameDuration;
+    this.paused = false;
+  }
+
+  pause() {
+    this.paused = true;
   }
   drawFrame(tick, ctx, x, y, scale) {
-    this.elapsedTime += tick;
+    if (!this.paused) {
+      this.elapsedTime += tick;
 
-    if (this.isDone()) {
-      if (this.loop) {
-        this.elapsedTime -= this.totalTime;
-      } else {
-        return;
+      if (this.isDone()) {
+        if (this.loop) {
+          this.elapsedTime -= this.totalTime;
+        } else {
+          return;
+        }
       }
     }
 

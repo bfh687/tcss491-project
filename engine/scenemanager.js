@@ -9,6 +9,8 @@ class SceneManager {
     this.x = 0;
     this.y = 0;
 
+    this.death_offset = 0;
+
     // screenshake details
     this.shakeDuration = -0.01;
     this.shakeCooldown = -0.01;
@@ -110,7 +112,11 @@ class SceneManager {
     let midpoint_x = 1366 / 2 - 48;
     let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
 
-    this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX) + this.x_offset;
+    if (this.death_offset == 0) {
+      this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX) + this.x_offset;
+    } else {
+      this.x = this.knight.x - midpoint_x + this.x_offset - this.death_offset;
+    }
     this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) + this.y_offset;
 
     this.updateAudio();

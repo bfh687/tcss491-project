@@ -129,11 +129,11 @@ class HUD {
     ctx.globalAlpha = 0.8;
     ctx.font = "34px Arial";
     ctx.fillStyle = "black";
-    ctx.fillText(Math.round(this.knight.health), 25 + 20, 717 - 20 - 30);
+    ctx.fillText(Math.ceil(this.knight.health), 25 + 20, 717 - 20 - 30);
 
     ctx.globalAlpha = 1;
     ctx.fillStyle = "#e84142";
-    ctx.fillText(Math.round(this.knight.health), 23 + 20, 715 - 20 - 30, width);
+    ctx.fillText(Math.ceil(this.knight.health), 23 + 20, 715 - 20 - 30, width);
 
     // draw health text foreground
     var healthWidth = ctx.measureText(Math.round(this.knight.health)).width + 5;

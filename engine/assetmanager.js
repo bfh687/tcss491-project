@@ -43,6 +43,7 @@ class AssetManager {
           break;
         case "wav":
         case "mp3":
+        case "mp4":
           const audio = new Audio();
           audio.addEventListener("loadeddata", () => {
             self.successCount++;

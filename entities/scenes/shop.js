@@ -314,16 +314,16 @@ class ShopUI {
   levelGoggles() {
     if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.gogglesLevel < this.shop.itemLevels) {
       if (this.game.knight.gogglesLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints--;
       } else if (this.game.knight.gogglesLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints -= 2;
       } else if (this.game.knight.gogglesLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints -= 3;
       } else if (this.game.knight.gogglesLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
-        this.game.knight.gogglesLevel++;
+        this.game.knight.purchaseGoggles();
         this.game.knight.xpSystem.skillPoints -= 4;
       } else {
         console.log("REACHED HERE");
@@ -340,16 +340,16 @@ class ShopUI {
   levelArmor() {
     if (this.game.knight.xpSystem.skillPoints > 0 && this.game.knight.armorLevel < this.shop.itemLevels) {
       if (this.game.knight.armorLevel == 0 && this.game.knight.xpSystem.skillPoints >= 1) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints--;
       } else if (this.game.knight.armorLevel == 1 && this.game.knight.xpSystem.skillPoints > 1) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints -= 2;
       } else if (this.game.knight.armorLevel == 2 && this.game.knight.xpSystem.skillPoints > 2) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints -= 3;
       } else if (this.game.knight.armorLevel == 3 && this.game.knight.xpSystem.skillPoints > 3) {
-        this.game.knight.armorLevel++;
+        this.game.knight.purchaseArmor();
         this.game.knight.xpSystem.skillPoints -= 4;
       }
     } else if (this.game.knight.armorLevel == this.shop.itemLevels) {

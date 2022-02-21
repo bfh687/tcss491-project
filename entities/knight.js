@@ -33,7 +33,7 @@ class Knight {
     this.updateBoundingBox();
 
     // information about player stats
-    this.attackDamage = 10;
+    this.attackDamage = 25;
     this.critMultiplier = 5;
     this.critChance = 0;
     this.health = 100;
@@ -47,10 +47,10 @@ class Knight {
 
     // shop item info
     this.gogglesLevel = 0;
-    this.gogglesMultiplier = 1;
+    this.gogglesMultiplier = 1.1;
 
     this.armorLevel = 0;
-    this.armorDeflect = 1;
+    this.armorDeflect = 0;
 
     this.potionLevel = 0;
     this.potionRegen = 0.025;
@@ -125,6 +125,23 @@ class Knight {
     this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false));
     this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false));
     this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false));
+  }
+
+  levelUp() {
+    this.attackDamage *= 1.1;
+    this.maxHealth = Math.floor(this.maxHealth + this.maxHealth * 0.1);
+    this.health = this.maxHealth;
+    this.speed += 5;
+  }
+
+  purchaseGoggles() {
+    this.gogglesLevel++;
+    this.damage *= this.gogglesMultiplier;
+  }
+
+  purchaseArmor() {
+    this.armorLevel++;
+    this.armorDeflect += 0.05;
   }
 
   update() {
@@ -488,7 +505,6 @@ class Knight {
 
     if (attacked.damageCooldown <= 0) {
       // DAMAGE TO BE DEFLECTED
-      var deflectPercentage = this.armorDeflect - this.armorLevel * 0.15;
       var damage = attacker.attackDamage;
 
       // calculate crit chance
@@ -507,13 +523,32 @@ class Knight {
           }, this.bleedDuration);
           attacked.bleedDamage = this.daggerBleed * this.daggerLevel;
         }
-      } else if (attacked instanceof Knight && !attacker instanceof LightningSpell) {
+      } else if (attacked instanceof Knight) {
         // ARMOR DEFLECTING DAMAGE BACK
         let initDmg = damage;
+        console.log("Hello");
 
-        damage *= deflectPercentage;
+        let dmgDeflected;
+        if (attacker instanceof Minotaur) {
+          dmgDeflected = (attacker.maxHealth * this.armorDeflect) / 3;
+        } else {
+          dmgDeflected = attacker.maxHealth * this.armorDeflect;
+        }
+
+        damage *= 1 - this.armorDeflect;
         damage -= this.armor;
-        attacker.health -= Math.ceil((this.attackDamage / 3) * (1 - deflectPercentage));
+        console.log(this.armorDeflect);
+        if (attacker instanceof Skeleton) {
+          dmgDeflected = dmgDeflected / 2;
+          attacker.health -= dmgDeflected;
+        } else {
+          attacker.health -= dmgDeflected;
+        }
+
+        if (this.armorLevel > 0 && !(attacker instanceof LightningSpell)) {
+          attacker.deflected(dmgDeflected);
+        }
+
         this.regenCooldown = 1;
       }
 

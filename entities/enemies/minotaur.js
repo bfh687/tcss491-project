@@ -422,7 +422,7 @@ class LightningSpell {
     // set scale of spell
     this.scale = 2;
 
-    this.attackDamage = 500;
+    this.attackDamage = 50;
   }
 
   update() {

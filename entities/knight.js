@@ -36,8 +36,8 @@ class Knight {
     this.attackDamage = 10;
     this.critMultiplier = 5;
     this.critChance = 0;
-    this.health = 1;
-    this.maxHealth = 1;
+    this.health = 100;
+    this.maxHealth = 100;
     this.armor = 1.0;
     this.regenRate = 2;
     this.damageCooldown = 0.1;
@@ -144,7 +144,9 @@ class Knight {
       } else {
         this.state = 4;
         this.health = 0;
-        this.game.addEntity(new Restart(this.game, this.x));
+        if (!this.game.restart) {
+          this.game.addEntity(new Restart(this.game, this.x));
+        }
       }
     }
 

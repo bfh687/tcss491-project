@@ -22,6 +22,7 @@ class GameEngine {
 
     // THE KILL SWITCH
     this.running = false;
+    this.restart = false;
 
     // Options and the Details
     this.options = options || {

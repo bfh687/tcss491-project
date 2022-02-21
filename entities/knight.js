@@ -244,7 +244,10 @@ class Knight {
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {
       ASSET_MANAGER.setVolume(0.25);
-      ASSET_MANAGER.playAudio("./sfx/sword_slash.mp3");
+      ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+      setTimeout(() => {
+        ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+      }, 250);
       this.state = 2;
       this.attackCooldown = 0.25;
     }
@@ -510,6 +513,15 @@ class Knight {
       // calculate crit chance
       var color = "red";
       if (attacker instanceof Knight) {
+        var frame = this.animations[this.state][this.direction].currentFrame();
+        if (frame == 0 || frame == 4) {
+          var path = "./sfx/klang2.mp3";
+          if (!(attacked instanceof Skeleton)) {
+            ASSET_MANAGER.getAsset(path).volume = 0.03;
+            ASSET_MANAGER.playAudio(path);
+          }
+        }
+
         var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
         damage *= damageMultiplier;
         if (Math.random() <= this.critChance) {
@@ -573,10 +585,10 @@ class Knight {
       }
 
       if (attacked instanceof Skeleton && color == "red") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_hit.mp3").volume = 0.03;
+        ASSET_MANAGER.getAsset("./sfx/skeleton_hit.mp3").volume = 0.1;
         ASSET_MANAGER.playAudio("./sfx/skeleton_hit.mp3");
       } else if (attacked instanceof Skeleton && color == "yellow") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_crit.mp3").volume = 0.03;
+        ASSET_MANAGER.getAsset("./sfx/skeleton_crit.mp3").volume = 0.1;
         ASSET_MANAGER.playAudio("./sfx/skeleton_crit.mp3");
       }
     }

@@ -12,6 +12,10 @@ ASSET_MANAGER.queueDownload("./sfx/thunderfx3.mp3");
 ASSET_MANAGER.queueDownload("./sfx/level1_music.mp3");
 ASSET_MANAGER.queueDownload("./sfx/skeleton_hit.mp3");
 ASSET_MANAGER.queueDownload("./sfx/skeleton_crit.mp3");
+ASSET_MANAGER.queueDownload("./sfx/klang1.mp3");
+ASSET_MANAGER.queueDownload("./sfx/klang2.mp3");
+ASSET_MANAGER.queueDownload("./sfx/swish1.mp3");
+ASSET_MANAGER.queueDownload("./sfx/swish2.mp3");
 
 // music downloads
 ASSET_MANAGER.queueDownload("./music/homescreen-loud.mp3");

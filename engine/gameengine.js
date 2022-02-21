@@ -85,7 +85,7 @@ class GameEngine {
         document.addEventListener("mousemove", updatePosition, false);
         self.locked = true;
         self.interactionCount++;
-        if (self.interactionCount == 1) self.camera.playMusic("./music/homescreen.mp3");
+        if (self.interactionCount == 1) self.camera.playMusic("./music/homescreen-loud.mp3");
       } else {
         document.removeEventListener("mousemove", updatePosition, false);
         self.locked = false;

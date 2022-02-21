@@ -36,12 +36,11 @@ class Knight {
     this.attackDamage = 10;
     this.critMultiplier = 5;
     this.critChance = 0;
-    this.health = 100;
-    this.maxHealth = 100;
+    this.health = 1;
+    this.maxHealth = 1;
     this.armor = 1.0;
     this.regenRate = 2;
     this.damageCooldown = 0.1;
-
     // misc
     this.kills = 0;
     this.xpSystem = new XP(this);
@@ -116,10 +115,10 @@ class Knight {
     this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.04, 15, 15, false, false));
 
     // death animations: left, right, up, down
-    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 8, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 8, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 8, 0.2, 15, 15, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 15, 15, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 15, 15, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 15, 15, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 15, 15, false, false));
 
     // slide animations: front-left, front-right, back-left, back-right
     this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false));
@@ -145,6 +144,7 @@ class Knight {
       } else {
         this.state = 4;
         this.health = 0;
+        this.game.addEntity(new Restart(this.game, this.x));
       }
     }
 
@@ -179,7 +179,8 @@ class Knight {
     if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
       return;
     } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
-      this.removeFromWorld = true;
+      this.animations[this.state][this.direction].pause();
+      this.state = 4;
       return;
     }
 

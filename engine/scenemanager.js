@@ -37,6 +37,7 @@ class SceneManager {
 
     this.game.addEntity(new MainMenu(this.game));
     this.game.addEntity(new Cursor(this.game));
+    this.playMusic("./music/homescreen.mp3");
   }
 
   loadLevel(level, boss) {
@@ -64,6 +65,7 @@ class SceneManager {
 
         this.maxX = 3216 + 32 * 57;
         this.maxY = 45 * 60;
+        this.playMusic("./music/Glitterglade_Grove.mp3");
       } else {
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
@@ -79,6 +81,7 @@ class SceneManager {
 
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
+        this.playMusic("./music/Orchestral_RATM.mp3");
       }
     } else if (level == 2) {
       if (boss) {
@@ -86,6 +89,15 @@ class SceneManager {
       }
     }
   }
+
+  updateAudio() {
+    var mute = document.getElementById("mute").checked;
+    var volume = document.getElementById("volume").value;
+
+    ASSET_MANAGER.muteAudio(mute);
+    ASSET_MANAGER.setVolume(volume);
+
+};
 
   update() {
     this.shakeDuration -= this.game.clockTick;
@@ -102,6 +114,8 @@ class SceneManager {
 
     this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX) + this.x_offset;
     this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) + this.y_offset;
+
+    this.updateAudio();
   }
 
   draw(ctx) {
@@ -116,5 +130,11 @@ class SceneManager {
       this.shakeDuration = 0.05;
       this.shakeCooldown = 0.3;
     }
+  }
+  
+  playMusic(path) {
+    ASSET_MANAGER.pauseAudio;
+    ASSET_MANAGER.playAudio(path);
+    ASSET_MANAGER.autoRepeat(path);
   }
 }

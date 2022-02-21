@@ -13,6 +13,13 @@ ASSET_MANAGER.queueDownload("./sfx/level1_music.mp3");
 ASSET_MANAGER.queueDownload("./sfx/skeleton_hit.mp3");
 ASSET_MANAGER.queueDownload("./sfx/skeleton_crit.mp3");
 
+// music downloads
+ASSET_MANAGER.queueDownload("./music/homescreen.mp3");
+ASSET_MANAGER.queueDownload("./music/Glitterglade_Grove.mp3");
+ASSET_MANAGER.queueDownload("./music/Orchestral_RATM.mp3");
+ASSET_MANAGER.queueDownload("./music/Charmsnow.mp3");
+ASSET_MANAGER.queueDownload("./music/Forgotten_Bramble.mp3");
+
 // knight-related downloads
 ASSET_MANAGER.queueDownload("./sprites/entities/knight.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/knight_dash.png");
@@ -54,6 +61,13 @@ for (var i = 0; i <= 32; i++) {
 ASSET_MANAGER.queueDownload("./vignette.png");
 
 ASSET_MANAGER.downloadAll(() => {
+
+  ASSET_MANAGER.autoRepeat("./music/homescreen.mp3");
+  ASSET_MANAGER.autoRepeat("./music/Charmsnow.mp3");
+	ASSET_MANAGER.autoRepeat("./music/Forgotten_Bramble.mp3");
+	ASSET_MANAGER.autoRepeat("./music/Glitterglade_Grove.mp3");
+	ASSET_MANAGER.autoRepeat("./music/Orchestral_RATM.mp3");
+
   const canvas = document.getElementById("gameWorld");
   const ctx = canvas.getContext("2d");
   ctx.imageSmoothingEnabled = false;

@@ -1,7 +1,9 @@
 class Skeleton {
   constructor(game, cluster, x, y) {
     Object.assign(this, { game, cluster, x, y });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/skeleton.png");
+    this.spritesheet = ASSET_MANAGER.getAsset(
+      "./sprites/entities/skeleton.png"
+    );
     this.animations = [];
     this.loadAnimations();
 
@@ -38,6 +40,10 @@ class Skeleton {
     this.isBleeding = false;
     this.bleedingCooldown = 1;
 
+    this.isStaggerable = true;
+    this.staggerCooldown = 3;
+    this.staggerDuration = 0.5;
+
     // information about skeleton movement
     this.aggroDist = 500;
     this.minSpeed = 125 + 25 * Math.random();
@@ -52,24 +58,140 @@ class Skeleton {
     this.animations.push([], [], [], [], []);
 
     // idle animations: left, right
-    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 64, 64, 4, 0.16, 0, 0, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 320, 64, 64, 4, 0.16, 0, 0, false, true));
+    this.animations[0].push(
+      new Animator(this.spritesheet, 0, 0, 64, 64, 4, 0.16, 0, 0, false, true)
+    );
+    this.animations[0].push(
+      new Animator(this.spritesheet, 0, 320, 64, 64, 4, 0.16, 0, 0, false, true)
+    );
 
     // walking animations: left, right
-    this.animations[1].push(new Animator(this.spritesheet, 0, 192, 64, 64, 12, 0.13, 0, 0, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 0, 512, 64, 64, 12, 0.13, 0, 0, false, true));
+    this.animations[1].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        192,
+        64,
+        64,
+        12,
+        0.13,
+        0,
+        0,
+        false,
+        true
+      )
+    );
+    this.animations[1].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        512,
+        64,
+        64,
+        12,
+        0.13,
+        0,
+        0,
+        false,
+        true
+      )
+    );
 
     // attack animations: left, right
-    this.animations[2].push(new Animator(this.spritesheet, 0, 64, 64, 64, 13, 0.09, 0, 0, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 384, 64, 64, 13, 0.09, 0, 0, false, false));
+    this.animations[2].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        64,
+        64,
+        64,
+        13,
+        0.09,
+        0,
+        0,
+        false,
+        false
+      )
+    );
+    this.animations[2].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        384,
+        64,
+        64,
+        13,
+        0.09,
+        0,
+        0,
+        false,
+        false
+      )
+    );
 
     // damaged animations: left, right
-    this.animations[3].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.08, 0, 0, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 448, 64, 64, 3, 0.08, 0, 0, false, false));
+    this.animations[3].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        128,
+        64,
+        64,
+        3,
+        0.08,
+        0,
+        0,
+        false,
+        false
+      )
+    );
+    this.animations[3].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        448,
+        64,
+        64,
+        3,
+        0.08,
+        0,
+        0,
+        false,
+        false
+      )
+    );
 
     // death animations: left, right
-    this.animations[4].push(new Animator(this.spritesheet, 0, 256, 64, 64, 12, 0.12, 0, 0, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 576, 64, 64, 12, 0.12, 0, 0, false, false));
+    this.animations[4].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        256,
+        64,
+        64,
+        12,
+        0.12,
+        0,
+        0,
+        false,
+        false
+      )
+    );
+    this.animations[4].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        576,
+        64,
+        64,
+        12,
+        0.12,
+        0,
+        0,
+        false,
+        false
+      )
+    );
   }
 
   update() {
@@ -80,6 +202,16 @@ class Skeleton {
 
     if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
     if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
+
+    if (!this.isStaggerable) {
+      this.staggerDuration -= this.game.clockTick;
+      this.staggerCooldown -= this.game.clockTick;
+    }
+
+    if (this.staggerCooldown <= 0) {
+      this.isStaggerable = true;
+      this.staggerCooldown = 3;
+    }
 
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {
@@ -100,31 +232,58 @@ class Skeleton {
     }
 
     // handle attacking state + animation
-    if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
-      var curr_frame = this.animations[this.state][this.direction].currentFrame();
+    if (
+      this.state == 2 &&
+      !this.animations[this.state][this.direction].isDone()
+    ) {
+      var curr_frame =
+        this.animations[this.state][this.direction].currentFrame();
       this.updateHitBox();
       return;
-    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
+    } else if (
+      this.state == 2 &&
+      this.animations[this.state][this.direction].isDone()
+    ) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
     }
 
     // handle damaged state + animation
-    else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
-      return;
-    } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
+    else if (
+      this.state == 3 &&
+      !this.animations[this.state][this.direction].isDone()
+    ) {
+      if (this.staggerDuration > 0) {
+        return;
+      } else {
+        this.staggerDuration = 0.5;
+      }
+    } else if (
+      this.state == 3 &&
+      this.animations[this.state][this.direction].isDone()
+    ) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
     }
 
     // if death animation is playing, let it play out, otherwise remove entity from world
-    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+    if (
+      this.state == 4 &&
+      !this.animations[this.state][this.direction].isDone()
+    ) {
       this.updateHitBox();
       return;
-    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+    } else if (
+      this.state == 4 &&
+      this.animations[this.state][this.direction].isDone()
+    ) {
       // calculate player center
-      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
-      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
+      var center_x =
+        this.boundingBox.left +
+        Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+      var center_y =
+        this.boundingBox.top +
+        Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
 
       // drop item on death
       if (Math.floor(Math.random()) + 1 === 1) {
@@ -169,8 +328,21 @@ class Skeleton {
         if (xVector < 0) attackDist *= -1;
 
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
-        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist, this.y + 80, 32, 24);
-        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
+        var horizontalBox = new BoundingBox(
+          this.x +
+            54 +
+            xVector * this.currSpeed * this.game.clockTick +
+            attackDist,
+          this.y + 80,
+          32,
+          24
+        );
+        var verticalBox = new BoundingBox(
+          this.x + 54,
+          this.y + 80 + yVector * this.currSpeed * this.game.clockTick,
+          32,
+          24
+        );
 
         // check collisions and attack if there would be on on the vertical axis
         if (verticalBox.collide(knight.hurtBox)) {
@@ -234,7 +406,9 @@ class Skeleton {
 
   bleed() {
     this.health = Math.max(this.health - this.bleedDamage, 0);
-    this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
+    this.textAnimations.push(
+      new TextAnimator(this.bleedDamage, "black", this.game, this)
+    );
   }
 
   deflected(damage) {
@@ -257,7 +431,8 @@ class Skeleton {
   }
 
   updateHitBox() {
-    var current_frame = this.animations[this.state][this.direction].currentFrame();
+    var current_frame =
+      this.animations[this.state][this.direction].currentFrame();
     if (this.state == 2) {
       if (current_frame == 4) {
         if (this.direction == 0) {
@@ -289,7 +464,13 @@ class Skeleton {
       drawShadow(ctx, this.game, this);
     }
 
-    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
+    this.animations[this.state][this.direction].drawFrame(
+      this.game.clockTick,
+      ctx,
+      this.x - this.game.camera.x,
+      this.y - this.game.camera.y,
+      2
+    );
 
     // draw hurt box and bounding box if parameter is on
     if (params.DEBUG) {
@@ -303,6 +484,13 @@ class Skeleton {
       this.textAnimations[i].drawText(ctx);
     }
 
-    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    drawHealthBar(
+      ctx,
+      this.game,
+      this.hurtBox,
+      this.constructor.name,
+      this.health,
+      this.maxHealth
+    );
   }
 }

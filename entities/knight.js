@@ -4,7 +4,9 @@ class Knight {
 
     // load knight spritesheets and sounds
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight.png");
-    this.slide_spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight_dash.png");
+    this.slide_spritesheet = ASSET_MANAGER.getAsset(
+      "./sprites/entities/knight_dash.png"
+    );
 
     this.removeFromWorld = false;
 
@@ -91,40 +93,364 @@ class Knight {
     this.animations.push([], [], [], [], [], []);
 
     // idle animations: left, right, up, down
-    this.animations[0].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.16, 15, 15, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 64, 64, 64, 3, 0.16, 15, 15, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 192, 64, 64, 3, 0.16, 15, 15, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 15, 15, false, true));
+    this.animations[0].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        128,
+        64,
+        64,
+        3,
+        0.16,
+        15,
+        15,
+        false,
+        true
+      )
+    );
+    this.animations[0].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        64,
+        64,
+        64,
+        3,
+        0.16,
+        15,
+        15,
+        false,
+        true
+      )
+    );
+    this.animations[0].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        192,
+        64,
+        64,
+        3,
+        0.16,
+        15,
+        15,
+        false,
+        true
+      )
+    );
+    this.animations[0].push(
+      new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 15, 15, false, true)
+    );
 
     // running animations: left, right, up, down
-    this.animations[1].push(new Animator(this.spritesheet, 64, 320, 64, 64, 10, 0.08, 15, 15, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 64, 256, 64, 64, 10, 0.08, 15, 15, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.08, 15, 15, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.08, 15, 15, false, true));
+    this.animations[1].push(
+      new Animator(
+        this.spritesheet,
+        64,
+        320,
+        64,
+        64,
+        10,
+        0.08,
+        15,
+        15,
+        false,
+        true
+      )
+    );
+    this.animations[1].push(
+      new Animator(
+        this.spritesheet,
+        64,
+        256,
+        64,
+        64,
+        10,
+        0.08,
+        15,
+        15,
+        false,
+        true
+      )
+    );
+    this.animations[1].push(
+      new Animator(
+        this.spritesheet,
+        64,
+        448,
+        64,
+        64,
+        7,
+        0.08,
+        15,
+        15,
+        false,
+        true
+      )
+    );
+    this.animations[1].push(
+      new Animator(
+        this.spritesheet,
+        64,
+        384,
+        64,
+        64,
+        8,
+        0.08,
+        15,
+        15,
+        false,
+        true
+      )
+    );
 
     // attack animations: left, right, up, down
-    this.animations[2].push(new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.06, 15, 15, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.06, 15, 15, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.06, 15, 15, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.06, 15, 15, false, false));
+    this.animations[2].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        576,
+        64,
+        64,
+        7,
+        0.06,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[2].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        512,
+        64,
+        64,
+        7,
+        0.06,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[2].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        704,
+        64,
+        64,
+        7,
+        0.06,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[2].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        640,
+        64,
+        64,
+        7,
+        0.06,
+        15,
+        15,
+        false,
+        false
+      )
+    );
 
     // damaged animations: left, right, up, down
-    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.04, 15, 15, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.04, 15, 15, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.04, 15, 15, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.04, 15, 15, false, false));
+    this.animations[3].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        832,
+        64,
+        64,
+        2,
+        0.04,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[3].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        768,
+        64,
+        64,
+        2,
+        0.04,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[3].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        832,
+        64,
+        64,
+        2,
+        0.04,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[3].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        768,
+        64,
+        64,
+        2,
+        0.04,
+        15,
+        15,
+        false,
+        false
+      )
+    );
 
     // death animations: left, right, up, down
-    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 15, 15, false, false));
+    this.animations[4].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        960,
+        64,
+        64,
+        7,
+        0.2,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[4].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        896,
+        64,
+        64,
+        7,
+        0.2,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[4].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        960,
+        64,
+        64,
+        7,
+        0.2,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[4].push(
+      new Animator(
+        this.spritesheet,
+        0,
+        896,
+        64,
+        64,
+        7,
+        0.2,
+        15,
+        15,
+        false,
+        false
+      )
+    );
 
     // slide animations: front-left, front-right, back-left, back-right
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(
+      new Animator(
+        this.slide_spritesheet,
+        0,
+        0,
+        64,
+        64,
+        9,
+        0.03,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[5].push(
+      new Animator(
+        this.slide_spritesheet,
+        0,
+        64,
+        64,
+        64,
+        9,
+        0.03,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[5].push(
+      new Animator(
+        this.slide_spritesheet,
+        0,
+        128,
+        64,
+        64,
+        9,
+        0.03,
+        15,
+        15,
+        false,
+        false
+      )
+    );
+    this.animations[5].push(
+      new Animator(
+        this.slide_spritesheet,
+        0,
+        196,
+        64,
+        64,
+        9,
+        0.03,
+        15,
+        15,
+        false,
+        false
+      )
+    );
   }
 
   levelUp() {
@@ -147,7 +473,8 @@ class Knight {
   update() {
     if (this.state != 4) {
       // update cooldowns
-      if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
+      if (this.slideCooldown > 0 && this.state != 5)
+        this.slideCooldown -= this.game.clockTick;
       if (this.attackCooldown > 0) this.attackCooldown -= this.game.clockTick;
       if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
       if (this.regenCooldown > 0) this.regenCooldown -= this.game.clockTick;
@@ -169,42 +496,72 @@ class Knight {
 
     if (this.regenCooldown <= 0) {
       if (this.potionLevel > 0) {
-        this.health = Math.min(this.health + this.game.clockTick * this.maxHealth * ((this.potionLevel + 1) * this.potionRegen), this.maxHealth);
+        this.health = Math.min(
+          this.health +
+            this.game.clockTick *
+              this.maxHealth *
+              ((this.potionLevel + 1) * this.potionRegen),
+          this.maxHealth
+        );
       } else {
-        this.health = Math.min(this.health + this.regenRate * this.game.clockTick, this.maxHealth);
+        this.health = Math.min(
+          this.health + this.regenRate * this.game.clockTick,
+          this.maxHealth
+        );
       }
     }
 
     // handle attacking state + animations
-    if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
+    if (
+      this.state == 2 &&
+      !this.animations[this.state][this.direction].isDone()
+    ) {
       this.updateBoundingBox();
       this.checkCollisions();
       return;
-    } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
+    } else if (
+      this.state == 2 &&
+      this.animations[this.state][this.direction].isDone()
+    ) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
       this.hitBox = null;
     }
 
     // handle damaged state + animations
-    else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
+    else if (
+      this.state == 3 &&
+      !this.animations[this.state][this.direction].isDone()
+    ) {
       return;
-    } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
+    } else if (
+      this.state == 3 &&
+      this.animations[this.state][this.direction].isDone()
+    ) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
     }
 
     // handle death state + animations
-    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+    if (
+      this.state == 4 &&
+      !this.animations[this.state][this.direction].isDone()
+    ) {
       return;
-    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
+    } else if (
+      this.state == 4 &&
+      this.animations[this.state][this.direction].isDone()
+    ) {
       this.animations[this.state][this.direction].pause();
       this.state = 4;
       return;
     }
 
     // handle sliding state + animations
-    if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
+    if (
+      this.state == 5 &&
+      !this.animations[this.state][this.direction].isDone()
+    ) {
       this.checkCollisions();
 
       var slideMult = 3;
@@ -216,7 +573,10 @@ class Knight {
       this.y += slideMult * this.velocity.y * this.game.clockTick;
       this.updateBoundingBox();
       return;
-    } else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
+    } else if (
+      this.state == 5 &&
+      this.animations[this.state][this.direction].isDone()
+    ) {
       this.animations[this.state][this.direction].reset();
       this.velocity.y = this.speed;
       this.velocity.x = this.speed;
@@ -295,7 +655,13 @@ class Knight {
     var tick = this.game.clockTick;
     if (this.game.hitStopDuration > 0) tick = 0;
 
-    this.animations[this.state][this.direction].drawFrame(tick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
+    this.animations[this.state][this.direction].drawFrame(
+      tick,
+      ctx,
+      this.x - this.game.camera.x,
+      this.y - this.game.camera.y,
+      2.5
+    );
 
     // draw hurt box, hit box, and bounding box
     if (params.DEBUG) {
@@ -317,7 +683,13 @@ class Knight {
   checkCollisions() {
     this.game.entities.forEach((entity) => {
       // prevent entity pass through for alive enemies
-      if ((entity instanceof Skeleton || entity instanceof Eyeball || entity instanceof Minotaur) && entity.state != 4 && entity.state != 5) {
+      if (
+        (entity instanceof Skeleton ||
+          entity instanceof Eyeball ||
+          entity instanceof Minotaur) &&
+        entity.state != 4 &&
+        entity.state != 5
+      ) {
         if (!this.boundingBox.collide(entity.boundingBox)) {
           // handle sliding collisions
 
@@ -325,8 +697,22 @@ class Knight {
           if (this.state == 5) slideMultiplier = 3;
 
           // get bounding boxes of NEXT tick (assuming no major changes in fps)
-          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+          var horizontalBox = new BoundingBox(
+            this.x +
+              28 +
+              this.velocity.x * slideMultiplier * this.game.clockTick,
+            this.y + 94,
+            29,
+            24
+          );
+          var verticalBox = new BoundingBox(
+            this.x + 28,
+            this.y +
+              94 +
+              this.velocity.y * slideMultiplier * this.game.clockTick,
+            29,
+            24
+          );
 
           // check collisions
           var flag = false;
@@ -348,7 +734,11 @@ class Knight {
       if (entity instanceof Skeleton) {
         // handle case where player attacks the skeleton
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) entity.state = 3;
+          if (entity.state != 2 && entity.isStaggerable) {
+            console.log("initiate stagger");
+            entity.isStaggerable = false;
+            entity.state = 3;
+          }
           this.handleAttackCollision(this, entity);
         }
 
@@ -363,7 +753,11 @@ class Knight {
       else if (entity instanceof Eyeball) {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) entity.state = 4;
+          if (entity.state != 2 && entity.isStaggerable) {
+            console.log("initiate stagger");
+            entity.isStaggerable = false;
+            entity.state = 4;
+          }
           this.handleAttackCollision(this, entity);
         }
 
@@ -376,16 +770,23 @@ class Knight {
 
       // handle minotaur collisions
       else if (entity instanceof Minotaur) {
-        // handle case where player attacks the eyeball
+        // handle case where player attacks the minotaur
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2 && entity.state != 3 && entity.damageCooldown <= 0) {
+          if (
+            entity.state != 2 &&
+            entity.isStaggerable &&
+            entity.state != 3 &&
+            entity.damageCooldown <= 0
+          ) {
+            console.log("initiate stagger");
+            entity.isStaggerable = false;
             entity.state = 5;
           }
 
           this.handleAttackCollision(this, entity);
         }
 
-        // handle case where eyeball attcks the player
+        // handle case where minotaur attcks the player
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
           if (this.state != 2) this.state = 3;
           this.handleAttackCollision(entity, this);
@@ -408,21 +809,50 @@ class Knight {
           if (this.state == 5) slideMultiplier = 3;
 
           // get bounding boxes of NEXT tick (assuming no major changes in fps)
-          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+          var horizontalBox = new BoundingBox(
+            this.x +
+              28 +
+              this.velocity.x * slideMultiplier * this.game.clockTick,
+            this.y + 94,
+            29,
+            24
+          );
+          var verticalBox = new BoundingBox(
+            this.x + 28,
+            this.y +
+              94 +
+              this.velocity.y * slideMultiplier * this.game.clockTick,
+            29,
+            24
+          );
 
           // check for and handle collisions
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;
         });
-      } else if (entity instanceof Shop || entity instanceof Foilage || entity instanceof Prop || entity instanceof Sign) {
+      } else if (
+        entity instanceof Shop ||
+        entity instanceof Foilage ||
+        entity instanceof Prop ||
+        entity instanceof Sign
+      ) {
         // handle sliding collisions
         var slideMultiplier = 1;
         if (this.state == 5) slideMultiplier = 3;
 
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
-        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+        var horizontalBox = new BoundingBox(
+          this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick,
+          this.y + 94,
+          29,
+          24
+        );
+        var verticalBox = new BoundingBox(
+          this.x + 28,
+          this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick,
+          29,
+          24
+        );
 
         // check for and handle collisions
         if (verticalBox.collide(entity.boundingBox)) this.velocity.y = 0;
@@ -446,7 +876,8 @@ class Knight {
   }
 
   updateHitBox() {
-    var current_frame = this.animations[this.state][this.direction].currentFrame();
+    var current_frame =
+      this.animations[this.state][this.direction].currentFrame();
     if (this.state == 2) {
       if (current_frame == 0) {
         if (this.direction == 0) {
@@ -520,7 +951,10 @@ class Knight {
           }
         }
 
-        var damageMultiplier = Math.pow(this.gogglesMultiplier, this.gogglesLevel);
+        var damageMultiplier = Math.pow(
+          this.gogglesMultiplier,
+          this.gogglesLevel
+        );
         damage *= damageMultiplier;
         if (Math.random() <= this.critChance) {
           damage *= this.critMultiplier;
@@ -569,7 +1003,11 @@ class Knight {
 
       var flag = true;
       for (var i = 0; i < attacked.textAnimations.length; i++) {
-        if (!attacked.textAnimations[i].isFull() && !attacked.textAnimations[i].isDone() && attacked.textAnimations[i].color != "yellow") {
+        if (
+          !attacked.textAnimations[i].isFull() &&
+          !attacked.textAnimations[i].isDone() &&
+          attacked.textAnimations[i].color != "yellow"
+        ) {
           attacked.textAnimations[i].increment(damage);
           flag = false;
           break;
@@ -577,7 +1015,9 @@ class Knight {
       }
 
       if (flag) {
-        attacked.textAnimations.push(new TextAnimator(damage, color, this.game, attacked));
+        attacked.textAnimations.push(
+          new TextAnimator(damage, color, this.game, attacked)
+        );
       }
 
       if (attacked instanceof Skeleton && color == "red") {

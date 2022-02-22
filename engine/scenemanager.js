@@ -59,18 +59,38 @@ class SceneManager {
 
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1));
-        this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
+        this.game.addEntity(
+          new Teleporter(this.game, 168 * 32, 32 * 6, 1, true)
+        );
 
         this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 800, 2112, 5, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 2144, 1792, 2, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 3296, 704, 6, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
+        this.game.addEntity(
+          new MobCluster(this.game, 600, 1350, 3, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 1730, 2130, 4, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 800, 2112, 5, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 1696, 3008, 3, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 2144, 1792, 2, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 2336, 704, 4, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 3296, 704, 6, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 3616, 896, 3, "skeleton")
+        );
+        this.game.addEntity(
+          new MobCluster(this.game, 5536, 1280, 2, "skeleton")
+        );
 
         this.game.addEntity(new MobCluster(this.game, 1056, 608, 3, "eyeball"));
         this.game.addEntity(new MobCluster(this.game, 480, 1728, 3, "eyeball"));
@@ -126,11 +146,15 @@ class SceneManager {
     let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
 
     if (this.death_offset == 0) {
-      this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX) + this.x_offset;
+      this.x =
+        Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX) +
+        this.x_offset;
     } else {
       this.x = this.knight.x - midpoint_x + this.x_offset - this.death_offset;
     }
-    this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) + this.y_offset;
+    this.y =
+      Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) +
+      this.y_offset;
 
     this.updateAudio();
   }

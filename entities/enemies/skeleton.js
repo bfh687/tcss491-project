@@ -286,7 +286,7 @@ class Skeleton {
         Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
 
       // drop item on death
-      if (Math.floor(Math.random()) + 5 === 1) {
+      if (Math.floor(Math.random() * 5) === 1) {
         const item = new Item(this.game, center_x, center_y);
         this.game.addEntity(item);
       }

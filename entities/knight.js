@@ -36,7 +36,7 @@ class Knight {
 
     // information about player stats
     this.attackDamage = 25;
-    this.critMultiplier = 5;
+    this.critMultiplier = 1.5;
     this.critChance = 0;
     this.health = 100;
     this.maxHealth = 100;
@@ -454,10 +454,10 @@ class Knight {
   }
 
   levelUp() {
-    this.attackDamage *= 1.1;
-    this.maxHealth = Math.floor(this.maxHealth + this.maxHealth * 0.1);
+    this.attackDamage *= 1.025;
+    this.maxHealth = Math.floor(this.maxHealth + this.maxHealth * 0.025);
     this.health = this.maxHealth;
-    this.speed += 5;
+    this.speed += 2;
   }
 
   purchaseGoggles() {

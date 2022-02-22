@@ -39,7 +39,7 @@ class Minotaur {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 5000 * (this.game.knight.attackDamage / 25);
+    this.maxHealth = 1 * (this.game.knight.attackDamage / 25);
     this.health = this.maxHealth;
     this.attackDamage = 20;
     this.attackCooldown = 3;
@@ -57,6 +57,8 @@ class Minotaur {
     this.aggroDist = 1000;
     this.minSpeed = 200;
     this.currSpeed = this.minSpeed;
+
+    this.bossItemsDropped = 3;
 
     // misc
     this.alpha = 1;
@@ -365,6 +367,20 @@ class Minotaur {
       this.state == 6 &&
       this.animations[this.state][this.direction].isDone()
     ) {
+      var center_x =
+        this.boundingBox.left +
+        Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+      var center_y =
+        this.boundingBox.top +
+        Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
+      let temp = this.bossItemsDropped;
+      while (temp > 0) {
+        const item = new Item(this.game, center_x, center_y);
+        this.game.addEntity(item);
+        temp--;
+      }
+      this.game.knight.kills += 1;
+      this.game.knight.xpSystem.incrementXP(this.xpDropped);
       this.game.addEntity(new Victory(this.game));
       console.log("hello");
       this.removeFromWorld = true;

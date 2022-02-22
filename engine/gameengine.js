@@ -130,6 +130,7 @@ class GameEngine {
 
     this.mouse.x = this.ctx.canvas.width / 2;
     this.mouse.y = this.ctx.canvas.height / 2;
+    this.propcount = 0;
   }
 
   addEntity(entity) {
@@ -158,9 +159,9 @@ class GameEngine {
 
     // sort entities to give 3d look, if e1 < e2 return -1
     this.entities.sort((e1, e2) => {
-      if (e1 instanceof Map || e1 instanceof Map2) {
+      if (e1 instanceof Map) {
         return -1;
-      } else if (e2 instanceof Map || e2 instanceof Map2) {
+      } else if (e2 instanceof Map) {
         return 1;
       } else if (e1 instanceof Cursor) {
         return 1;

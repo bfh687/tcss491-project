@@ -401,7 +401,7 @@ class Knight {
       }
 
       // handle map collisions
-      else if (entity instanceof Map || entity instanceof Map2) {
+      else if (entity instanceof Map) {
         entity.bounding_boxes.forEach((box) => {
           // handle sliding collisions
           var slideMultiplier = 1;

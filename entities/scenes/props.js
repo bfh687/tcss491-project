@@ -1,9 +1,8 @@
 class Prop {
   constructor(game, x, y, code) {
-    Object.assign(this, { game, x, y });
+    Object.assign(this, { game, x, y, code });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/props.png");
     this.shadow_spritesheet = ASSET_MANAGER.getAsset("./sprites/map/prop_shadows.png");
-
     this.init(code);
   }
 

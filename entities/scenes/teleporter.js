@@ -11,7 +11,6 @@ class Teleporter {
     if (!this.level || !this.boss) return;
 
     const knight = this.game.knight;
-
     if (this.interaction_box.collide(knight.hurtBox)) {
       // enter shop
       if (this.game.keys.e && !this.isShopActive) {

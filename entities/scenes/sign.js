@@ -68,7 +68,6 @@ class Sign {
         this.interaction_box = new BoundingBox(this.x - 16, this.y + 50, 96, 96);
         this.boundingBox = new BoundingBox(this.x + 7, this.y + 90, 48, 32);
         this.icon_offset = 15;
-
         break;
       case "slab2":
         this.sprite_x = 7 * 32;
@@ -78,7 +77,6 @@ class Sign {
         this.interaction_box = new BoundingBox(this.x - 16, this.y + 50, 96, 96);
         this.boundingBox = new BoundingBox(this.x + 7, this.y + 90, 48, 32);
         this.icon_offset = -15;
-
         break;
       case "slab3":
         this.sprite_x = 7 * 32;
@@ -88,15 +86,12 @@ class Sign {
         this.interaction_box = new BoundingBox(this.x - 16, this.y + 50 + 60, 96, 96);
         this.boundingBox = new BoundingBox(this.x + 7, this.y + 90 + 60, 48, 32);
         this.icon_offset = 20;
-
         break;
     }
   }
 
   draw(ctx) {
     // draw sign shadow
-
-    // draw sign
     ctx.drawImage(
       this.spritesheet,
       this.sprite_x,
@@ -109,6 +104,7 @@ class Sign {
       this.sprite_height * 2
     );
 
+    // draw sign
     ctx.drawImage(
       this.spritesheet,
       this.sprite_x + 32,
@@ -121,13 +117,9 @@ class Sign {
       this.sprite_height * 2
     );
 
-    var center_x = this.boundingBox.left + (this.boundingBox.right - this.boundingBox.left) / 2;
-    var center_y = this.boundingBox.top + (this.boundingBox.bottom - this.boundingBox.top) / 2;
-
     // draw info text
     ctx.save();
     ctx.globalAlpha = this.alpha;
-
     ctx.drawImage(
       this.icons,
       16 * 6,
@@ -139,9 +131,6 @@ class Sign {
       24,
       24
     );
-
-    var width = ctx.measureText("PRESS E TO SHOP").width / 2;
-
     ctx.restore();
 
     if (params.DEBUG) {
@@ -166,12 +155,10 @@ class SignUI {
     this.sound_cooldown = 0;
     this.interaction_cooldown = 0.1;
     this.current_text = this.dialogue[this.dialogue_index].charAt(0);
-    console.log(this.current_text);
   }
 
   update() {
     this.updateText();
-
     this.sound_cooldown -= this.game.clockTick;
     this.interaction_cooldown -= this.game.clockTick;
     if (this.game.keys[" "] && this.interaction_cooldown <= 0 && this.text_index > this.dialogue[this.dialogue_index].length - 1) {
@@ -198,7 +185,6 @@ class SignUI {
         ASSET_MANAGER.playAudio("./sfx/text.wav");
         this.sound_cooldown = 0.05;
       }
-
       this.current_text += this.dialogue[this.dialogue_index].charAt(this.text_index);
       this.text_cooldown = 0.0;
       this.text_index++;
@@ -227,10 +213,7 @@ class SignUI {
       ctx.font = "24px bitpap";
       ctx.fillText(text, 1366 / 2 - 335, 768 - 250 + 60);
       ctx.restore();
-
-      var mouseBox = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
     } else {
-      // remove from world if associated sign isnt active
       this.removeFromWorld = true;
     }
   }

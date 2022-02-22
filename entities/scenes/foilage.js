@@ -1,10 +1,11 @@
 class Foilage {
   constructor(game, x, y, code) {
-    Object.assign(this, { game, x, y });
+    Object.assign(this, { game, x, y, code });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/foilage.png");
     this.shadow_spritesheet = ASSET_MANAGER.getAsset("./sprites/map/foilage_shadows.png");
 
     this.init(code);
+    console.log("{ x:" + this.x + ", y: " + this.y + ', type: "' + this.code + '" },');
   }
 
   update() {}

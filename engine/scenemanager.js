@@ -58,7 +58,7 @@ class SceneManager {
         this.knight.y = 244;
 
         // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0));
+        this.game.addEntity(new Map(this.game, 0, 0, level1));
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         this.minX = 32;
@@ -77,8 +77,7 @@ class SceneManager {
         this.game.addEntity(new Transition(this.game, true));
 
         // add map and teleporter
-        this.game.addEntity(new Map2(this.game, 0, 0));
-        //this.game.addEntity(new Teleporter(this.game, this.knight.x, this.knight.y, 1, true));
+        this.game.addEntity(new Map(this.game, 0, 0, level1boss));
 
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));

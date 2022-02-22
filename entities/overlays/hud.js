@@ -35,7 +35,7 @@ class HUD {
       ctx.font = "15px bitpap";
       ctx.globalAlpha = 0.7;
 
-      const health = Math.max(Math.floor(this.game.boss.health), 0) + "/" + this.game.boss.maxHealth;
+      const health = Math.max(Math.floor(this.game.boss.health), 0) + "/" + Math.floor(this.game.boss.maxHealth);
       ctx.fillText(health, 1366 / 2 - ctx.measureText(health).width / 2 + 1, 52 + 1);
       ctx.globalAlpha = 1;
 

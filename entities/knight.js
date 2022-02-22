@@ -43,7 +43,7 @@ class Knight {
     this.damageCooldown = 0.1;
     // misc
     this.kills = 0;
-    this.xpSystem = new XP(this);
+    this.xpSystem = new XP(this.game);
 
     // shop item info
     this.gogglesLevel = 0;

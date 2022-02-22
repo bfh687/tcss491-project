@@ -1,6 +1,6 @@
 class XP {
-  constructor(knight) {
-    this.knight = knight;
+  constructor(game) {
+    this.knight = this.game.knight;
     this.baseXP = 1000;
     this.currLevel = 1;
     this.currXP = 0;

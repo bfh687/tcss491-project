@@ -37,8 +37,8 @@ class Minotaur {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 5000;
-    this.health = 5000;
+    this.maxHealth = 5000 * (this.game.knight.attackDamage / 25);
+    this.health = this.maxHealth;
     this.attackDamage = 20;
     this.attackCooldown = 3;
     this.damageCooldown = 0;

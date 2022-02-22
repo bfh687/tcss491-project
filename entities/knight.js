@@ -497,9 +497,7 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
-    console.log("here");
     this.game.camera.screenshake();
-    console.log("here2");
     if (attacked instanceof Knight && attacked.state == 5) return;
 
     if (attacked instanceof Knight) {
@@ -538,7 +536,6 @@ class Knight {
       } else if (attacked instanceof Knight) {
         // ARMOR DEFLECTING DAMAGE BACK
         let initDmg = damage;
-        console.log("Hello");
 
         let dmgDeflected;
         if (attacker instanceof Minotaur) {
@@ -549,7 +546,6 @@ class Knight {
 
         damage *= 1 - this.armorDeflect;
         damage -= this.armor;
-        console.log(this.armorDeflect);
         if (attacker instanceof Skeleton) {
           dmgDeflected = dmgDeflected / 2;
           attacker.health -= dmgDeflected;

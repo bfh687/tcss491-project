@@ -1,9 +1,11 @@
 class Skeleton {
-  constructor(game, x, y) {
-    Object.assign(this, { game, x, y });
+  constructor(game, cluster, x, y) {
+    Object.assign(this, { game, cluster, x, y });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/skeleton.png");
     this.animations = [];
     this.loadAnimations();
+
+    this.scale = this.cluster.scale;
 
     // skeleton spawn point
     this.originX = this.x;
@@ -26,9 +28,9 @@ class Skeleton {
     this.removeFromWorld = false;
 
     // information about stats + attacking
-    this.maxHealth = 400;
-    this.health = 400;
-    this.attackDamage = 10;
+    this.maxHealth = 400 * this.scale;
+    this.health = 400 * this.scale;
+    this.attackDamage = 10 * this.scale;
 
     this.attackCooldown = 1;
     this.damageCooldown = 0.5;
@@ -37,13 +39,13 @@ class Skeleton {
     this.bleedingCooldown = 1;
 
     // information about skeleton movement
-    this.aggroDist = 250;
+    this.aggroDist = 500;
     this.minSpeed = 125 + 25 * Math.random();
     this.currSpeed = this.minSpeed;
 
     // misc
     this.alpha = 1;
-    this.xpDropped = 270;
+    this.xpDropped = 270 * this.scale;
   }
 
   loadAnimations() {
@@ -133,6 +135,7 @@ class Skeleton {
       // increment knight kills on death
       this.game.knight.kills += 1;
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
+      this.cluster.aliveMobs--;
       this.removeFromWorld = true;
       return;
     }

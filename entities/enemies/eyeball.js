@@ -1,7 +1,9 @@
 class Eyeball {
-  constructor(game, x, y) {
-    Object.assign(this, { game, x, y });
+  constructor(game, cluster, x, y) {
+    Object.assign(this, { game, cluster, x, y });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/eyeball.png");
+
+    this.scale = this.cluster.scale;
 
     // eyeball spawn point
     this.originX = this.x;
@@ -25,9 +27,9 @@ class Eyeball {
     this.updateBoundingBox();
 
     // information about stats + attacking;
-    this.health = 100;
-    this.maxHealth = 100;
-    this.attackDamage = 15;
+    this.health = 100 * this.scale;
+    this.maxHealth = 100 * this.scale;
+    this.attackDamage = 15 * this.scale;
     this.attackCooldown = 2;
     this.damageCooldown = 0.05;
 
@@ -41,7 +43,7 @@ class Eyeball {
 
     // misc
     this.alpha = 1;
-    this.xpDropped = 320;
+    this.xpDropped = 320 * this.scale;
   }
 
   loadAnimations() {
@@ -131,6 +133,7 @@ class Eyeball {
 
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
       this.game.knight.kills += 1;
+      this.cluster.aliveMobs--;
     }
 
     var knight = this.game.knight;

@@ -1,8 +1,42 @@
 class MobCluster {
-  constructor(game) {
-    Object.assign(this, { game });
-    this.minOffset = 13;
-    this.maxOffset = 20;
+  constructor(game, x, y, amount, type) {
+    Object.assign(this, { game, x, y, amount, type });
+
+    this.scale = 1;
+    this.makeCluster(x, y, amount, type);
+    this.aliveMobs = amount;
+    this.respawnCountdown = 10;
+  }
+
+  makeCluster(x, y, amount, type) {
+    let radius = 100;
+    if (type == "skeleton") {
+      for (let i = 0, theta = 0; i < amount; i++, theta += (2 * Math.PI) / amount) {
+        let r1 = radius * Math.max(Math.random() * 1.5, 0.5);
+        let xRand = x + r1 * Math.cos(theta);
+        let yRand = y + r1 * Math.sin(theta);
+        this.game.addEntity(new Skeleton(this.game, this, xRand, yRand));
+      }
+    } else if (type == "eyeball") {
+      for (let i = 0, theta = 0; i < amount; i++, theta += (2 * Math.PI) / amount) {
+        let r1 = radius * Math.max(Math.random() * 1.5, 0.5);
+        let xRand = x + r1 * Math.cos(theta);
+        let yRand = y + r1 * Math.sin(theta);
+        this.game.addEntity(new Eyeball(this.game, this, xRand - 64, yRand - 64));
+      }
+    } else {
+      for (let i = 0, theta = 0; i < amount; i++, theta += (2 * Math.PI) / amount) {
+        const rand = this.randomNumber(0, 12);
+        let r1 = radius * Math.max(Math.random() * 1.5, 0.5);
+        let xRand = x + r1 * Math.cos(theta);
+        let yRand = y + r1 * Math.sin(theta);
+        if (rand <= 7) {
+          this.game.addEntity(new Skeleton(this.game, this, xRand, yRand));
+        } else {
+          this.game.addEntity(new Eyeball(this.game, this, xRand - 64, yRand - 64));
+        }
+      }
+    }
   }
 
   randomNumber(min, max) {
@@ -10,30 +44,15 @@ class MobCluster {
     return Math.floor(r);
   }
 
-  makeCluster(x, y, mobs, type) {
-    let radius = Math.sqrt(216) * mobs;
-    let r1 = radius * Math.random();
-    let theta = Math.random() * 2 * Math.PI;
-    let xRand = x + r1 * Math.cos(theta);
-    let yRand = y + r1 * Math.sin(theta);
-    if (type == "skeleton") {
-      for (let i = 0; i < mobs; i++) {
-        this.game.addEntity(new Skeleton(this.game, xRand, yRand));
-      }
-    } else if (type == "eyeball") {
-      for (let i = 0; i < mobs; i++) {
-        this.game.addEntity(new Eyeball(this.game, xRand - 64, yRand));
-      }
-    } else {
-      for (let i = 0; i < mobs; i++) {
-        const rand = this.randomNumber(0, 12);
-
-        if (rand <= 7) {
-          this.game.addEntity(new Skeleton(this.game, xRand, yRand));
-        } else {
-          this.game.addEntity(new Eyeball(this.game, xRand - 64, yRand));
-        }
-      }
+  update() {
+    if (this.aliveMobs <= 0) this.respawnCountdown -= this.game.clockTick;
+    if (this.respawnCountdown <= 0) {
+      this.scale *= 1.1;
+      this.makeCluster(this.x, this.y, this.amount, this.type);
+      this.respawnCountdown = 10;
+      this.aliveMobs = this.amount;
     }
   }
+
+  draw(ctx) {}
 }

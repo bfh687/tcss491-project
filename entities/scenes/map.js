@@ -28,6 +28,8 @@ class Map {
     level.shops.forEach((shop) => {
       this.game.addEntity(new Shop(this.game, shop.x, shop.y));
     });
+
+    this.game.addEntity(new MobCluster(this.game, 800, 900, 5, "edsadas"));
   }
 
   loadBoundingBoxes() {

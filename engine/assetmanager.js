@@ -7,7 +7,6 @@ class AssetManager {
   }
 
   queueDownload(path) {
-    //console.log("Queueing " + path);
     this.downloadQueue.push(path);
   }
 
@@ -27,7 +26,7 @@ class AssetManager {
         case "png":
           const img = new Image();
           img.addEventListener("load", () => {
-            //console.log("Loaded " + img.src);
+            //.log("Loaded " + img.src);
             self.successCount++;
             if (self.isDone()) callback();
           });

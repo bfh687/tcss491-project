@@ -5,7 +5,6 @@ class Foilage {
     this.shadow_spritesheet = ASSET_MANAGER.getAsset("./sprites/map/foilage_shadows.png");
 
     this.init(code);
-    console.log("{ x:" + this.x + ", y: " + this.y + ', type: "' + this.code + '" },');
   }
 
   update() {}

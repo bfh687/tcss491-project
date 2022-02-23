@@ -222,6 +222,9 @@ class Knight {
       this.velocity.x = this.speed;
     }
 
+    // don't allow user input if there is a transition
+    if (this.game.camera.transition) return;
+
     // capture input booleans
     var left = this.game.keys.a;
     var right = this.game.keys.d;

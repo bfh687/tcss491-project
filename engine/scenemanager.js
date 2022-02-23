@@ -36,7 +36,6 @@ class SceneManager {
   loadMainMenu() {
     this.clearEntities();
     this.boss = null;
-
     this.game.addEntity(new MainMenu(this.game));
     this.game.addEntity(new Cursor(this.game));
   }
@@ -59,22 +58,6 @@ class SceneManager {
 
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1));
-        this.game.addEntity(new FadeTransition(this.game, 1, 1, true));
-        // this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
-
-        // this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 800, 2112, 5, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 2144, 1792, 2, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 3296, 704, 6, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
-
-        // this.game.addEntity(new MobCluster(this.game, 1056, 608, 3, "eyeball"));
-        // this.game.addEntity(new MobCluster(this.game, 480, 1728, 3, "eyeball"));
 
         this.minX = 32;
         this.minY = 0;
@@ -106,14 +89,6 @@ class SceneManager {
     }
   }
 
-  updateAudio() {
-    var mute = document.getElementById("mute").checked;
-    var volume = document.getElementById("volume").value;
-
-    ASSET_MANAGER.muteAudio(mute);
-    ASSET_MANAGER.setVolume(volume);
-  }
-
   update() {
     this.shakeDuration -= this.game.clockTick;
     this.shakeCooldown -= this.game.clockTick;
@@ -135,6 +110,7 @@ class SceneManager {
     this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) + this.y_offset;
 
     this.updateAudio();
+    if (this.game.camera.transition) this.game.camera.transition.update();
   }
 
   draw(ctx) {
@@ -142,6 +118,7 @@ class SceneManager {
     ctx.globalAlpha = 0.25;
     ctx.drawImage(this.vignette, 0, 0, 1366, 768);
     ctx.restore();
+    if (this.game.camera.transition) this.game.camera.transition.draw(ctx);
   }
 
   screenshake() {
@@ -155,5 +132,13 @@ class SceneManager {
     ASSET_MANAGER.pauseAudio();
     ASSET_MANAGER.playAudio(path);
     ASSET_MANAGER.autoRepeat(path);
+  }
+
+  updateAudio() {
+    var mute = document.getElementById("mute").checked;
+    var volume = document.getElementById("volume").value;
+
+    ASSET_MANAGER.muteAudio(mute);
+    ASSET_MANAGER.setVolume(volume);
   }
 }

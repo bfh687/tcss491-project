@@ -4,6 +4,7 @@ class FadeTransition {
     this.alpha = 0;
     this.fadeInDuration = duration / 2;
     this.fadeOutDuration = duration / 2;
+    this.loaded = false;
   }
 
   update() {
@@ -12,16 +13,17 @@ class FadeTransition {
       this.alpha = Math.min(this.alpha, 1);
       this.fadeInDuration -= this.game.clockTick;
     } else if (this.fadeOutDuration >= 0) {
+      if (!this.loaded) {
+        this.game.camera.loadLevel(this.level, this.boss);
+        this.loaded = true;
+      }
       this.alpha -= this.game.clockTick / (this.duration / 2);
       this.alpha = Math.max(this.alpha, 0);
       this.fadeOutDuration -= this.game.clockTick;
     } else {
       this.removeFromWorld = true;
-      this.game.camera.loadLevel(this.level, this.boss);
+      this.game.camera.transition = null;
     }
-    // console.log("fadein: " + this.fadeInDuration);
-    // console.log("fadeout: " + this.fadeOutDuration);
-    // console.log("alpha: " + this.alpha + "\n");
   }
   draw(ctx) {
     ctx.save();

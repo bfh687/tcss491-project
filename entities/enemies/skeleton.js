@@ -1,9 +1,13 @@
 class Skeleton {
   constructor(game, cluster, x, y) {
     Object.assign(this, { game, cluster, x, y });
+
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/skeleton.png");
     this.animations = [];
     this.loadAnimations();
+
+    this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
+    this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
 
     this.scale = this.cluster.scale;
 
@@ -304,5 +308,6 @@ class Skeleton {
     }
 
     drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    this.spawnAnimation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
   }
 }

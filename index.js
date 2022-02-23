@@ -32,6 +32,7 @@ ASSET_MANAGER.queueDownload("./sprites/entities/knight_dash.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/skeleton.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/eyeball.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/minotaur.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/spawnvfx.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/thunder_spell.png");
 
 // cursor downloads

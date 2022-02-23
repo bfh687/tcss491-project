@@ -54,6 +54,9 @@ class SceneManager {
       if (!boss) {
         this.knight.direction = 3;
 
+        this.x = this.midpoint_x;
+        this.y = this.midpoint_y;
+
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1));
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));

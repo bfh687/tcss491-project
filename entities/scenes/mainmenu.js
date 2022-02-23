@@ -18,7 +18,7 @@ class MainMenu {
     this.y += this.game.clockTick * 20;
     if (this.x > 4800) this.x = this.startX;
 
-    if (this.game.keys[" "] && !this.game.camera.transition) this.game.camera.transition = new FadeTransition(this.game, 4, 1, false);
+    if (this.game.keys[" "] && !this.game.camera.transition) this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
   }
 
   draw(ctx) {

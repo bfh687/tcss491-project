@@ -6,8 +6,10 @@ class SceneManager {
     this.vignette = ASSET_MANAGER.getAsset("./vignette.png");
 
     // initialize camera coords
-    this.x = 0;
-    this.y = 0;
+    this.midpoint_x = 1366 / 2 - 44;
+    this.midpoint_y = 768 / 2 - (62 * 2.5) / 2 - 12;
+    this.x = this.midpoint_x;
+    this.y = this.midpoint_y;
 
     this.death_offset = 0;
 
@@ -20,10 +22,7 @@ class SceneManager {
     this.title = true;
     this.level = null;
 
-    let midpoint_x = 1366 / 2;
-    let midpoint_y = 768 / 2;
-
-    this.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
+    this.knight = new Knight(this.game, this.midpoint_x, this.midpoint_y);
     // load first level
     this.loadMainMenu();
   }
@@ -54,10 +53,11 @@ class SceneManager {
     if (level == 1) {
       if (!boss) {
         this.knight.direction = 3;
-        this.knight.y = 244;
 
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1));
+        this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
+
 
         this.minX = 32;
         this.minY = 0;
@@ -98,19 +98,26 @@ class SceneManager {
     } else {
       this.x_offset = this.y_offset = 0;
     }
-
-    let midpoint_x = 1366 / 2 - 48;
-    let midpoint_y = 768 / 2 - (62 * 2.5) / 2;
-
-    if (this.death_offset == 0) {
-      this.x = Math.min(Math.max(this.knight.x - midpoint_x, this.minX), this.maxX) + this.x_offset;
-    } else {
-      this.x = this.knight.x - midpoint_x + this.x_offset - this.death_offset;
-    }
-    this.y = Math.min(Math.max(this.knight.y - midpoint_y, this.minY), this.maxY) + this.y_offset;
-
+    this.lerp();
     this.updateAudio();
     if (this.game.camera.transition) this.game.camera.transition.update();
+  }
+
+  lerp() {
+    const lerp_value = 0.05;
+
+    const position_x = this.x;
+    const target_x = this.game.knight.x;
+
+    const position_y = this.y;
+    const target_y = this.game.knight.y;
+
+    const velocity_x = (target_x - position_x - this.midpoint_x) * lerp_value;
+    const velocity_y = (target_y - position_y - this.midpoint_y) * lerp_value;
+
+    this.x += velocity_x;
+    this.y += velocity_y;
+
   }
 
   draw(ctx) {

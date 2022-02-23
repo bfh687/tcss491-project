@@ -35,7 +35,6 @@ class SceneManager {
   loadMainMenu() {
     this.clearEntities();
     this.boss = null;
-
     this.game.addEntity(new MainMenu(this.game));
     this.game.addEntity(new Cursor(this.game));
   }
@@ -59,6 +58,7 @@ class SceneManager {
         this.game.addEntity(new Map(this.game, 0, 0, level1));
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
+
         this.minX = 32;
         this.minY = 0;
 
@@ -66,6 +66,7 @@ class SceneManager {
         this.maxY = 45 * 60;
         this.playMusic("./music/Glitterglade_Grove.mp3");
       } else {
+        console.log("HERE");
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
 
@@ -89,8 +90,17 @@ class SceneManager {
   }
 
   update() {
+    this.shakeDuration -= this.game.clockTick;
+    this.shakeCooldown -= this.game.clockTick;
+    if (this.shakeDuration >= 0) {
+      this.y_offset = Math.random() * 15 - 7.5;
+      this.x_offset = Math.random() * 15 - 7.5;
+    } else {
+      this.x_offset = this.y_offset = 0;
+    }
     this.lerp();
     this.updateAudio();
+    if (this.game.camera.transition) this.game.camera.transition.update();
   }
 
   lerp() {
@@ -107,6 +117,7 @@ class SceneManager {
 
     this.x += velocity_x;
     this.y += velocity_y;
+
   }
 
   draw(ctx) {
@@ -114,6 +125,7 @@ class SceneManager {
     ctx.globalAlpha = 0.25;
     ctx.drawImage(this.vignette, 0, 0, 1366, 768);
     ctx.restore();
+    if (this.game.camera.transition) this.game.camera.transition.draw(ctx);
   }
 
   screenshake() {

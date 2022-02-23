@@ -120,7 +120,7 @@ class SceneManager {
     const lerp_value = 0.05;
 
     const position_x = this.x;
-    const target_x = this.game.knight.x;
+    const target_x = this.game.knight.x - this.death_offset;
 
     const position_y = this.y;
     const target_y = this.game.knight.y;

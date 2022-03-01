@@ -504,8 +504,8 @@ class Knight {
 
   handleAttackCollision(attacker, attacked) {
     this.game.camera.screenshake();
-    if (attacked instanceof Knight && attacked.state == 5) return;
 
+    if (attacked instanceof Knight && attacked.state == 5) return;
     if (attacked instanceof Knight) {
       this.regenCooldown = 1;
     }

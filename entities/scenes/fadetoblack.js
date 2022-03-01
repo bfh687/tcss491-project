@@ -25,6 +25,7 @@ class FadeTransition {
       this.game.camera.transition = null;
     }
   }
+
   draw(ctx) {
     ctx.save();
     ctx.globalAlpha = this.alpha;

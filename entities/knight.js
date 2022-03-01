@@ -510,6 +510,21 @@ class Knight {
       this.regenCooldown = 1;
     }
 
+    if (attacker instanceof Knight) {
+      const dir = this.direction;
+      const knockback = 75;
+      if (dir == 0) {
+        attacked.x -= this.game.clockTick * knockback;
+      } else if (dir == 1) {
+        attacked.x += this.game.clockTick * knockback;
+      } else if (dir == 2) {
+        attacked.y -= this.game.clockTick * knockback;
+      } else {
+        attacked.y += this.game.clockTick * knockback;
+      }
+      attacked.updateBoundingBox();
+    }
+
     if (attacked.damageCooldown <= 0) {
       // DAMAGE TO BE DEFLECTED
       var damage = attacker.attackDamage;

@@ -7,6 +7,8 @@ class Skeleton {
     this.animations = [];
     this.loadAnimations();
 
+    this.healthAlpha = 1;
+
     this.scale = this.cluster.scale;
 
     // skeleton spawn point
@@ -195,6 +197,12 @@ class Skeleton {
   }
 
   update() {
+    // update healthbar alpha if skeleton is dead
+    if (this.state == 4) {
+      this.healthAlpha -= this.game.clockTick;
+      this.healthAlpha = Math.max(0, this.healthAlpha);
+    }
+
     // decrement cooldowns
     if (this.state != 2) {
       this.attackCooldown -= this.game.clockTick;
@@ -460,17 +468,10 @@ class Skeleton {
 
   draw(ctx) {
     // draw shadows if not dying
-    if (this.state != 4) {
-      drawShadow(ctx, this.game, this);
-    }
+    if (this.state != 4) drawShadow(ctx, this.game, this);
 
-    this.animations[this.state][this.direction].drawFrame(
-      this.game.clockTick,
-      ctx,
-      this.x - this.game.camera.x,
-      this.y - this.game.camera.y,
-      2
-    );
+
+    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
 
     // draw hurt box and bounding box if parameter is on
     if (params.DEBUG) {
@@ -484,13 +485,9 @@ class Skeleton {
       this.textAnimations[i].drawText(ctx);
     }
 
-    drawHealthBar(
-      ctx,
-      this.game,
-      this.hurtBox,
-      this.constructor.name,
-      this.health,
-      this.maxHealth
-    );
+
+    ctx.globalAlpha = this.healthAlpha;
+    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    ctx.globalAlpha = 1;
   }
 }

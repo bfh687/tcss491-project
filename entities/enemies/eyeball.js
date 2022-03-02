@@ -3,6 +3,8 @@ class Eyeball {
     Object.assign(this, { game, cluster, x, y });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/eyeball.png");
 
+    this.healthAlpha = 1;
+
     this.scale = this.cluster.scale;
 
     // eyeball spawn point
@@ -223,6 +225,12 @@ class Eyeball {
   }
 
   update() {
+    // update healthbar alpha if eyeball is dead
+    if (this.state == 5) {
+      this.healthAlpha -= this.game.clockTick * 1.5;
+      this.healthAlpha = Math.max(0, this.healthAlpha);
+    }
+
     // decrement cooldowns
     if (this.state != 2) {
       this.attackCooldown -= this.game.clockTick;
@@ -702,7 +710,7 @@ class Eyeball {
 
   draw(ctx) {
     // draw shadow
-    drawShadow(ctx, this.game, this, 0.5);
+    if (this.state != 5) drawShadow(ctx, this.game, this, 0.5);
 
     this.animations[this.state][this.direction].drawFrame(
       this.game.clockTick,
@@ -722,13 +730,9 @@ class Eyeball {
       this.textAnimations[i].drawText(ctx);
     }
 
-    drawHealthBar(
-      ctx,
-      this.game,
-      this.boundingBox,
-      this.constructor.name,
-      this.health,
-      this.maxHealth
-    );
+
+    ctx.globalAlpha = this.healthAlpha;
+    drawHealthBar(ctx, this.game, this.boundingBox, this.constructor.name, this.health, this.maxHealth);
+    ctx.globalAlpha = 1;
   }
 }

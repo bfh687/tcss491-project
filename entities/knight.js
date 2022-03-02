@@ -740,7 +740,7 @@ class Knight {
       if (entity instanceof Skeleton) {
         // handle case where player attacks the skeleton
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2 && entity.isStaggerable) {
+          if (entity.state != 2 && entity.isStaggerable&& entity.health > 0) {
             console.log("initiate stagger");
             entity.isStaggerable = false;
             entity.state = 3;
@@ -759,7 +759,7 @@ class Knight {
       else if (entity instanceof Eyeball) {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2 && entity.isStaggerable) {
+          if (entity.state != 2 && entity.isStaggerable && entity.health > 0) {
             console.log("initiate stagger");
             entity.isStaggerable = false;
             entity.state = 4;
@@ -934,9 +934,11 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
+    if (attacker.health <= 0 || attacked.health <= 0) return;
+    if (attacked instanceof Knight && attacked.state == 5) return;
+
     this.game.camera.screenshake();
 
-    if (attacked instanceof Knight && attacked.state == 5) return;
     if (attacked instanceof Knight) {
       this.regenCooldown = 1;
     }

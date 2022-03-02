@@ -3,6 +3,9 @@ class Eyeball {
     Object.assign(this, { game, cluster, x, y });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/eyeball.png");
 
+    this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
+    this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
+    
     this.healthAlpha = 1;
 
     this.scale = this.cluster.scale;
@@ -730,7 +733,8 @@ class Eyeball {
       this.textAnimations[i].drawText(ctx);
     }
 
-
+    this.spawnAnimation.drawFrame(this.game.clockTick, ctx, this.x + 107 - this.game.camera.x, this.y - 7 - this.game.camera.y, 1.25);
+    
     ctx.globalAlpha = this.healthAlpha;
     drawHealthBar(ctx, this.game, this.boundingBox, this.constructor.name, this.health, this.maxHealth);
     ctx.globalAlpha = 1;

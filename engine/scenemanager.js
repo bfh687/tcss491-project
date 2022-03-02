@@ -114,7 +114,18 @@ class SceneManager {
     } else {
       this.x_offset = this.y_offset = 0;
     }
-    this.lerp();
+
+    // smooth camera
+    if (this.x_offset == 0 && this.y_offset == 0) this.lerp();
+
+    // add shake
+    this.x += this.x_offset;
+    this.y += this.y_offset;
+
+    // restrict to scene bounds
+    this.x = Math.min(Math.max(this.minX, this.x), this.maxX);
+    this.y = Math.min(Math.max(this.minY, this.y), this.maxY);
+
     this.updateAudio();
     if (this.game.camera.transition) this.game.camera.transition.update();
   }

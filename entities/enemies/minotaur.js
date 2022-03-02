@@ -253,27 +253,6 @@ class Minotaur {
       }
     }
 
-    // // handle damaged state + animation
-    // else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
-    //   return;
-    // } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
-    //   this.animations[this.state][this.direction].reset();
-    //   this.state = 0;
-    // }
-
-    //   // drop item on death
-    //   if (Math.floor(Math.random()) + 1 === 1) {
-    //     const item = new Item(this.game, center_x, center_y);
-    //     this.game.addEntity(item);
-    //   }
-
-    //   // increment knight kills on death
-    //   this.game.knight.kills += 1;
-    //   this.game.knight.xpSystem.incrementXP(this.xpDropped);
-    //   this.removeFromWorld = true;
-    //   return;
-    // }
-
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
     this.updateBoundingBox();
@@ -382,7 +361,7 @@ class Minotaur {
 
   draw(ctx) {
     // draw shadows if not dying
-    if (this.state != 4) {
+    if (this.state != 6) {
       drawShadow(ctx, this.game, this, 2);
     }
 
@@ -411,7 +390,7 @@ class Minotaur {
 class LightningSpell {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    console.log("new spell");
+
     // load spritesheet
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/thunder_spell.png");
     this.animation = new Animator(this.spritesheet, 0, 0, 64, 64, 12, 0.1, 0, 0, false, false);

@@ -5,7 +5,7 @@ class MobCluster {
     this.scale = 1;
     this.makeCluster(x, y, amount, type);
     this.aliveMobs = amount;
-    this.respawnCountdown = 15;
+    this.respawnCountdown = 10;
   }
 
   makeCluster(x, y, amount, type) {
@@ -49,7 +49,7 @@ class MobCluster {
     if (this.respawnCountdown <= 0) {
       this.scale *= 1.1;
       this.makeCluster(this.x, this.y, this.amount, this.type);
-      this.respawnCountdown = 15;
+      this.respawnCountdown = 10;
       this.aliveMobs = this.amount;
     }
   }

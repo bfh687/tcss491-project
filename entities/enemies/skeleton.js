@@ -76,7 +76,10 @@ class Skeleton {
 
   update() {
     // update healthbar alpha if skeleton is dead
-    if (this.state == 4) this.healthAlpha -= this.game.clockTick;
+    if (this.state == 4) {
+      this.healthAlpha -= this.game.clockTick;
+      this.healthAlpha = Math.max(0, this.healthAlpha);
+    }
 
     // decrement cooldowns
     if (this.state != 2) {
@@ -290,12 +293,9 @@ class Skeleton {
 
   draw(ctx) {
     // draw shadows if not dying
-    ctx.globalAlpha = this.healthAlpha;
-    drawShadow(ctx, this.game, this);
-    ctx.globalAlpha = 1;
+    if (this.state != 4) drawShadow(ctx, this.game, this);
 
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
-
     // draw hurt box and bounding box if parameter is on
     if (params.DEBUG) {
       drawBoundingBox(this.boundingBox, ctx, this.game, "white");

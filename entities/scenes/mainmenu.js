@@ -3,8 +3,8 @@ class MainMenu {
     Object.assign(this, { game });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/level_1.png");
 
-    this.startX = 450;
-    this.startY = 800;
+    this.startX = 300;
+    this.startY = 100;
 
     this.x = this.startX;
     this.y = this.startY;
@@ -16,7 +16,12 @@ class MainMenu {
     this.alpha += 2 * this.game.clockTick;
     this.x += this.game.clockTick * this.speed;
     this.y += this.game.clockTick * 20;
+
     if (this.x > 4800) this.x = this.startX;
+    if (this.y > 2600) {
+      this.x = this.startX;
+      this.y = this.startY;
+    }
 
     if (this.game.keys[" "] && !this.game.camera.transition) this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
   }

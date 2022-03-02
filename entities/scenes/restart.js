@@ -2,7 +2,7 @@ class Restart {
   constructor(game) {
     Object.assign(this, { game });
     this.game.camera.death_offset = 0;
-    this.defaultTimer = 30;
+    this.defaultTimer = 15;
     this.selections = ["restart", "mainmenu"];
     this.selectedOption = "default";
     this.message = "";

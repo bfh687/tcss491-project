@@ -168,7 +168,6 @@ class Minotaur {
       this.game.knight.kills += 1;
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
       this.game.addEntity(new Victory(this.game));
-      console.log("hello");
       this.removeFromWorld = true;
       this.game.boss = null;
     }
@@ -262,7 +261,6 @@ class Minotaur {
         if (verticalBox.collide(knight.hurtBox)) {
           yVector = 0;
           if (this.attackCooldown <= 0) {
-            console.log(this.state);
             this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
             this.attackCooldown = 3;
           }
@@ -273,7 +271,6 @@ class Minotaur {
           xVector = 0;
           if (this.attackCooldown <= 0) {
             this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
-            console.log(this.state);
             this.attackCooldown = 3;
           }
         }

@@ -194,7 +194,10 @@ class Skeleton {
 
     // if line collides, pathfind
     if (flag && getDistance(x1, y1, x2, y2) <= this.aggroDist) {
-      this.pathfind();
+      const bb = this.boundingBox;
+      const x = bb.left + (bb.right - bb.left) / 2;
+      const y = bb.top + (bb.bottom - bb.top) / 2;
+      this.pathfind(x, y);
     }
     // else do basic AI.
     else {
@@ -204,14 +207,9 @@ class Skeleton {
     this.updateBoundingBox();
   }
 
-  pathfind() {
-    var knight = this.game.knight;
+  pathfind(x, y) {
     if (this.game.grid) {
       const grid = this.game.grid.grid;
-
-      const bb = this.boundingBox;
-      const x = bb.left + (bb.right - bb.left) / 2;
-      const y = bb.top + (bb.bottom - bb.top) / 2;
 
       const location = getCurrentLocation(x, y, grid);
       const dir = aStar(location, grid)[0];
@@ -389,16 +387,18 @@ class Skeleton {
       const skeleX = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
       const skeleY = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
 
-      ctx.save();
-      ctx.beginPath();
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = "white";
-      ctx.globalAlpha = 0.2;
-      ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
-      ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
-      ctx.stroke();
-      ctx.globalAlpha = 1;
-      ctx.restore();
+      if (getDistance(knightX, knightY, skeleX, skeleY) < this.aggroDist) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "white";
+        ctx.globalAlpha = 0.2;
+        ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
+        ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      }
     }
 
     // draw shadows if not dying

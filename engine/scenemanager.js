@@ -60,8 +60,8 @@ class SceneManager {
         this.y = this.midpoint_y;
 
         // test values
-        this.knight.x = 400;
-        this.knight.y = 800;
+        this.knight.x = 722;
+        this.knight.y = 250;
 
         // add map and teleporter
         const map = new Map(this.game, 0, 0, level1);
@@ -72,34 +72,34 @@ class SceneManager {
         //this.game.addEntity(new MobCluster(this.game, 300, 700, 5, "skeleton"));
         this.game.addEntity(new Grid(this.game, 100, 55, map));
 
-        this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
-        this.game.addEntity(
-          new MobCluster(this.game, 600, 1350, 3, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 1730, 2130, 4, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 800, 2112, 5, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 1696, 3008, 3, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 2144, 1792, 2, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 2336, 704, 4, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 3296, 704, 6, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 3616, 896, 3, "skeleton")
-        );
-        this.game.addEntity(
-          new MobCluster(this.game, 5536, 1280, 2, "skeleton")
-        );
+        this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "eyeball"));
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 600, 1350, 3, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 1730, 2130, 4, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 800, 2112, 5, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 1696, 3008, 3, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 2144, 1792, 2, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 2336, 704, 4, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 3296, 704, 6, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 3616, 896, 3, "skeleton")
+        // );
+        // this.game.addEntity(
+        //   new MobCluster(this.game, 5536, 1280, 2, "skeleton")
+        // );
 
         // this.game.addEntity(new MobCluster(this.game, 1056, 608, 3, "eyeball"));
         // this.game.addEntity(new MobCluster(this.game, 480, 1728, 3, "eyeball"));

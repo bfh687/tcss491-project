@@ -380,24 +380,26 @@ class Skeleton {
   }
 
   draw(ctx) {
-    // calculate knight center
-    const knightBB = this.game.knight.boundingBox;
-    const knightX = knightBB.left + (knightBB.right - knightBB.left) / 2;
-    const knightY = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+    if (params.DEBUG) {
+      // calculate knight center
+      const knightBB = this.game.knight.boundingBox;
+      const knightX = knightBB.left + (knightBB.right - knightBB.left) / 2;
+      const knightY = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
 
-    // calculate skeleton center
-    const skeleBB = this.boundingBox;
-    const skeleX = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
-    const skeleY = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+      // calculate skeleton center
+      const skeleBB = this.boundingBox;
+      const skeleX = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+      const skeleY = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
 
-    ctx.save();
-    ctx.beginPath();
-    ctx.strokeWidth = 15;
-    ctx.strokeStyle = "red";
-    ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
-    ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
-    ctx.stroke();
-    ctx.restore();
+      ctx.save();
+      ctx.beginPath();
+      ctx.strokeWidth = 15;
+      ctx.strokeStyle = "red";
+      ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
+      ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
+      ctx.stroke();
+      ctx.restore();
+    }
 
     // draw shadows if not dying
     if (this.state != 4) drawShadow(ctx, this.game, this);

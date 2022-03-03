@@ -111,7 +111,6 @@ class Skeleton {
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {
         this.bleed();
-        console.log("TICK");
         this.bleedingCooldown = 1;
       }
     }
@@ -221,14 +220,13 @@ class Skeleton {
       if (!dir) this.state = 0;
       else this.state = 1;
 
-      if (knight.boundingBox.left < this.boundingBox.left) this.direction = 0;
-      else this.direction = 1;
-
       if (dir == "West") {
+        this.direction = 0;
         this.x -= this.currSpeed * engine.clockTick;
       } else if (dir == "North") {
         this.y -= this.currSpeed * engine.clockTick;
       } else if (dir == "East") {
+        this.direction = 1;
         this.x += this.currSpeed * engine.clockTick;
       } else if (dir == "South") {
         this.y += this.currSpeed * engine.clockTick;
@@ -393,11 +391,13 @@ class Skeleton {
 
       ctx.save();
       ctx.beginPath();
-      ctx.strokeWidth = 15;
-      ctx.strokeStyle = "red";
+      ctx.lineWidth = 2;
+      ctx.strokeStyle = "white";
+      ctx.globalAlpha = 0.2;
       ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
       ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
       ctx.stroke();
+      ctx.globalAlpha = 1;
       ctx.restore();
     }
 

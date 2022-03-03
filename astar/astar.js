@@ -58,15 +58,10 @@ var aStar = function (startCoordinates, grid) {
 };
 
 const getCurrentLocation = (x, y, grid) => {
-  const nodeSize = 16;
+  const nodeSize = 32;
   for (var i = 0, x_pos = 32; i < grid.length; i++, x_pos += nodeSize) {
     for (var j = 0, y_pos = 0; j < grid[i].length; j++, y_pos += nodeSize) {
-      if (
-        x >= x_pos &&
-        x < x_pos + nodeSize &&
-        y >= y_pos &&
-        y < y_pos + nodeSize
-      ) {
+      if (x >= x_pos && x < x_pos + nodeSize && y >= y_pos && y < y_pos + nodeSize) {
         const location = [];
         location.push(j);
         location.push(i);

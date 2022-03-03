@@ -2,9 +2,9 @@ class Grid {
   constructor(game, width, height, map) {
     Object.assign(this, { game, width, height, map });
     this.grid = [];
-    this.width *= 4;
-    this.height *= 4;
-    this.nodeSize = 16;
+    this.width *= 2;
+    this.height *= 2;
+    this.nodeSize = 32;
     this.init();
     this.game.grid = this;
     this.hasBeenInit = false;
@@ -46,8 +46,7 @@ class Grid {
       }
     }
 
-    if (this.targetCell)
-      this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
+    if (this.targetCell) this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
     if (!this.hasBeenInit) this.hasBeenInit = true;
   }
 
@@ -100,22 +99,12 @@ class Grid {
         // check if obstacle
         if (this.grid[tempTileY][tempTileX] != "Obstacle") {
           // if obstacle, compare center of the tile to center of knight
-          const tempTileXCenter =
-            tempTileX * this.nodeSize + this.nodeSize / 2 + 32;
+          const tempTileXCenter = tempTileX * this.nodeSize + this.nodeSize / 2 + 32;
           const tempTileYCenter = tempTileY * this.nodeSize + this.nodeSize / 2;
 
-          const dist = getDistance(
-            knightX,
-            knightY,
-            tempTileXCenter,
-            tempTileYCenter
-          );
+          const dist = getDistance(knightX, knightY, tempTileXCenter, tempTileYCenter);
           if (dist < min_dist) {
-            newTarget = getCurrentLocation(
-              tempTileXCenter,
-              tempTileYCenter,
-              this.grid
-            );
+            newTarget = getCurrentLocation(tempTileXCenter, tempTileYCenter, this.grid);
             min_dist = dist;
           }
         }
@@ -152,10 +141,7 @@ class Grid {
     //   }
     // }
 
-    if (
-      newTarget != this.targetCell &&
-      this.grid[newTarget[0]][newTarget[1]] != "Obstacle"
-    ) {
+    if (newTarget != this.targetCell && this.grid[newTarget[0]][newTarget[1]] != "Obstacle") {
       this.grid[this.targetCell[0]][this.targetCell[1]] = "Empty";
       this.targetCell = newTarget;
       this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
@@ -182,55 +168,26 @@ class Grid {
       ctx.save();
       ctx.globalAlpha = 0.4;
       for (var i = 0, x_pos = 32; i < this.width; i++, x_pos += this.nodeSize) {
-        for (
-          var j = 0, y_pos = 0;
-          j < this.height;
-          j++, y_pos += this.nodeSize
-        ) {
+        for (var j = 0, y_pos = 0; j < this.height; j++, y_pos += this.nodeSize) {
           const node = this.grid[j][i];
 
           if (node == "Start") {
             ctx.fillStyle = "green";
-            ctx.fillRect(
-              x_pos - this.game.camera.x,
-              y_pos - this.game.camera.y,
-              this.nodeSize,
-              this.nodeSize
-            );
+            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
           } else if (node == "Goal") {
             ctx.fillStyle = "blue";
-            ctx.fillRect(
-              x_pos - this.game.camera.x,
-              y_pos - this.game.camera.y,
-              this.nodeSize,
-              this.nodeSize
-            );
+            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
           } else if (node == "Obstacle") {
             ctx.fillStyle = "black";
-            ctx.fillRect(
-              x_pos - this.game.camera.x,
-              y_pos - this.game.camera.y,
-              this.nodeSize,
-              this.nodeSize
-            );
+            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
           } else {
             ctx.strokeStyle = "grey";
-            ctx.strokeRect(
-              x_pos - this.game.camera.x,
-              y_pos - this.game.camera.y,
-              this.nodeSize,
-              this.nodeSize
-            );
+            ctx.strokeRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
           }
 
           if (j == this.targetCell[0] && i == this.targetCell[1]) {
             ctx.fillStyle = "red";
-            ctx.fillRect(
-              x_pos - this.game.camera.x,
-              y_pos - this.game.camera.y,
-              this.nodeSize,
-              this.nodeSize
-            );
+            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
           }
         }
       }

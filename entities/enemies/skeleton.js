@@ -51,7 +51,7 @@ class Skeleton {
     // information about skeleton movement
     this.aggroDist = 500;
     // 125 + 25 * Math.random()
-    this.minSpeed = 0;
+    this.minSpeed = 125 + 25 * Math.random();
     this.currSpeed = this.minSpeed;
 
     // misc
@@ -171,6 +171,50 @@ class Skeleton {
       return;
     }
 
+    var flag = false;
+    this.game.entities.forEach((entity) => {
+      if (entity instanceof Map) {
+        const knightBB = this.game.knight.boundingBox;
+        const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
+        const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+        // calculate skeleton center
+        const skeleBB = this.boundingBox;
+        const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+        const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
+        entity.bounding_boxes.forEach((box) => {
+          // check for line collision
+          if (box.collideLine(x1, y1, x2, y2)) flag = true;
+        });
+      } else if (entity instanceof Foilage || entity instanceof Prop) {
+        const knightBB = this.game.knight.boundingBox;
+        const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
+        const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+        // calculate skeleton center
+        const skeleBB = this.boundingBox;
+        const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+        const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
+        const box = entity.boundingBox;
+        if (box.collideLine(x1, y1, x2, y2)) flag = true;
+      }
+    });
+
+    // if line collides, pathfind
+    if (flag) {
+      this.pathfind();
+    }
+    // else do basic AI.
+    else {
+      this.basicAI();
+    }
+
+    this.updateBoundingBox();
+  }
+
+  pathfind() {
     var knight = this.game.knight;
     if (this.game.grid) {
       const grid = this.game.grid.grid;
@@ -199,13 +243,98 @@ class Skeleton {
         this.y += this.currSpeed * engine.clockTick;
       }
     }
+  }
 
-    var xVector, yVector;
-    xVector = yVector = 0;
+  basicAI() {
+    var knight = this.game.knight;
+
+    if (knight) {
+      // calculate distance towards knight
+      var dist = getDistance(knight.x, knight.y, this.x, this.y);
+
+      if (dist < this.aggroDist) {
+        var xVector = (knight.x - this.x) / dist;
+        var yVector = (knight.y - this.y) / dist;
+
+        // set direction based on player location
+        if (this.hurtBox.left >= knight.hurtBox.right) {
+          this.direction = 0;
+        } else if (this.hurtBox.right <= knight.hurtBox.left) {
+          this.direction = 1;
+        }
+
+        // set state based on vectors towards players
+        if (xVector != 0 || yVector != 0) {
+          this.state = 1;
+        } else {
+          this.state = 0;
+        }
+
+        // set distance away from the player that the eyeball must be to begin attacking
+        var attackDist = 30;
+        if (xVector < 0) attackDist *= -1;
+
+        // get bounding boxes of NEXT tick (assuming no major changes in fps)
+        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist, this.y + 80, 32, 24);
+        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
+
+        // check collisions and attack if there would be on on the vertical axis
+        if (verticalBox.collide(knight.hurtBox)) {
+          yVector = 0;
+          if (this.attackCooldown <= 0) {
+            this.state = 2;
+            this.attackCooldown = 1;
+          }
+        }
+
+        // check collisions and attack if there would be on on the horizontal axis
+        if (horizontalBox.collide(knight.hurtBox)) {
+          xVector = 0;
+          if (this.attackCooldown <= 0) {
+            this.state = 2;
+            this.attackCooldown = 1;
+          }
+        }
+
+        // if not moving, set state to idle
+        if (xVector == 0 && yVector == 0) this.state = 0;
+      }
+
+      // path towards origin/spawn point
+      else {
+        // calculate distance to spawn point
+        var dist = getDistance(this.originX, this.originY, this.x, this.y);
+
+        // calculate vector towards spawn point
+        var xVector = (this.originX - this.x) / dist;
+        var yVector = (this.originY - this.y) / dist;
+
+        // set direction based on location
+        if (xVector >= 0) this.direction = 1;
+        else this.direction = 0;
+
+        // set state based on vectors towards spawn point
+        if (xVector != 0 || yVector != 0) {
+          this.state = 1;
+        } else {
+          this.state = 0;
+        }
+
+        // set idle behavior + direction of skeleton
+        if (Math.abs(dist) < 1) {
+          xVector = yVector = 0;
+          this.state = 0;
+          if (this.hurtBox.left >= knight.hurtBox.right) {
+            this.direction = 0;
+          } else if (this.hurtBox.right <= knight.hurtBox.left) {
+            this.direction = 1;
+          }
+        }
+      }
+    }
 
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
-    this.updateBoundingBox();
   }
 
   bleed() {
@@ -260,6 +389,25 @@ class Skeleton {
   }
 
   draw(ctx) {
+    // calculate knight center
+    const knightBB = this.game.knight.boundingBox;
+    const knightX = knightBB.left + (knightBB.right - knightBB.left) / 2;
+    const knightY = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+    // calculate skeleton center
+    const skeleBB = this.boundingBox;
+    const skeleX = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+    const skeleY = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
+    ctx.save();
+    ctx.beginPath();
+    ctx.strokeWidth = 15;
+    ctx.strokeStyle = "red";
+    ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
+    ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
+    ctx.stroke();
+    ctx.restore();
+
     // draw shadows if not dying
     if (this.state != 4) drawShadow(ctx, this.game, this);
 

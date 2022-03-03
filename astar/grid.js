@@ -25,16 +25,18 @@ class Grid {
     }
 
     // add obstacle cells
-    this.grid[14][15] = "Obstacle";
-    this.grid[15][15] = "Obstacle";
-    this.grid[15][16] = "Obstacle";
-    this.grid[14][16] = "Obstacle";
-    this.grid[17][16] = "Obstacle";
-    this.grid[18][16] = "Obstacle";
-    this.grid[19][16] = "Obstacle";
-    this.grid[14][17] = "Obstacle";
-    this.grid[14][18] = "Obstacle";
-    this.grid[14][19] = "Obstacle";
+    this.grid[18][7] = "Obstacle";
+    this.grid[18][8] = "Obstacle";
+    this.grid[18][9] = "Obstacle";
+    this.grid[18][10] = "Obstacle";
+    this.grid[18][11] = "Obstacle";
+    this.grid[18][12] = "Obstacle";
+    this.grid[18][13] = "Obstacle";
+    this.grid[18][14] = "Obstacle";
+    this.grid[17][14] = "Obstacle";
+    this.grid[17][15] = "Obstacle";
+    this.grid[18][15] = "Obstacle";
+    this.grid[19][15] = "Obstacle";
 
     if (this.targetCell) this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
   }
@@ -78,10 +80,6 @@ class Grid {
           ctx.fillStyle = "red";
           ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
         }
-        // if (j == this.startCell[0] && i == this.startCell[1]) {
-        //   ctx.fillStyle = "orange";
-        //   ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
-        // }
       }
     }
     ctx.restore();

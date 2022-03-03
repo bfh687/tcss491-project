@@ -24,7 +24,9 @@ class SceneManager {
 
     this.knight = new Knight(this.game, this.midpoint_x, this.midpoint_y);
     // load first level
-    this.loadMainMenu();
+    //this.loadMainMenu();
+
+    this.loadLevel(1, false);
   }
 
   // remove all entities from the game engine
@@ -57,23 +59,30 @@ class SceneManager {
         this.x = this.midpoint_x;
         this.y = this.midpoint_y;
 
+        // test values
+        this.knight.x = 800;
+        this.knight.y = 800;
+
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1));
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
-        this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 800, 2112, 5, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 2144, 1792, 2, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 3296, 704, 6, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
+        // spawn path finding test skeleton
+        this.game.addEntity(new MobCluster(this.game, 1000, 1000, 1, "skeleton"));
 
-        this.game.addEntity(new MobCluster(this.game, 1056, 608, 3, "eyeball"));
-        this.game.addEntity(new MobCluster(this.game, 480, 1728, 3, "eyeball"));
+        // this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 800, 2112, 5, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 2144, 1792, 2, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 3296, 704, 6, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
+        // this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
+
+        // this.game.addEntity(new MobCluster(this.game, 1056, 608, 3, "eyeball"));
+        // this.game.addEntity(new MobCluster(this.game, 480, 1728, 3, "eyeball"));
 
         this.minX = 32;
         this.minY = 0;
@@ -81,6 +90,7 @@ class SceneManager {
         this.maxX = 3216 + 32 * 57;
         this.maxY = 45 * 60;
         this.playMusic("./music/Glitterglade_Grove.mp3");
+        this.game.addEntity(new Grid(this.game, 100, 55));
       } else {
         console.log("HERE");
         this.knight.direction = 2;

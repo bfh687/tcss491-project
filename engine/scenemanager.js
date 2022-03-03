@@ -24,9 +24,9 @@ class SceneManager {
 
     this.knight = new Knight(this.game, this.midpoint_x, this.midpoint_y);
     // load first level
-    //this.loadMainMenu();
+    this.loadMainMenu();
 
-    this.loadLevel(1, false);
+    //this.loadLevel(1, false);
   }
 
   // remove all entities from the game engine
@@ -60,16 +60,17 @@ class SceneManager {
         this.y = this.midpoint_y;
 
         // test values
-        this.knight.x = 600;
-        this.knight.y = 1200;
+        this.knight.x = 400;
+        this.knight.y = 800;
 
         // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0, level1));
+        const map = new Map(this.game, 0, 0, level1);
+        this.game.addEntity(map);
         //this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         // spawn path finding test skeleton
-        this.game.addEntity(new MobCluster(this.game, 300, 700, 5, "skeleton"));
-        this.game.addEntity(new Grid(this.game, 100, 55));
+        //this.game.addEntity(new MobCluster(this.game, 300, 700, 5, "skeleton"));
+        this.game.addEntity(new Grid(this.game, 100, 55, map));
 
         this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));

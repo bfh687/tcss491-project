@@ -1,10 +1,13 @@
 class Grid {
-  constructor(game, width, height) {
-    Object.assign(this, { game, width, height });
+  constructor(game, width, height, map) {
+    Object.assign(this, { game, width, height, map });
     this.grid = [];
-    this.nodeSize = 64;
+    this.width *= 2;
+    this.height *= 2;
+    this.nodeSize = 32;
     this.init();
     this.game.grid = this;
+    this.hasBeenInit = false;
 
     // initialize target cell
     const bb = this.game.knight.boundingBox;
@@ -18,27 +21,34 @@ class Grid {
   init() {
     // create empty array
     for (var i = 0; i < this.width; i++) {
-      this.grid.push([]);
+      if (!this.hasBeenInit) this.grid.push([]);
       for (var j = 0; j < this.height; j++) {
-        this.grid[i][j] = "Empty";
+        if (this.grid[i][j] != "Obstacle") this.grid[i][j] = "Empty";
       }
     }
 
-    // add obstacle cells
-    this.grid[18][7] = "Obstacle";
-    this.grid[18][8] = "Obstacle";
-    this.grid[18][9] = "Obstacle";
-    this.grid[18][10] = "Obstacle";
-    this.grid[18][11] = "Obstacle";
-    this.grid[18][12] = "Obstacle";
-    this.grid[18][13] = "Obstacle";
-    this.grid[18][14] = "Obstacle";
-    this.grid[17][14] = "Obstacle";
-    this.grid[17][15] = "Obstacle";
-    this.grid[18][15] = "Obstacle";
-    this.grid[19][15] = "Obstacle";
+    if (!this.hasBeenInit) {
+      for (var i = 0; i < this.grid.length; i++) {
+        for (var j = 0; j < this.grid[i].length; j++) {
+          const width = this.nodeSize;
+          const x = (i + 1) * width;
+          const y = j * width;
+
+          const bb = new BoundingBox(x, y, width, width);
+          this.map.bounding_boxes.forEach((box) => {
+            if (bb.collide(box)) {
+              const loc = getCurrentLocation(x, y, this.grid);
+              this.grid[loc[0]][loc[1]] = "Obstacle";
+              //console.log("[" + loc[0] + ", " + loc[1] + "]");
+            }
+          });
+        }
+      }
+    }
 
     if (this.targetCell) this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
+
+    if (!this.hasBeenInit) this.hasBeenInit = true;
   }
 
   // updates position of target

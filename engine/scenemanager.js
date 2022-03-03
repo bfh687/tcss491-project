@@ -68,7 +68,7 @@ class SceneManager {
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         // spawn path finding test skeleton
-        this.game.addEntity(new MobCluster(this.game, 1000, 1000, 1, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 1000, 1000, 5, "skeleton"));
 
         // this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
         // this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
@@ -90,7 +90,6 @@ class SceneManager {
         this.maxX = 3216 + 32 * 57;
         this.maxY = 45 * 60;
         this.playMusic("./music/Glitterglade_Grove.mp3");
-        this.game.addEntity(new Grid(this.game, 100, 55));
       } else {
         console.log("HERE");
         this.knight.direction = 2;

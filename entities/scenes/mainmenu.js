@@ -84,16 +84,35 @@ class MainMenu {
     const ctx = this.game.ctx;
     const mouseBox = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
 
-    const playWidth = ctx.measureText("PLAY").width;
-    this.playBox = new BoundingBox(this.game.width() / 2 - playWidth / 2, this.game.height() / 6 + 9 + 80 + 120, playWidth + 100, 130);
+    ctx.save();
+    ctx.font = "36px bitpap";
 
-    //if (mouseBox.collide(playBox) && this.game.left_click) this.state++;
-    const controlsBox = new BoundingBox();
-    const creditsBox = new BoundingBox();
+    const playWidth = 56.25;
+    this.playBox = new BoundingBox(this.game.width() / 2 - playWidth / 2, this.game.height() / 6 + 63 + 120, playWidth, 30);
+    if (mouseBox.collide(this.playBox) && this.game.left_click) {
+      // load game
+      this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
+    }
+
+    const controlWidth = 119.25;
+    this.controlBox = new BoundingBox(this.game.width() / 2 - controlWidth / 2, this.game.height() / 6 + 63 + 120 + 40, controlWidth, 30);
+    if (mouseBox.collide(this.controlBox) && this.game.left_click) {
+      this.state = 2;
+    }
+
+    const creditsWidth = 90;
+    this.creditsBox = new BoundingBox(this.game.width() / 2 - creditsWidth / 2, this.game.height() / 6 + 63 + 120 + 80, creditsWidth, 30);
+    if (mouseBox.collide(this.creditsBox) && this.game.left_click) {
+      this.state = 3;
+    }
+
+    ctx.restore();
   }
 
   drawMainMenu(ctx) {
-    drawBoundingBox(this.playBox, ctx, this.game, "purple");
+    if (this.playBox) drawBoundingBox(this.playBox, ctx, this.game, "red");
+    if (this.controlBox) drawBoundingBox(this.controlBox, ctx, this.game, "red");
+    if (this.creditsBox) drawBoundingBox(this.creditsBox, ctx, this.game, "red");
 
     // draw play
     ctx.save();
@@ -141,9 +160,9 @@ class MainMenu {
     ctx.restore();
   }
 
-  updateCredits() {}
-  drawCredits(ctx) {}
-
   updateControls() {}
   drawControls(ctx) {}
+
+  updateCredits() {}
+  drawCredits(ctx) {}
 }

@@ -171,39 +171,30 @@ class Skeleton {
       return;
     }
 
+    const knightBB = this.game.knight.boundingBox;
+    const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
+    const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+    // calculate skeleton center
+    const skeleBB = this.boundingBox;
+    const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+    const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
     var flag = false;
     this.game.entities.forEach((entity) => {
       if (entity instanceof Map) {
-        const knightBB = this.game.knight.boundingBox;
-        const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
-        const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
-
-        // calculate skeleton center
-        const skeleBB = this.boundingBox;
-        const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
-        const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
-
         entity.bounding_boxes.forEach((box) => {
           // check for line collision
           if (box.collideLine(x1, y1, x2, y2)) flag = true;
         });
       } else if (entity instanceof Foilage || entity instanceof Prop) {
-        const knightBB = this.game.knight.boundingBox;
-        const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
-        const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
-
-        // calculate skeleton center
-        const skeleBB = this.boundingBox;
-        const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
-        const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
-
         const box = entity.boundingBox;
         if (box.collideLine(x1, y1, x2, y2)) flag = true;
       }
     });
 
     // if line collides, pathfind
-    if (flag) {
+    if (flag && getDistance(x1, y1, x2, y2) <= this.aggroDist) {
       this.pathfind();
     }
     // else do basic AI.

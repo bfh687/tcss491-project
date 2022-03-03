@@ -64,11 +64,12 @@ class SceneManager {
         this.knight.y = 800;
 
         // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0, level1));
-        this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
+        //this.game.addEntity(new Map(this.game, 0, 0, level1));
+        //this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         // spawn path finding test skeleton
-        this.game.addEntity(new MobCluster(this.game, 1000, 1000, 5, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 1250, 1200, 1, "skeleton"));
+        this.game.addEntity(new Grid(this.game, 100, 55));
 
         // this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
         // this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));

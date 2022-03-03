@@ -50,7 +50,8 @@ class Skeleton {
 
     // information about skeleton movement
     this.aggroDist = 500;
-    this.minSpeed = 125 + 25 * Math.random();
+    // 125 + 25 * Math.random()
+    this.minSpeed = 0;
     this.currSpeed = this.minSpeed;
 
     // misc
@@ -171,6 +172,33 @@ class Skeleton {
     }
 
     var knight = this.game.knight;
+    if (this.game.grid) {
+      const grid = this.game.grid.grid;
+
+      const bb = this.boundingBox;
+      const x = bb.left + (bb.right - bb.left) / 2;
+      const y = bb.top + (bb.bottom - bb.top) / 2;
+
+      const location = getCurrentLocation(x, y, grid);
+      const dir = aStar(location, grid)[0];
+      this.game.grid.init();
+
+      if (!dir) this.state = 0;
+      else this.state = 1;
+
+      if (knight.boundingBox.left < this.boundingBox.left) this.direction = 0;
+      else this.direction = 1;
+
+      if (dir == "West") {
+        this.x -= this.currSpeed * engine.clockTick;
+      } else if (dir == "North") {
+        this.y -= this.currSpeed * engine.clockTick;
+      } else if (dir == "East") {
+        this.x += this.currSpeed * engine.clockTick;
+      } else if (dir == "South") {
+        this.y += this.currSpeed * engine.clockTick;
+      }
+    }
 
     var xVector, yVector;
     xVector = yVector = 0;

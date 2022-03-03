@@ -17,7 +17,6 @@ class MobCluster {
         let yRand = y + r1 * Math.sin(theta);
         const skeleton = new Skeleton(this.game, this, xRand, yRand);
         this.game.addEntity(skeleton);
-        this.game.addEntity(new Grid(this.game, skeleton, 100, 55));
       }
     } else if (type == "eyeball") {
       for (let i = 0, theta = 0; i < amount; i++, theta += (2 * Math.PI) / amount) {

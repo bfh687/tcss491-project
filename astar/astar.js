@@ -15,7 +15,6 @@ var aStar = function (startCoordinates, grid) {
 
   // Initialize the queue with the start location already inside
   var queue = [location];
-
   // Loop through the grid searching for the goal
   while (queue.length > 0) {
     // Take the first location off the queue

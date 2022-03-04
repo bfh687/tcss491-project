@@ -37,9 +37,8 @@ class Grid {
           const bb = new BoundingBox(x, y, width, width);
           this.map.bounding_boxes.forEach((box) => {
             if (bb.collide(box)) {
-              const loc = getCurrentLocation(x, y, this.grid);
+              const loc = getCurrentLocation(x + 27, y, this.grid);
               this.grid[loc[0]][loc[1]] = "Obstacle";
-              //console.log("[" + loc[0] + ", " + loc[1] + "]");
             }
           });
         }
@@ -71,8 +70,6 @@ class Grid {
       const dirs = [
         [this.nodeSize, 0],
         [-this.nodeSize, 0],
-        [0, this.nodeSize],
-        [0, -this.nodeSize],
       ];
 
       var min_dist = +Infinity;
@@ -90,7 +87,7 @@ class Grid {
         const x_offset = tileX + dirX;
         const y_offset = tileY + dirY;
         // create new temp tiles for each direction around the current tile and check if its an obstacle
-        const tempTile = getCurrentLocation(x_offset, y_offset, this.grid);
+        const tempTile = getCurrentLocation(x_offset + 32, y_offset, this.grid);
 
         // get unswapped indicies
         const tempTileX = tempTile[1];
@@ -111,57 +108,12 @@ class Grid {
       }
     }
 
-    //console.log(newTarget[0] + " " + newTarget[1]);
-    //newTarget X AND Y ARE INVERTED
-
-    // if (newTarget != this.targetCell && this.grid[newTarget[0]][newTarget[1]] == "Obstacle") {
-    //   if (this.game.knight.velocity.x == 0) {
-    //     const leftTile = {
-    //       x: (newTarget[1] - 1) * this.nodeSize + this.nodeSize / 2,
-    //       y: newTarget[0] * this.nodeSize + this.nodeSize / 2,
-    //     };
-    //     const rightTile = {
-    //       x: (newTarget[1] + 1) * this.nodeSize + this.nodeSize / 2,
-    //       y: newTarget[0] * this.nodeSize + this.nodeSize / 2,
-    //     };
-    //     const getDistanceLeft = getDistance(leftTile.x, leftTile.y, this.targetX, this.targetY);
-    //     const getDistanceRight = getDistance(rightTile.x, rightTile.y, this.targetX, this.targetY);
-    //     if (getDistanceLeft < getDistanceRight) {
-    //       console.log("Distance Left Closer By: " + (getDistanceRight - getDistanceLeft).toFixed(2));
-    //       newTarget = getCurrentLocation(leftTile.y, leftTile.x, this.grid);
-    //     } else if (getDistanceLeft > getDistanceRight) {
-    //       console.log("Distance Right Closer By: " + (getDistanceLeft - getDistanceRight).toFixed(2));
-    //       newTarget = getCurrentLocation(rightTile.y, rightTile.x, this.grid);
-
-    //       console.log("RIGHT DISTANCE SMALLER");
-    //     } else {
-    //       console.log("EQUAL");
-    //     }
-    //   } else if (this.game.knight.velocity.y == 0) {
-    //   }
-    // }
-
     if (newTarget != this.targetCell && this.grid[newTarget[0]][newTarget[1]] != "Obstacle") {
       this.grid[this.targetCell[0]][this.targetCell[1]] = "Empty";
       this.targetCell = newTarget;
       this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
     }
   }
-  //   var bb = this.game.knight.boundingBox;
-  //   this.targetX = bb.left + (bb.right - bb.left) / 2;
-  //   this.targetY = bb.top + (bb.bottom - bb.top) / 2;
-
-  //   var newTarget = getCurrentLocation(this.targetX, this.targetY, this.grid);
-  //   if (newTarget != this.targetCell && this.grid[newTarget[0]][newTarget[1]] != "Obstacle") {
-  //     this.grid[this.targetCell[0]][this.targetCell[1]] = "Empty";
-  //     this.targetCell = newTarget;
-  //     this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
-  //   }
-
-  // get the center of the current cell that the knight is in
-  // evaluate all cells around it, if a cell ISNT an obstacle, get the center x/y of that cell
-  // compare the distance to the knight.
-  // pick the cell closest to the knight.
 
   draw(ctx) {
     if (params.DEBUG) {

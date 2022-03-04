@@ -23,8 +23,11 @@ class SceneManager {
     this.level = null;
 
     this.knight = new Knight(this.game, this.midpoint_x, this.midpoint_y);
-    // load first level
-    this.loadMainMenu();
+
+    // load main level
+    //this.loadMainMenu();
+    // load second level, for testing, remove later
+    this.loadLevel(2, false);
   }
 
   // remove all entities from the game engine
@@ -99,7 +102,26 @@ class SceneManager {
         this.playMusic("./music/Orchestral_RATM.mp3");
       }
     } else if (level == 2) {
-      if (boss) {
+      if (!boss) {
+        console.log("HERE");
+        this.knight.direction = 3;
+
+        this.x = this.midpoint_x;
+        this.y = this.midpoint_y;
+        // add map and teleporter
+        
+        this.knight.x = 1736 * 2;
+        this.knight.y = 800 * 2;
+
+
+        this.game.addEntity(new Map(this.game, 0, 0, level2));
+
+        this.minX = -320;
+        this.minY = 0;
+
+        this.maxX = 3216 + 32 * 57;
+        this.maxY = 45 * 60;
+        this.playMusic("./music/Charmsnow.mp3");
       } else {
       }
     }

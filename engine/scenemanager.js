@@ -150,6 +150,9 @@ class SceneManager {
 
     this.updateAudio();
     if (this.game.camera.transition) this.game.camera.transition.update();
+
+    // Adds functionality to the debug button.
+    params.DEBUG = document.getElementById("debug").checked;
   }
 
   lerp() {

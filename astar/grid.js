@@ -2,8 +2,8 @@ class Grid {
   constructor(game, width, height, map) {
     Object.assign(this, { game, width, height, map });
     this.grid = [];
-    this.width *= 2;
-    this.height *= 2;
+    this.width = width * 4;
+    this.height = height * 2;
     this.nodeSize = 32;
     this.init();
     this.game.grid = this;

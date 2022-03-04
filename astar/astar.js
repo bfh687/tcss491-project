@@ -76,15 +76,16 @@ const getCurrentLocation = (x, y, grid) => {
 // and has not yet been visited by our algorithm)
 // returns "Valid", "Invalid", "Blocked", or "Goal"
 var locationStatus = function (location, grid) {
-  var gridSize = grid.length;
+  var gridSizeX = grid.length;
+  var gridSizeY = grid[0].length;
   var dft = location.distanceFromTop;
   var dfl = location.distanceFromLeft;
 
   if (
     location.distanceFromLeft < 0 ||
-    location.distanceFromLeft >= gridSize ||
+    location.distanceFromLeft >= gridSizeX ||
     location.distanceFromTop < 0 ||
-    location.distanceFromTop >= gridSize
+    location.distanceFromTop >= gridSizeY
   ) {
     // location is not on the grid--return false
     return "Invalid";

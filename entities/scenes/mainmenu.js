@@ -24,6 +24,8 @@ class MainMenu {
     }
 
     if (this.game.keys[" "] && !this.game.camera.transition) this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
+    // Fast load w/o transition for testing
+    // if (this.game.keys[" "]) this.game.camera.loadLevel(1, true);
   }
 
   draw(ctx) {

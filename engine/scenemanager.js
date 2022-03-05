@@ -22,11 +22,10 @@ class SceneManager {
     this.title = true;
     this.level = null;
 
+
     this.knight = new Knight(this.game, 722, 250);
     // load first level
     this.loadMainMenu();
-
-    //this.loadLevel(1, false);
   }
 
   // remove all entities from the game engine
@@ -88,6 +87,9 @@ class SceneManager {
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
 
+        this.x = this.midpoint_x;
+        this.y = this.midpoint_y;
+
         this.knight.x = 750;
         this.knight.y = 2200;
 
@@ -105,13 +107,57 @@ class SceneManager {
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1boss));
 
+        this.minX = 32;
+        this.minY = 0;
+        this.maxX = 3216 + 32 * 57;
+        this.maxY = 45 * 60;
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
         this.playMusic("./music/Orchestral_RATM.mp3");
       }
     } else if (level == 2) {
-      if (boss) {
+      if (!boss) {
+        this.knight.direction = 3;
+
+        this.x = this.midpoint_x;
+        this.y = this.midpoint_y;
+        // add map and teleporter
+        
+        // this.knight.x = 1736 * 2;
+        // this.knight.y = 800 * 2;
+        this.knight.x = 970 * 2;
+        this.knight.y = 920 * 2;
+
+        this.game.addEntity(new Map(this.game, 0, 0, level2));
+
+        this.minX = -320;
+        this.minY = 0;
+
+        this.maxX = 3216 + 32 * 57;
+        this.maxY = 45 * 60;
+        this.playMusic("./music/Charmsnow.mp3");
       } else {
+        this.knight.direction = 2;
+        this.knight.currSpeed = this.knight.minSpeed;
+
+        this.x = this.midpoint_x;
+        this.y = this.midpoint_y;
+
+        this.knight.x = 1271 * 2;
+        this.knight.y = 1210 * 2;
+
+        this.game.addEntity(new Transition(this.game, true));
+
+        // add map and teleporter
+        this.game.addEntity(new Map(this.game, 0, 0, level2boss));
+
+        this.minX = 32;
+        this.minY = 0;
+        this.maxX = 3216 + 32 * 57;
+        this.maxY = 45 * 60;
+        // add boss
+        this.game.addEntity(new Minotaur(this.game, 1500 * 2, 550 * 2));
+        this.playMusic("./music/Orchestral_RATM.mp3");
       }
     }
   }
@@ -139,6 +185,9 @@ class SceneManager {
 
     this.updateAudio();
     if (this.game.camera.transition) this.game.camera.transition.update();
+
+    // Adds functionality to the debug button.
+    params.DEBUG = document.getElementById("debug").checked;
   }
 
   lerp() {

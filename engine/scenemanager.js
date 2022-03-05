@@ -27,7 +27,7 @@ class SceneManager {
     // load main level
     //this.loadMainMenu();
     // load second level, for testing, remove later
-    this.loadLevel(2, false);
+    this.loadLevel(1, false);
   }
 
   // remove all entities from the game engine

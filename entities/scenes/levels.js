@@ -99,6 +99,9 @@ const level1 = {
     { x: 2784, y: 2112, type: "tombstone2" },
     { x: 3040, y: 2048, type: "tombstone2" },
     { x: 3232, y: 2176, type: "tombstone2" },
+    { x: 464 * 2, y: 1120 * 2, type: "well" }, // Left Well
+    { x: 1647 * 2, y: 672 * 2, type: "well" }, // Center Well
+    { x: 2672 * 2, y: 704 * 2, type: "well" }, // Right Well
   ],
   foilage: [
     { x: 864, y: 256, type: "medbush" },

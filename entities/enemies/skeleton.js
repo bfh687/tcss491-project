@@ -212,8 +212,9 @@ class Skeleton {
       const grid = this.game.grid.grid;
 
       const location = getCurrentLocation(x, y, grid);
-      const dir = aStar(location, grid)[0];
-      this.game.grid.init();
+      const dirs = aStar(location, grid);
+      const dir = dirs[0];
+      this.game.grid.init(true);
 
       if (!dir) this.state = 0;
       else this.state = 1;

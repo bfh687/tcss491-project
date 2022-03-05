@@ -78,6 +78,7 @@ const getCurrentLocation = (x, y, grid) => {
 var locationStatus = function (location, grid) {
   var gridSizeX = grid.length;
   var gridSizeY = grid[0].length;
+  //console.log(gridSizeX + " " + gridSizeY);
   var dft = location.distanceFromTop;
   var dfl = location.distanceFromLeft;
 
@@ -85,7 +86,8 @@ var locationStatus = function (location, grid) {
     location.distanceFromLeft < 0 ||
     location.distanceFromLeft >= gridSizeX ||
     location.distanceFromTop < 0 ||
-    location.distanceFromTop >= gridSizeY
+    location.distanceFromTop >= gridSizeY ||
+    location.path.length * 32 > 32 * 20
   ) {
     // location is not on the grid--return false
     return "Invalid";

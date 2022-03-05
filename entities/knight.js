@@ -8,9 +8,6 @@ class Knight {
 
     this.removeFromWorld = false;
 
-    this.x = this.game.camera.midpoint_x;
-    this.y = this.game.camera.midpoint_y;
-
     // load/initialize animations
     this.textAnimations = [];
     this.animations = [];

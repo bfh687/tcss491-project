@@ -2,10 +2,8 @@ class Grid {
   constructor(game, width, height, map) {
     Object.assign(this, { game, width, height, map });
     this.grid = [];
-    this.width = width * 4;
-    this.height = height * 2;
     this.nodeSize = 32;
-    this.init();
+    this.init(false);
     this.game.grid = this;
     this.hasBeenInit = false;
 
@@ -18,16 +16,22 @@ class Grid {
     this.targetCell = getCurrentLocation(this.targetX, this.targetY, this.grid);
   }
 
-  init() {
+  init(isInit) {
     // create empty array
     for (var i = 0; i < this.width; i++) {
-      if (!this.hasBeenInit) this.grid.push([]);
-      for (var j = 0; j < this.height; j++) {
-        if (this.grid[i][j] != "Obstacle") this.grid[i][j] = "Empty";
+      if (!isInit) {
+        this.grid.push([]);
+        for (var j = 0; j < this.height; j++) {
+          this.grid[i].push("Empty");
+        }
+      } else {
+        for (var j = 0; j < this.height; j++) {
+          if (this.grid[i][j] != "Obstacle") this.grid[i][j] = "Empty";
+        }
       }
     }
 
-    if (!this.hasBeenInit) {
+    if (!isInit) {
       for (var i = 0; i < this.grid.length; i++) {
         for (var j = 0; j < this.grid[i].length; j++) {
           const width = this.nodeSize;
@@ -35,10 +39,20 @@ class Grid {
           const y = j * width;
 
           const bb = new BoundingBox(x, y, width, width);
+
           this.map.bounding_boxes.forEach((box) => {
             if (bb.collide(box)) {
               const loc = getCurrentLocation(x + 27, y, this.grid);
               this.grid[loc[0]][loc[1]] = "Obstacle";
+            }
+          });
+
+          this.game.entities.forEach((entity) => {
+            if (entity instanceof Shop || entity instanceof Prop || entity instanceof Sign || entity instanceof Foilage) {
+              if (bb.collide(entity.boundingBox)) {
+                const loc = getCurrentLocation(x + 27, y, this.grid);
+                this.grid[loc[0]][loc[1]] = "Obstacle";
+              }
             }
           });
         }
@@ -46,7 +60,6 @@ class Grid {
     }
 
     if (this.targetCell) this.grid[this.targetCell[0]][this.targetCell[1]] = "Goal";
-    if (!this.hasBeenInit) this.hasBeenInit = true;
   }
 
   // updates position of target

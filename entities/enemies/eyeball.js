@@ -215,7 +215,7 @@ class Eyeball {
 
       const location = getCurrentLocation(x, y, grid);
       const dir = aStar(location, grid)[0];
-      this.game.grid.init();
+      this.game.grid.init(true);
 
       if (!dir) this.state = 0;
       else this.state = 1;

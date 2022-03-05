@@ -43,6 +43,13 @@ class Restart {
 
     var boxWidth = 1366 / 2 - optionWidth / 2;
     var center = 1366 / 2;
+
+    ctx.save();
+    ctx.fillStyle = "black";
+    ctx.globalAlpha = 0.4;
+    ctx.fillRect(0, 0, engine.width(), engine.height());
+    ctx.restore();
+
     ctx.save();
     // ctx.fillStyle = "black";
     // ctx.globalAlpha = 1;

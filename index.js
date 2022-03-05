@@ -47,6 +47,7 @@ ASSET_MANAGER.queueDownload("./sprites/items/goggles.png");
 
 // level downloads
 ASSET_MANAGER.queueDownload("./sprites/map/level_1.png");
+ASSET_MANAGER.queueDownload("./sprites/map/level_1_home.png");
 ASSET_MANAGER.queueDownload("./sprites/map/level_2.png");
 ASSET_MANAGER.queueDownload("./sprites/map/alt_hub.png");
 ASSET_MANAGER.queueDownload("./sprites/map/shop.png");

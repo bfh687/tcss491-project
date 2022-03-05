@@ -8,9 +8,6 @@ class Knight {
 
     this.removeFromWorld = false;
 
-    this.x = this.game.camera.midpoint_x;
-    this.y = this.game.camera.midpoint_y;
-
     // load/initialize animations
     this.textAnimations = [];
     this.animations = [];
@@ -355,7 +352,6 @@ class Knight {
         // handle case where player attacks the skeleton
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
           if (entity.state != 2 && entity.isStaggerable && entity.health > 0) {
-            console.log("initiate stagger");
             entity.isStaggerable = false;
             entity.state = 3;
           }
@@ -374,7 +370,6 @@ class Knight {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
           if (entity.state != 2 && entity.isStaggerable && entity.health > 0) {
-            console.log("initiate stagger");
             entity.isStaggerable = false;
             entity.state = 4;
           }
@@ -393,7 +388,6 @@ class Knight {
         // handle case where player attacks the minotaur
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
           if (entity.state != 2 && entity.isStaggerable && entity.state != 3 && entity.damageCooldown <= 0) {
-            console.log("initiate stagger");
             entity.isStaggerable = false;
             entity.state = 5;
           }
@@ -525,14 +519,53 @@ class Knight {
     if (attacker instanceof Knight) {
       const dir = this.direction;
       const knockback = 75;
+
+      const left = attacked.boundingBox.left;
+      const top = attacked.boundingBox.top;
+      const width = attacked.boundingBox.width;
+      const height = attacked.boundingBox.height;
+
+      var flag = false;
       if (dir == 0) {
-        attacked.x -= this.game.clockTick * knockback;
+        var horizontalBox = new BoundingBox(left - this.game.clockTick * knockback, top, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (horizontalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.x -= this.game.clockTick * knockback;
       } else if (dir == 1) {
-        attacked.x += this.game.clockTick * knockback;
+        var horizontalBox = new BoundingBox(left + this.game.clockTick * knockback, top, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (horizontalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.x += this.game.clockTick * knockback;
       } else if (dir == 2) {
-        attacked.y -= this.game.clockTick * knockback;
+        var verticalBox = new BoundingBox(left, top - this.game.clockTick * knockback, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (verticalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.y -= this.game.clockTick * knockback;
       } else {
-        attacked.y += this.game.clockTick * knockback;
+        var verticalBox = new BoundingBox(left, top + this.game.clockTick * knockback, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (verticalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.y += this.game.clockTick * knockback;
       }
       attacked.updateBoundingBox();
     }

@@ -61,7 +61,7 @@ class Restart {
     ctx.fillStyle = "white";
     var deathString = "YOU HAVE DIED";
     var widthDeathString = ctx.measureText(deathString).width / 2;
-    ctx.fillText(deathString, center - widthDeathString + 10, 61);
+    ctx.fillText(deathString, center - widthDeathString, 61);
 
     var deathString2 = this.message;
     ctx.fillText(deathString2 + this.dotString, boxWidth - 50, 120);

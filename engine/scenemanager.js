@@ -32,14 +32,12 @@ class SceneManager {
     this.game.entities = [];
   }
 
-  loadMainMenu(x, y) {
+  loadMainMenu() {
     this.clearEntities();
     this.boss = null;
 
     // if an x/y value is provied, initialize the main menu with that position
-    if (x && y) this.game.addEntity(new MainMenu(this.game, x, y));
-    else this.game.addEntity(new MainMenu(this.game));
-
+    this.game.addEntity(new MainMenu(this.game));
     this.game.addEntity(new Cursor(this.game));
   }
 
@@ -64,11 +62,7 @@ class SceneManager {
 
     // add knight
     this.game.addEntity(this.knight);
-    if (level == -1) {
-      this.loadMainMenu();
-    } else if (level == 0) {
-      this.loadCredits();
-    } else if (level == 1) {
+    if (level == 1) {
       if (!boss) {
         this.knight.direction = 3;
 

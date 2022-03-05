@@ -10,6 +10,7 @@ class MainMenu {
     this.eKey = ASSET_MANAGER.getAsset("./sprites/controls/E.png");
     this.tabKey = ASSET_MANAGER.getAsset("./sprites/controls/TAB.png");
     this.spaceKey = ASSET_MANAGER.getAsset("./sprites/controls/SPACEALTERNATIVE.png");
+    this.back = ASSET_MANAGER.getAsset("./sprites/controls/ui_buttons.png");
 
     this.startX = x || 300;
     this.startY = y || 100;
@@ -26,9 +27,21 @@ class MainMenu {
 
     // credits variables
     this.creditsOffset = 0;
+
+    // bounding box info
+    this.mouseBB = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
+    this.backBB = new BoundingBox(25, 20, 32, 32);
+
+    // back button info
+    this.backButtonCooldown = 0;
+    this.alpha = 1;
+    this.xOffset = 0;
+    this.yOffset = 0;
   }
 
   update() {
+    this.mouseBB = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
+
     this.x += this.game.clockTick * this.speed;
     this.y += (this.game.clockTick * this.speed) / 12;
 
@@ -41,11 +54,11 @@ class MainMenu {
     }
 
     if (this.state == 0) this.updateTitleScreen();
-    if (this.state == 1) this.updateMainMenu();
-    if (this.state == 2) this.updateControls();
-    if (this.state == 3) this.updateCredits();
+    else if (this.state == 1) this.updateMainMenu();
+    else if (this.state == 2) this.updateControls();
+    else if (this.state == 3) this.updateCredits();
 
-    if (this.game.keys[" "] && this.state == 0) this.state++;
+    if (this.state != 0) this.updateBackButton();
   }
 
   draw(ctx) {
@@ -57,9 +70,12 @@ class MainMenu {
     if (this.state == 1) this.drawMainMenu(ctx);
     if (this.state == 2) this.drawControls(ctx);
     if (this.state == 3) this.drawCredits(ctx);
+
+    if (this.state != 0) this.drawBackButton(ctx);
   }
 
   updateTitleScreen() {
+    if (this.game.keys[" "]) this.state = 1;
     this.alpha += 2 * this.game.clockTick;
   }
 
@@ -193,7 +209,6 @@ class MainMenu {
 
     ctx.save();
     ctx.font = "24px bitpap";
-    ctx.fillStyle = "white";
 
     var keyOffsetX = engine.width() / 2 - 126 / 2 - 8;
     var keyOffsetY = 200;
@@ -202,24 +217,52 @@ class MainMenu {
     ctx.drawImage(this.aKey, 0, 0, 19, 21, 8 + keyOffsetX, 65 + keyOffsetY, 38, 42);
     ctx.drawImage(this.dKey, 0, 0, 19, 21, 92 + keyOffsetX, 65 + keyOffsetY, 38, 42);
     ctx.drawImage(this.sKey, 0, 0, 19, 21, 50 + keyOffsetX, 65 + keyOffsetY, 38, 42);
+
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = "black";
+    ctx.fillText("MOVEMENT", 30 + keyOffsetX + 3, 135 + keyOffsetY + 3);
+
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white";
     ctx.fillText("MOVEMENT", 30 + keyOffsetX, 135 + keyOffsetY);
 
     keyOffsetX = engine.width() / 2 - 126 / 2 - 50 + 129 - 32;
     keyOffsetY = 220;
 
     ctx.drawImage(this.eKey, 0, 0, 19, 21, 50 + keyOffsetX, 140 + keyOffsetY, 38, 42);
+
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = "black";
+    ctx.fillText("INTERACT", 34 + keyOffsetX + 3, 210 + keyOffsetY + 3);
+
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white";
     ctx.fillText("INTERACT", 34 + keyOffsetX, 210 + keyOffsetY);
 
     keyOffsetX = engine.width() / 2 - 98 - 5;
     keyOffsetY = 135;
 
     ctx.drawImage(this.spaceKey, 0, 0, 98, 21, 8 + keyOffsetX, 320 + keyOffsetY, 98 * 2, 42);
+
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = "black";
+    ctx.fillText("DASH / SKIP TEXT", 34 + keyOffsetX + 3, 389 + keyOffsetY + 3);
+
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white";
     ctx.fillText("DASH / SKIP TEXT", 34 + keyOffsetX, 389 + keyOffsetY);
 
     keyOffsetX = engine.width() / 2 - 126 / 2 - 50 + 50 - 32;
     keyOffsetY = -140;
 
     ctx.drawImage(this.tabKey, 0, 0, 33, 21, 20 + keyOffsetX, 20 + 60 * 8 + keyOffsetY, 33 * 2, 21 * 2);
+
+    ctx.globalAlpha = 0.4;
+    ctx.fillStyle = "black";
+    ctx.fillText("MENU", 32 + keyOffsetX + 3, 570 + keyOffsetY + 3);
+
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white";
     ctx.fillText("MENU", 32 + keyOffsetX, 570 + keyOffsetY);
 
     ctx.restore();
@@ -288,9 +331,38 @@ class MainMenu {
     ctx.restore();
 
     if (finished) {
-      this.state = 0;
+      this.state = 1;
       this.creditsOffset = 0;
     }
+  }
+  updateBackButton() {
+    this.backButtonCooldown -= this.game.clockTick;
+
+    if (this.mouseBB.collide(this.backBB)) {
+      this.alpha = 0.8;
+      if (this.game.left_click && this.backButtonCooldown <= 0) {
+        this.xOffset = 1;
+        this.yOffset = 1;
+        if (this.state == 3) this.creditsOffset = 0;
+        if (this.state != 1) {
+          this.state = 1;
+        } else if (this.state == 1) {
+          this.state = 0;
+        }
+        this.backButtonCooldown = 0.25;
+      }
+    } else {
+      this.alpha = 1;
+      this.xOffset = 0;
+      this.yOffset = 0;
+    }
+  }
+
+  drawBackButton(ctx) {
+    ctx.save();
+    ctx.globalAlpha = this.alpha;
+    ctx.drawImage(this.back, 0, 0, 128, 128, 25 + this.xOffset, 20 + this.yOffset, 32, 32);
+    ctx.restore();
   }
 }
 

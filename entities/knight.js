@@ -148,6 +148,14 @@ class Knight {
   }
 
   update() {
+    if (this.game.camera.transition) {
+      var path = "./sfx/running_grass.mp3";
+      ASSET_MANAGER.setVolume(path, 0);
+      this.state = 0;
+      this.velocity.x = this.velocity.y = 0;
+      return;
+    }
+
     if (this.state != 1) {
       var path = "./sfx/running_grass.mp3";
       ASSET_MANAGER.setVolume(path, 0);

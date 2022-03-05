@@ -74,10 +74,6 @@ ASSET_MANAGER.queueDownload("./sprites/controls/TAB.png");
 ASSET_MANAGER.queueDownload("./sprites/controls/SPACEALTERNATIVE.png");
 ASSET_MANAGER.queueDownload("./sprites/controls/ui_buttons.png");
 
-for (var i = 0; i <= 32; i++) {
-  ASSET_MANAGER.queueDownload("./sprites/death_transition/death_transition (" + i + ").png");
-}
-
 ASSET_MANAGER.queueDownload("./vignette.png");
 
 ASSET_MANAGER.downloadAll(() => {

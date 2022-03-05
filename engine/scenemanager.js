@@ -112,8 +112,6 @@ class SceneManager {
         this.maxX = 3216 + 32 * 57;
         this.maxY = 45 * 60;
 
-        this.game.addEntity(new Transition(this.game, true));
-
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1boss));
 

@@ -124,6 +124,18 @@ class HUD {
     ctx.fillRect(25 + 20, 695 + 25 - 20, width, 1);
     ctx.restore();
 
+    // draw dash cooldown
+    ctx.save();
+
+    ctx.fillStyle = "black";
+    ctx.globalAlpha = 0.5;
+    ctx.fillRect(25 + 20, 695 + 25 - 27, width - 1, 3);
+
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "white";
+    ctx.fillRect(25 + 20, 695 + 25 - 27, Math.max(0, 1 - Math.max(this.knight.slideCooldown / this.knight.SLIDE_COOLDOWN, 0)) * width - 1, 3);
+    ctx.restore();
+
     // draw health text shadows
     ctx.save();
     ctx.globalAlpha = 0.8;

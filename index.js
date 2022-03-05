@@ -52,6 +52,7 @@ ASSET_MANAGER.queueDownload("./sprites/map/alt_hub.png");
 ASSET_MANAGER.queueDownload("./sprites/map/shop.png");
 ASSET_MANAGER.queueDownload("./sprites/map/teleporter.png");
 ASSET_MANAGER.queueDownload("./sprites/map/bossroom.png");
+ASSET_MANAGER.queueDownload("./sprites/map/bossroom2.png");
 // foilage + props
 ASSET_MANAGER.queueDownload("./sprites/map/foilage.png");
 ASSET_MANAGER.queueDownload("./sprites/map/foilage_shadows.png");

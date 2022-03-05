@@ -192,6 +192,7 @@ class Prop {
         this.sprite_width = 64;
         this.sprite_height = 64;
         this.boundingBox = new BoundingBox(this.x + 7, this.y + 22, 110, 86);
+        break;
       default:
         console.log("invalid prop code");
     }

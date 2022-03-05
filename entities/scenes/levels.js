@@ -714,3 +714,13 @@ const level2 = {
     { x: 1691 * 2, y: 959 * 2, width: 8.3 * 64, height: 14 },
   ],
 };
+
+const level2boss = {
+  map: { path: "./sprites/map/bossroom2.png", width: 3216, height: 1760 },
+  props: [],
+  foilage:[],
+  signs:[],
+  shops:[],
+  bounding_boxes:[
+  ],
+};

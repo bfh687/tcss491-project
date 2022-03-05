@@ -138,7 +138,7 @@ class GameEngine {
   }
 
   addEntity(entity) {
-    this.entitiesToAdd.push(entity);
+    this.entities.push(entity);
   }
 
   draw() {
@@ -156,10 +156,6 @@ class GameEngine {
 
     // Remove dead things
     this.entities = this.entities.filter((entity) => !entity.removeFromWorld);
-
-    // Add new things
-    this.entities = this.entities.concat(this.entitiesToAdd);
-    this.entitiesToAdd = [];
 
     // sort entities to give 3d look, if e1 < e2 return -1
     this.entities.sort((e1, e2) => {

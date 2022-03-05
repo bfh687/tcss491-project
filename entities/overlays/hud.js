@@ -119,9 +119,12 @@ class HUD {
 
     // draw divider
     ctx.save();
-    ctx.globalAlpha = 0.33;
+    ctx.globalAlpha = 1;
     ctx.fillStyle = "white";
-    ctx.fillRect(25 + 20, 695 + 25 - 20, width, 1);
+    ctx.fillRect(25 + 20, 695 + 25 - 20, width, 3);
+    ctx.globalAlpha = 1;
+    ctx.fillStyle = "black";
+    ctx.fillRect(25 + 20, 695 + 25 - 20, Math.max(0, this.knight.slideCooldown / this.knight.SLIDE_COOLDOWN) * width, 3);
     ctx.restore();
 
     // draw health text shadows

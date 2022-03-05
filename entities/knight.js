@@ -10,7 +10,7 @@ class Knight {
     this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
 
     this.removeFromWorld = false;
-
+    this.SLIDE_COOLDOWN = 1;
     // load/initialize animations
     this.textAnimations = [];
     this.animations = [];
@@ -70,7 +70,7 @@ class Knight {
     // information about sliding
     this.slideDirection = { x: 0, y: 0 };
     this.slideLength = 200;
-    this.slideCooldown = 0.7;
+    this.slideCooldown = this.SLIDE_COOLDOWN;
 
     // information about attacking
     this.attackCooldown = 0.25;
@@ -245,7 +245,7 @@ class Knight {
     // handle slide input
     if (slide && this.slideCooldown <= 0 && (left || right || up || down)) {
       this.state = 5;
-      this.slideCooldown = 0.7;
+      this.slideCooldown = this.SLIDE_COOLDOWN;
     }
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {

@@ -39,7 +39,7 @@ class Minotaur {
     this.maxHealth = 5000 * (this.game.knight.attackDamage / 25);
     this.health = this.maxHealth;
     this.attackDamage = 20;
-    this.attackCooldown = 3;
+    this.attackCooldown = 2;
     this.damageCooldown = 0;
     this.bleedDamage = this.maxHealth * 0.02;
 
@@ -333,11 +333,11 @@ class Minotaur {
 
     if (knight) {
       // calculate distance towards knight
-      var dist = getDistance(knight.x, knight.y - 100, this.x, this.y);
+      var dist = getDistance(knight.x, knight.y - 75, this.x, this.y);
 
       if (dist < this.aggroDist) {
         xVector = (knight.x - this.x) / dist;
-        yVector = (knight.y - 100 - this.y) / dist;
+        yVector = (knight.y - 75 - this.y) / dist;
 
         // set direction based on player location
         if (this.hurtBox.left >= knight.hurtBox.right) {
@@ -353,40 +353,29 @@ class Minotaur {
           this.state = 0;
         }
 
-        // set distance away from the player that the eyeball must be to begin attacking
-        var attackDist = 100;
-        if (xVector < 0) attackDist *= -1;
-
+        var attackDist = 0;
+        if (xVector > 0.2) {
+          attackDist = -120;
+        }
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
         var horizontalBox = new BoundingBox(
-          this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist,
+          this.x + 54 + attackDist + xVector * this.currSpeed * this.game.clockTick,
           this.y + 80,
           96 * this.scale,
           96 * this.scale
         );
-        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
-
-        // check collisions and attack if there would be on on the vertical axis
-        // if (verticalBox.collide(knight.hurtBox)) {
-        //   yVector = 0;
-        //   //if (this.attackCooldown <= 0) {
-        //     this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
-        //     this.attackCooldown = 3;
-        //   //}
-        // }
 
         // check collisions and attack if there would be on on the horizontal axis
         if (horizontalBox.collide(knight.hurtBox)) {
           xVector = 0;
           if (this.attackCooldown <= 0) {
             this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
-
-            this.attackCooldown = 3;
+            this.attackCooldown = 2;
           }
         }
 
         // if not moving, set state to idle
-        if (Math.abs(xVector) <= 0.05 && Math.abs(yVector) <= 0.05) this.state = 0;
+        if (Math.abs(xVector) <= 0.05 && Math.abs(yVector) <= 0.05 && this.attackCooldown != 2) this.state = 0;
       }
     }
 

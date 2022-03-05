@@ -22,7 +22,6 @@ class SceneManager {
     this.title = true;
     this.level = null;
 
-
     this.knight = new Knight(this.game, 722, 250);
     // load first level
     this.loadMainMenu();
@@ -134,7 +133,7 @@ class SceneManager {
         this.x = this.midpoint_x;
         this.y = this.midpoint_y;
         // add map and teleporter
-        
+
         // this.knight.x = 1736 * 2;
         // this.knight.y = 800 * 2;
         this.knight.x = 970 * 2;

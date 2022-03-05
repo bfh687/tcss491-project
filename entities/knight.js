@@ -6,6 +6,9 @@ class Knight {
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight.png");
     this.slide_spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/knight_dash.png");
 
+    this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
+    this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
+
     this.removeFromWorld = false;
 
     // load/initialize animations
@@ -314,7 +317,7 @@ class Knight {
       this.textAnimations[i].drawText(ctx);
     }
 
-    //drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    this.spawnAnimation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2.5);
   }
 
   checkCollisions() {
@@ -420,7 +423,6 @@ class Knight {
           // get bounding boxes of NEXT tick (assuming no major changes in fps)
           var horizontalBox = new BoundingBox(this.x + 37.5 + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
           var verticalBox = new BoundingBox(this.x + 28 + 37.5, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
-
 
           // check for and handle collisions
           if (verticalBox.collide(box)) this.velocity.y = 0;

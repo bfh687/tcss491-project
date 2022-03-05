@@ -60,6 +60,16 @@ ASSET_MANAGER.queueDownload("./sprites/map/foilage_shadows.png");
 ASSET_MANAGER.queueDownload("./sprites/map/props.png");
 ASSET_MANAGER.queueDownload("./sprites/map/prop_shadows.png");
 
+// control keys
+ASSET_MANAGER.queueDownload("./sprites/controls/W.png");
+ASSET_MANAGER.queueDownload("./sprites/controls/A.png");
+ASSET_MANAGER.queueDownload("./sprites/controls/S.png");
+ASSET_MANAGER.queueDownload("./sprites/controls/D.png");
+ASSET_MANAGER.queueDownload("./sprites/controls/E.png");
+ASSET_MANAGER.queueDownload("./sprites/controls/TAB.png");
+ASSET_MANAGER.queueDownload("./sprites/controls/SPACEALTERNATIVE.png");
+ASSET_MANAGER.queueDownload("./sprites/controls/ui_buttons.png");
+
 for (var i = 0; i <= 32; i++) {
   ASSET_MANAGER.queueDownload("./sprites/death_transition/death_transition (" + i + ").png");
 }

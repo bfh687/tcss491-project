@@ -36,7 +36,20 @@ class SceneManager {
   loadMainMenu() {
     this.clearEntities();
     this.boss = null;
+
+    // if an x/y value is provied, initialize the main menu with that position
     this.game.addEntity(new MainMenu(this.game));
+    this.game.addEntity(new Cursor(this.game));
+  }
+
+  loadCredits(x, y) {
+    this.clearEntities();
+    this.boss = null;
+
+    // if an x/y value is provied, initialize the credits with that position
+    if (x && y) this.game.addEntity(new Credits(this.game, x, y));
+    else this.game.addEntity(new Credits(this.game));
+
     this.game.addEntity(new Cursor(this.game));
   }
 
@@ -50,7 +63,6 @@ class SceneManager {
 
     // add knight
     this.game.addEntity(this.knight);
-
     if (level == 1) {
       if (!boss) {
         this.game.timer.gameTime = 0;

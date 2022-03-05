@@ -208,6 +208,12 @@ class Knight {
 
     // handle sliding state + animations
     if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
+      var path = "./sfx/woosh.mp3";
+      if (ASSET_MANAGER.getAsset(path).currentTime == 0) {
+        ASSET_MANAGER.getAsset(path).volume = 0.7;
+        ASSET_MANAGER.playAudio(path);
+      }
+
       this.checkCollisions();
 
       var slideMult = 3;
@@ -249,16 +255,28 @@ class Knight {
     }
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {
-      ASSET_MANAGER.setVolume(0.25);
-      ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+      var path = "./sfx/swish2.mp3";
+      ASSET_MANAGER.getAsset(path).volume = 0.25;
+      ASSET_MANAGER.playAudio(path);
       setTimeout(() => {
-        ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+        ASSET_MANAGER.playAudio(path);
       }, 250);
       this.state = 2;
       this.attackCooldown = 0.25;
     }
     // handle movement input
     else if (left || right || up || down) {
+      // if not already running, start playing grass
+      if (this.state != 1) {
+        var path = "./sfx/running_grass.mp3";
+        ASSET_MANAGER.getAsset(path).volume = 0.03;
+        if (ASSET_MANAGER.getAsset(path).currentTime == 0) {
+          ASSET_MANAGER.playAudio(path);
+          ASSET_MANAGER.autoRepeat(path);
+        }
+      }
+
+      // then set state to 1
       this.state = 1;
 
       if (left && !right) {
@@ -284,6 +302,9 @@ class Knight {
     else {
       this.state = 0;
       this.velocity.x = this.velocity.y = 0;
+
+      var path = "./sfx/running_grass.mp3";
+      ASSET_MANAGER.getAsset(path).volume = 0;
     }
 
     // check collisions then update velocity and bounding boxes

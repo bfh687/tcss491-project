@@ -128,35 +128,5 @@ class Grid {
     }
   }
 
-  draw(ctx) {
-    if (params.DEBUG) {
-      ctx.save();
-      ctx.globalAlpha = 0.4;
-      for (var i = 0, x_pos = 32; i < this.width; i++, x_pos += this.nodeSize) {
-        for (var j = 0, y_pos = 0; j < this.height; j++, y_pos += this.nodeSize) {
-          const node = this.grid[j][i];
-
-          if (node == "Start") {
-            ctx.fillStyle = "green";
-            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
-          } else if (node == "Goal") {
-            ctx.fillStyle = "blue";
-            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
-          } else if (node == "Obstacle") {
-            ctx.fillStyle = "black";
-            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
-          } else {
-            ctx.strokeStyle = "grey";
-            ctx.strokeRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
-          }
-
-          if (j == this.targetCell[0] && i == this.targetCell[1]) {
-            ctx.fillStyle = "red";
-            ctx.fillRect(x_pos - this.game.camera.x, y_pos - this.game.camera.y, this.nodeSize, this.nodeSize);
-          }
-        }
-      }
-      ctx.restore();
-    }
-  }
+  draw(ctx) {}
 }

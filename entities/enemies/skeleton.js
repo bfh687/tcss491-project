@@ -50,6 +50,7 @@ class Skeleton {
 
     // information about skeleton movement
     this.aggroDist = 500;
+    // 125 + 25 * Math.random()
     this.minSpeed = 125 + 25 * Math.random();
     this.currSpeed = this.minSpeed;
 
@@ -169,6 +170,70 @@ class Skeleton {
       return;
     }
 
+    const knightBB = this.game.knight.boundingBox;
+    const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
+    const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+    // calculate skeleton center
+    const skeleBB = this.boundingBox;
+    const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+    const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
+    var flag = false;
+    this.game.entities.forEach((entity) => {
+      if (entity instanceof Map) {
+        entity.bounding_boxes.forEach((box) => {
+          // check for line collision
+          if (box.collideLine(x1, y1, x2, y2)) flag = true;
+        });
+      } else if (entity instanceof Foilage || entity instanceof Prop) {
+        const box = entity.boundingBox;
+        if (box.collideLine(x1, y1, x2, y2)) flag = true;
+      }
+    });
+
+    // if line collides, pathfind
+    if (flag && getDistance(x1, y1, x2, y2) <= this.aggroDist) {
+      const bb = this.boundingBox;
+      const x = bb.left + (bb.right - bb.left) / 2;
+      const y = bb.top + (bb.bottom - bb.top) / 2;
+      this.pathfind(x, y);
+    }
+    // else do basic AI.
+    else {
+      this.basicAI();
+    }
+
+    this.updateBoundingBox();
+  }
+
+  pathfind(x, y) {
+    if (this.game.grid) {
+      const grid = this.game.grid.grid;
+
+      const location = getCurrentLocation(x, y, grid);
+      const dirs = aStar(location, grid);
+      const dir = dirs[0];
+      this.game.grid.init(true);
+
+      if (!dir) this.state = 0;
+      else this.state = 1;
+
+      if (dir == "West") {
+        this.direction = 0;
+        this.x -= this.currSpeed * engine.clockTick;
+      } else if (dir == "North") {
+        this.y -= this.currSpeed * engine.clockTick;
+      } else if (dir == "East") {
+        this.direction = 1;
+        this.x += this.currSpeed * engine.clockTick;
+      } else if (dir == "South") {
+        this.y += this.currSpeed * engine.clockTick;
+      }
+    }
+  }
+
+  basicAI() {
     var knight = this.game.knight;
 
     if (knight) {
@@ -258,7 +323,6 @@ class Skeleton {
 
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
-    this.updateBoundingBox();
   }
 
   bleed() {
@@ -313,6 +377,31 @@ class Skeleton {
   }
 
   draw(ctx) {
+    if (params.DEBUG) {
+      // calculate knight center
+      const knightBB = this.game.knight.boundingBox;
+      const knightX = knightBB.left + (knightBB.right - knightBB.left) / 2;
+      const knightY = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+      // calculate skeleton center
+      const skeleBB = this.boundingBox;
+      const skeleX = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+      const skeleY = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
+      if (getDistance(knightX, knightY, skeleX, skeleY) < this.aggroDist) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "white";
+        ctx.globalAlpha = 0.2;
+        ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
+        ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      }
+    }
+
     // draw shadows if not dying
     if (this.state != 4) drawShadow(ctx, this.game, this);
 

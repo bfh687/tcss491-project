@@ -22,9 +22,11 @@ class SceneManager {
     this.title = true;
     this.level = null;
 
-    this.knight = new Knight(this.game, this.midpoint_x, this.midpoint_y);
+    this.knight = new Knight(this.game, 722, 250);
     // load first level
     this.loadMainMenu();
+
+    //this.loadLevel(1, false);
   }
 
   // remove all entities from the game engine
@@ -59,22 +61,21 @@ class SceneManager {
         this.y = this.midpoint_y;
 
         // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0, level1));
+        const map = new Map(this.game, 0, 0, level1);
+        this.game.addEntity(map);
+        this.game.addEntity(new Grid(this.game, 200, 200, map));
+
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
-        this.game.addEntity(new MobCluster(this.game, 400, 850, 5, "skeleton"));
+        // spawn path finding test skeleton
+        //this.game.addEntity(new MobCluster(this.game, 300, 700, 5, "skeleton"));
+
         this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 800, 2112, 5, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 2144, 1792, 2, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 3296, 704, 6, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
-
-        this.game.addEntity(new MobCluster(this.game, 1056, 608, 3, "eyeball"));
-        this.game.addEntity(new MobCluster(this.game, 480, 1728, 3, "eyeball"));
 
         this.minX = 32;
         this.minY = 0;
@@ -158,7 +159,7 @@ class SceneManager {
   screenshake() {
     if (this.shakeDuration <= 0 && this.shakeCooldown <= 0) {
       this.shakeDuration = 0.05;
-      this.shakeCooldown = 0.3;
+      this.shakeCooldown = 0.2;
     }
   }
 

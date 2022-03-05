@@ -260,7 +260,7 @@ class Knight {
       this.slideCooldown = 0.7;
     }
     // handle attack input
-    else if (attack && this.attackCooldown <= 0) {
+    else if (attack && this.attackCooldown <= 0 && !this.game.isShopActive) {
       var path = "./sfx/swish2.mp3";
       var volume = document.getElementById("volume").value;
       ASSET_MANAGER.setVolume(path, volumes.KNIGHT_ATTACK * volume);

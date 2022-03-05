@@ -88,6 +88,10 @@ class Skeleton {
     if (this.state == 4) {
       this.healthAlpha -= this.game.clockTick;
       this.healthAlpha = Math.max(0, this.healthAlpha);
+
+      var path = "./sfx/swish2.mp3";
+      var volume = document.getElementById("volume").value;
+      ASSET_MANAGER.setVolume(path, 0);
     }
 
     // decrement cooldowns

@@ -15,7 +15,7 @@ const volumes = {
   MENU_SELECT: 0.8,
   MENU_HOVER: 0.4,
   LIGHTNING: 0.12,
-  DIALOGUE: 0.9,
+  DIALOGUE: 0.7,
 };
 
 /** Easy access to math functions */

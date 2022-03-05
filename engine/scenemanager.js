@@ -91,6 +91,15 @@ class SceneManager {
         this.knight.x = 750;
         this.knight.y = 2200;
 
+        this.x = this.midpoint_x;
+        this.y = this.midpoint_y;
+
+        this.minX = 32;
+        this.minY = 0;
+
+        this.maxX = 3216 + 32 * 57;
+        this.maxY = 45 * 60;
+
         this.game.addEntity(new Transition(this.game, true));
 
         // add map and teleporter

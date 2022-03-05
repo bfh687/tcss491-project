@@ -16,6 +16,8 @@ ASSET_MANAGER.queueDownload("./sfx/klang1.mp3");
 ASSET_MANAGER.queueDownload("./sfx/klang2.mp3");
 ASSET_MANAGER.queueDownload("./sfx/swish1.mp3");
 ASSET_MANAGER.queueDownload("./sfx/swish2.mp3");
+ASSET_MANAGER.queueDownload("./sfx/menu_select.mp3");
+ASSET_MANAGER.queueDownload("./sfx/menu_hover.mp3");
 
 // music downloads
 ASSET_MANAGER.queueDownload("./music/homescreen-loud.mp3");

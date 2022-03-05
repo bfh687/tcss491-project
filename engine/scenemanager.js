@@ -12,7 +12,10 @@ class SceneManager {
     this.y = this.midpoint_y;
 
     this.death_offset = 0;
-
+    // this.x: 714.900000000001, this.y: 50.67749999998878
+    this.nextRoom;
+    this.makeBossRoom = false;
+    this.notified = false;
     // screenshake details
     this.shakeDuration = -0.01;
     this.shakeCooldown = -0.01;
@@ -21,7 +24,6 @@ class SceneManager {
 
     this.title = true;
     this.level = null;
-
 
     this.knight = new Knight(this.game, 722, 250);
     // load first level
@@ -53,6 +55,7 @@ class SceneManager {
 
     if (level == 1) {
       if (!boss) {
+        this.level = 1;
         this.game.timer.gameTime = 0;
         this.knight.direction = 3;
 
@@ -83,6 +86,7 @@ class SceneManager {
         this.maxY = 45 * 60;
         this.playMusic("./music/Glitterglade_Grove.mp3");
       } else {
+        this.makeBossRoom = true;
         console.log("HERE");
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
@@ -111,6 +115,7 @@ class SceneManager {
         this.minY = 0;
         this.maxX = 3216 + 32 * 57;
         this.maxY = 45 * 60;
+        this.nextRoom = new BoundingBox(710, 70, 100, 100);
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
         this.playMusic("./music/Orchestral_RATM.mp3");
@@ -122,7 +127,7 @@ class SceneManager {
         this.x = this.midpoint_x;
         this.y = this.midpoint_y;
         // add map and teleporter
-        
+
         // this.knight.x = 1736 * 2;
         // this.knight.y = 800 * 2;
         this.knight.x = 970 * 2;
@@ -185,7 +190,17 @@ class SceneManager {
 
     this.updateAudio();
     if (this.game.camera.transition) this.game.camera.transition.update();
-
+    if (this.makeBossRoom && this.game.knight.boundingBox.collide(this.nextRoom)) {
+      if (this.game.boss == null) {
+        this.loadLevel(2, false);
+        this.makeBossRoom = false;
+      } else {
+        if (!this.notified) {
+          this.game.knight.textAnimations.push(new TextAnimator("Kill The Boss First", "red", this.game, this.game.knight, 50));
+          this.notified = true;
+        }
+      }
+    }
     // Adds functionality to the debug button.
     params.DEBUG = document.getElementById("debug").checked;
   }
@@ -210,6 +225,10 @@ class SceneManager {
     ctx.save();
     ctx.globalAlpha = 0.25;
     ctx.drawImage(this.vignette, 0, 0, 1366, 768);
+    if (this.nextRoom != null) {
+      drawBoundingBox(this.nextRoom, ctx, this.game, "orange");
+    }
+
     ctx.restore();
     if (this.game.camera.transition) this.game.camera.transition.draw(ctx);
   }

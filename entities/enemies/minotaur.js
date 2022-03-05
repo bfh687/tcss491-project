@@ -166,7 +166,7 @@ class Minotaur {
       }
       this.game.knight.kills += 1;
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
-      this.game.addEntity(new Victory(this.game));
+      // this.game.addEntity(new Victory(this.game));
       this.removeFromWorld = true;
       this.game.boss = null;
     }

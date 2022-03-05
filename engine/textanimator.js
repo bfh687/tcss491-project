@@ -1,11 +1,13 @@
 class TextAnimator {
-  constructor(amount, color, game, entity) {
+  constructor(amount, color, game, entity, scale) {
     Object.assign(this, {
+      scale,
       amount,
       color,
       game,
       entity,
     });
+    this.width = 48;
 
     // max capacity for current text animator
     this.max = 25 + Math.floor(Math.random() * 10);
@@ -44,14 +46,16 @@ class TextAnimator {
 
     // set font of text
     ctx.font = "15px bitpap";
-
+    if (this.scale) {
+      ctx.font = this.scale + "px bitpap";
+    }
     // draw text background
     ctx.fillStyle = "black";
-    ctx.fillText(amount, x_center - this.game.camera.x + 1, this.entity.y + this.y_offset - this.game.camera.y + 1, 48);
+    ctx.fillText(amount, x_center - this.game.camera.x + 1, this.entity.y + this.y_offset - this.game.camera.y + 1);
 
     // draw text foreground
     ctx.fillStyle = this.color;
-    ctx.fillText(amount, x_center - this.game.camera.x, this.entity.y + this.y_offset - this.game.camera.y, 48);
+    ctx.fillText(amount, x_center - this.game.camera.x, this.entity.y + this.y_offset - this.game.camera.y);
 
     ctx.restore();
   }

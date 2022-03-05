@@ -6,15 +6,15 @@ const params = {
 };
 
 const volumes = {
-  MUSIC: 0.6,
+  MUSIC: 0.4,
   DASH: 0.7,
-  KNIGHT_ATTACK: 0.4,
+  KNIGHT_ATTACK: 0.35,
   GRASS_RUNNING: 0.3,
-  SKELETON_HIT: 0.25,
-  SKELETON_CRIT: 0.2,
+  SKELETON_HIT: 0.18,
+  SKELETON_CRIT: 0.17,
   MENU_SELECT: 0.8,
   MENU_HOVER: 0.4,
-  LIGHTNING: 1,
+  LIGHTNING: 0.12,
   DIALOGUE: 0.9,
 };
 

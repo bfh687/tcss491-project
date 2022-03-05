@@ -286,6 +286,18 @@ class Skeleton {
 
         // if not moving, set state to idle
         if (xVector == 0 && yVector == 0) this.state = 0;
+
+        if (this.state == 2) {
+          var path = "./sfx/swish2.mp3";
+          var volume = document.getElementById("volume").value;
+          ASSET_MANAGER.setVolume(path, (volumes.KNIGHT_ATTACK / 1.6) * volume);
+          setTimeout(() => {
+            ASSET_MANAGER.playAudio(path);
+          }, 320);
+          setTimeout(() => {
+            ASSET_MANAGER.playAudio(path);
+          }, 730);
+        }
       }
 
       // path towards origin/spawn point

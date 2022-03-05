@@ -421,6 +421,7 @@ class Knight {
           var horizontalBox = new BoundingBox(this.x + 37.5 + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
           var verticalBox = new BoundingBox(this.x + 28 + 37.5, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
+
           // check for and handle collisions
           if (verticalBox.collide(box)) this.velocity.y = 0;
           if (horizontalBox.collide(box)) this.velocity.x = 0;

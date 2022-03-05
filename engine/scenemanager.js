@@ -54,6 +54,7 @@ class SceneManager {
 
     if (level == 1) {
       if (!boss) {
+        this.game.timer.gameTime = 0;
         this.knight.direction = 3;
 
         this.x = this.midpoint_x;

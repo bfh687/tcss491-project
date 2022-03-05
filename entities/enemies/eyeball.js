@@ -324,6 +324,15 @@ class Eyeball {
     this.y += yVector * this.currSpeed * this.game.clockTick;
   }
 
+  deflected(damage) {
+    this.textAnimations.push(new TextAnimator(damage, "cyan", this.game, this));
+  }
+
+  bleed() {
+    this.health = Math.max(this.health - this.bleedDamage, 0);
+    this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
+  }
+
   updateBoundingBox() {
     var current_frame = this.animations[this.state][this.direction].currentFrame();
     if (this.state == 0) {

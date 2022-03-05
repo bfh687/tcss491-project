@@ -16,7 +16,6 @@ class Minotaur {
 
     // states: idle (0), walking (1), attack (2), damaged (3), dying (4)
     this.state = 0;
-
     // spell state info
     this.spellState = false;
     this.spellStateDuration = 5;
@@ -47,10 +46,16 @@ class Minotaur {
     this.isBleeding = false;
     this.bleedingCooldown = 1;
 
+    this.isStaggerable = true;
+    this.staggerCooldown = 3;
+    this.staggerDuration = 0.5;
+
     // information about skeleton movement
     this.aggroDist = 1000;
     this.minSpeed = 200;
     this.currSpeed = this.minSpeed;
+
+    this.bossItemsDropped = 3;
 
     // misc
     this.alpha = 1;
@@ -109,6 +114,16 @@ class Minotaur {
     if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
     if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
 
+    if (!this.isStaggerable) {
+      this.staggerDuration -= this.game.clockTick;
+      this.staggerCooldown -= this.game.clockTick;
+    }
+
+    if (this.staggerCooldown <= 0) {
+      this.isStaggerable = true;
+      this.staggerCooldown = 3;
+    }
+
     // calculate bleed
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {
@@ -141,15 +156,28 @@ class Minotaur {
     else if (this.state == 6 && !this.animations[this.state][this.direction].isDone()) {
       return;
     } else if (this.state == 6 && this.animations[this.state][this.direction].isDone()) {
+      var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
+      var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
+      let temp = this.bossItemsDropped;
+      while (temp > 0) {
+        const item = new Item(this.game, center_x, center_y);
+        this.game.addEntity(item);
+        temp--;
+      }
+      this.game.knight.kills += 1;
+      this.game.knight.xpSystem.incrementXP(this.xpDropped);
       this.game.addEntity(new Victory(this.game));
-      console.log("hello");
       this.removeFromWorld = true;
       this.game.boss = null;
     }
 
     // if damaged animation is playing, let it play out, otherwise remove entity from world
     else if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
-      return;
+      if (this.staggerDuration > 0) {
+        return;
+      } else {
+        this.staggerDuration = 0.5;
+      }
     } else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
@@ -192,90 +220,7 @@ class Minotaur {
         this.fxcount = (this.fxcount + 1) % 4;
       }
     }
-
-    // walk toward player
-    var knight = this.game.knight;
-    var xVector = 0;
-    var yVector = 0;
-
-    if (knight) {
-      // calculate distance towards knight
-      var dist = getDistance(knight.x, knight.y, this.x, this.y);
-
-      if (dist < this.aggroDist) {
-        xVector = (knight.x - this.x) / dist;
-        yVector = (knight.y - this.y) / dist;
-
-        // set direction based on player location
-        if (this.hurtBox.left >= knight.hurtBox.right) {
-          this.direction = 0;
-        } else if (this.hurtBox.right <= knight.hurtBox.left) {
-          this.direction = 1;
-        }
-
-        // set state based on vectors towards players
-        if (xVector != 0 || yVector != 0) {
-          this.state = 1;
-        } else {
-          this.state = 0;
-        }
-
-        // set distance away from the player that the eyeball must be to begin attacking
-        var attackDist = 30;
-        if (xVector < 0) attackDist *= -1;
-
-        // get bounding boxes of NEXT tick (assuming no major changes in fps)
-        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist, this.y + 80, 32, 24);
-        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
-
-        // check collisions and attack if there would be on on the vertical axis
-        if (verticalBox.collide(knight.hurtBox)) {
-          yVector = 0;
-          if (this.attackCooldown <= 0) {
-            console.log(this.state);
-            this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
-            this.attackCooldown = 3;
-          }
-        }
-
-        // check collisions and attack if there would be on on the horizontal axis
-        if (horizontalBox.collide(knight.hurtBox)) {
-          xVector = 0;
-          if (this.attackCooldown <= 0) {
-            this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
-            console.log(this.state);
-            this.attackCooldown = 3;
-          }
-        }
-
-        // if not moving, set state to idle
-        if (xVector == 0 && yVector == 0) this.state = 0;
-      }
-    }
-
-    // // handle damaged state + animation
-    // else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
-    //   return;
-    // } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
-    //   this.animations[this.state][this.direction].reset();
-    //   this.state = 0;
-    // }
-
-    //   // drop item on death
-    //   if (Math.floor(Math.random()) + 1 === 1) {
-    //     const item = new Item(this.game, center_x, center_y);
-    //     this.game.addEntity(item);
-    //   }
-
-    //   // increment knight kills on death
-    //   this.game.knight.kills += 1;
-    //   this.game.knight.xpSystem.incrementXP(this.xpDropped);
-    //   this.removeFromWorld = true;
-    //   return;
-    // }
-
-    this.x += xVector * this.currSpeed * this.game.clockTick;
-    this.y += yVector * this.currSpeed * this.game.clockTick;
+    this.basicAI();
     this.updateBoundingBox();
   }
 
@@ -380,9 +325,78 @@ class Minotaur {
     }
   }
 
+  basicAI() {
+    // walk toward player
+    var knight = this.game.knight;
+    var xVector = 0;
+    var yVector = 0;
+
+    if (knight) {
+      // calculate distance towards knight
+      var dist = getDistance(knight.x, knight.y - 100, this.x, this.y);
+
+      if (dist < this.aggroDist) {
+        xVector = (knight.x - this.x) / dist;
+        yVector = (knight.y - 100 - this.y) / dist;
+
+        // set direction based on player location
+        if (this.hurtBox.left >= knight.hurtBox.right) {
+          this.direction = 0;
+        } else if (this.hurtBox.right <= knight.hurtBox.left) {
+          this.direction = 1;
+        }
+
+        // set state based on vectors towards players
+        if (xVector != 0 || yVector != 0) {
+          this.state = 1;
+        } else {
+          this.state = 0;
+        }
+
+        // set distance away from the player that the eyeball must be to begin attacking
+        var attackDist = 100;
+        if (xVector < 0) attackDist *= -1;
+
+        // get bounding boxes of NEXT tick (assuming no major changes in fps)
+        var horizontalBox = new BoundingBox(
+          this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist,
+          this.y + 80,
+          96 * this.scale,
+          96 * this.scale
+        );
+        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
+
+        // check collisions and attack if there would be on on the vertical axis
+        // if (verticalBox.collide(knight.hurtBox)) {
+        //   yVector = 0;
+        //   //if (this.attackCooldown <= 0) {
+        //     this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
+        //     this.attackCooldown = 3;
+        //   //}
+        // }
+
+        // check collisions and attack if there would be on on the horizontal axis
+        if (horizontalBox.collide(knight.hurtBox)) {
+          xVector = 0;
+          if (this.attackCooldown <= 0) {
+            this.state = Math.round(Math.ceil(Math.random() * 2) + 1);
+
+            this.attackCooldown = 3;
+          }
+        }
+
+        // if not moving, set state to idle
+        if (Math.abs(xVector) <= 0.05 && Math.abs(yVector) <= 0.05) this.state = 0;
+      }
+    }
+
+    this.x += xVector * this.currSpeed * this.game.clockTick;
+    this.y += yVector * this.currSpeed * this.game.clockTick;
+  }
+
   draw(ctx) {
     // draw shadows if not dying
-    if (this.state != 4) {
+    if (this.state != 6) {
       drawShadow(ctx, this.game, this, 2);
     }
 
@@ -411,7 +425,7 @@ class Minotaur {
 class LightningSpell {
   constructor(game, x, y) {
     Object.assign(this, { game, x, y });
-    console.log("new spell");
+
     // load spritesheet
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/thunder_spell.png");
     this.animation = new Animator(this.spritesheet, 0, 0, 64, 64, 12, 0.1, 0, 0, false, false);

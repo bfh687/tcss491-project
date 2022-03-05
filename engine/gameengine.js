@@ -102,7 +102,11 @@ class GameEngine {
     window.addEventListener("keydown", (e) => {
       if (e.key == " " || e.key == "Tab") e.preventDefault();
       this.keys[e.key] = true;
-      if (this.keys.c) params.DEBUG = !params.DEBUG;
+      if (this.keys.c) { 
+        params.DEBUG = !params.DEBUG;
+        if (params.DEBUG == true) { document.getElementById("debug").checked = true; }
+        else if (params.DEBUG == false) { document.getElementById("debug").checked = false; }
+      }
     });
     window.addEventListener("keyup", (e) => {
       this.keys[e.key] = false;
@@ -134,7 +138,7 @@ class GameEngine {
   }
 
   addEntity(entity) {
-    this.entitiesToAdd.push(entity);
+    this.entities.push(entity);
   }
 
   draw() {
@@ -152,10 +156,6 @@ class GameEngine {
 
     // Remove dead things
     this.entities = this.entities.filter((entity) => !entity.removeFromWorld);
-
-    // Add new things
-    this.entities = this.entities.concat(this.entitiesToAdd);
-    this.entitiesToAdd = [];
 
     // sort entities to give 3d look, if e1 < e2 return -1
     this.entities.sort((e1, e2) => {

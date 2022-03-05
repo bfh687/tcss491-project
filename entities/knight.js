@@ -8,9 +8,6 @@ class Knight {
 
     this.removeFromWorld = false;
 
-    this.x = this.game.camera.midpoint_x;
-    this.y = this.game.camera.midpoint_y;
-
     // load/initialize animations
     this.textAnimations = [];
     this.animations = [];
@@ -37,7 +34,7 @@ class Knight {
 
     // information about player stats
     this.attackDamage = 25;
-    this.critMultiplier = 5;
+    this.critMultiplier = 1.5;
     this.critChance = 0;
     this.health = 100;
     this.maxHealth = 100;
@@ -94,47 +91,47 @@ class Knight {
     this.animations.push([], [], [], [], [], []);
 
     // idle animations: left, right, up, down
-    this.animations[0].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.16, 15, 15, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 64, 64, 64, 3, 0.16, 15, 15, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 192, 64, 64, 3, 0.16, 15, 15, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 15, 15, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 64, 64, 64, 3, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 192, 64, 64, 3, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 64, 64, 3, 0.16, 0, 0, false, true));
 
     // running animations: left, right, up, down
-    this.animations[1].push(new Animator(this.spritesheet, 64, 320, 64, 64, 10, 0.08, 15, 15, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 64, 256, 64, 64, 10, 0.08, 15, 15, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.08, 15, 15, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.08, 15, 15, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 64, 320, 64, 64, 10, 0.08, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 64, 256, 64, 64, 10, 0.08, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 64, 448, 64, 64, 7, 0.08, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 64, 384, 64, 64, 8, 0.08, 0, 0, false, true));
 
     // attack animations: left, right, up, down
-    this.animations[2].push(new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.06, 15, 15, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.06, 15, 15, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.06, 15, 15, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.06, 15, 15, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 576, 64, 64, 7, 0.06, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 512, 64, 64, 7, 0.06, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 704, 64, 64, 7, 0.06, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 640, 64, 64, 7, 0.06, 0, 0, false, false));
 
     // damaged animations: left, right, up, down
-    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.04, 15, 15, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.04, 15, 15, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.04, 15, 15, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.04, 15, 15, false, false));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.04, 0, 0, false, false));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.04, 0, 0, false, false));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 832, 64, 64, 2, 0.04, 0, 0, false, false));
+    this.animations[3].push(new Animator(this.spritesheet, 0, 768, 64, 64, 2, 0.04, 0, 0, false, false));
 
     // death animations: left, right, up, down
-    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 15, 15, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 15, 15, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 960, 64, 64, 7, 0.2, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 896, 64, 64, 7, 0.2, 0, 0, false, false));
 
     // slide animations: front-left, front-right, back-left, back-right
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 15, 15, false, false));
-    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 15, 15, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 0, 64, 64, 9, 0.03, 0, 0, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 64, 64, 64, 9, 0.03, 0, 0, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 128, 64, 64, 9, 0.03, 0, 0, false, false));
+    this.animations[5].push(new Animator(this.slide_spritesheet, 0, 196, 64, 64, 9, 0.03, 0, 0, false, false));
   }
 
   levelUp() {
-    this.attackDamage *= 1.1;
-    this.maxHealth = Math.floor(this.maxHealth + this.maxHealth * 0.1);
+    this.attackDamage *= 1.025;
+    this.maxHealth = Math.floor(this.maxHealth + this.maxHealth * 0.025);
     this.health = this.maxHealth;
-    this.speed += 5;
+    this.speed += 2;
   }
 
   purchaseGoggles() {
@@ -331,8 +328,8 @@ class Knight {
           if (this.state == 5) slideMultiplier = 3;
 
           // get bounding boxes of NEXT tick (assuming no major changes in fps)
-          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+          var horizontalBox = new BoundingBox(this.x + 28 + 37.5 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+          var verticalBox = new BoundingBox(this.x + 28 + 37.5, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
           // check collisions
           var flag = false;
@@ -354,7 +351,10 @@ class Knight {
       if (entity instanceof Skeleton) {
         // handle case where player attacks the skeleton
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) entity.state = 3;
+          if (entity.state != 2 && entity.isStaggerable && entity.health > 0) {
+            entity.isStaggerable = false;
+            entity.state = 3;
+          }
           this.handleAttackCollision(this, entity);
         }
 
@@ -369,7 +369,10 @@ class Knight {
       else if (entity instanceof Eyeball) {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2) entity.state = 4;
+          if (entity.state != 2 && entity.isStaggerable && entity.health > 0) {
+            entity.isStaggerable = false;
+            entity.state = 4;
+          }
           this.handleAttackCollision(this, entity);
         }
 
@@ -382,16 +385,17 @@ class Knight {
 
       // handle minotaur collisions
       else if (entity instanceof Minotaur) {
-        // handle case where player attacks the eyeball
+        // handle case where player attacks the minotaur
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
-          if (entity.state != 2 && entity.state != 3 && entity.damageCooldown <= 0) {
+          if (entity.state != 2 && entity.isStaggerable && entity.state != 3 && entity.damageCooldown <= 0) {
+            entity.isStaggerable = false;
             entity.state = 5;
           }
 
           this.handleAttackCollision(this, entity);
         }
 
-        // handle case where eyeball attcks the player
+        // handle case where minotaur attcks the player
         if (entity.hitBox && this.hurtBox.collide(entity.hitBox)) {
           if (this.state != 2) this.state = 3;
           this.handleAttackCollision(entity, this);
@@ -411,11 +415,12 @@ class Knight {
         entity.bounding_boxes.forEach((box) => {
           // handle sliding collisions
           var slideMultiplier = 1;
-          if (this.state == 5) slideMultiplier = 3;
+          if (this.state == 5) slideMultiplier = 3.5;
 
           // get bounding boxes of NEXT tick (assuming no major changes in fps)
-          var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-          var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+          var horizontalBox = new BoundingBox(this.x + 37.5 + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+          var verticalBox = new BoundingBox(this.x + 28 + 37.5, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+
 
           // check for and handle collisions
           if (verticalBox.collide(box)) this.velocity.y = 0;
@@ -427,8 +432,8 @@ class Knight {
         if (this.state == 5) slideMultiplier = 3;
 
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
-        var horizontalBox = new BoundingBox(this.x + 28 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
-        var verticalBox = new BoundingBox(this.x + 28, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
+        var horizontalBox = new BoundingBox(this.x + 28 + 37.5 + this.velocity.x * slideMultiplier * this.game.clockTick, this.y + 94, 29, 24);
+        var verticalBox = new BoundingBox(this.x + 28 + 37.5, this.y + 94 + this.velocity.y * slideMultiplier * this.game.clockTick, 29, 24);
 
         // check for and handle collisions
         if (verticalBox.collide(entity.boundingBox)) this.velocity.y = 0;
@@ -446,8 +451,8 @@ class Knight {
   }
 
   updateBoundingBox() {
-    this.hurtBox = new BoundingBox(this.x + 28, this.y + 50, 29, 62);
-    this.boundingBox = new BoundingBox(this.x + 28, this.y + 94, 29, 24);
+    this.hurtBox = new BoundingBox(this.x + 28 + 37.5, this.y + 50, 29, 62);
+    this.boundingBox = new BoundingBox(this.x + 28 + 37.5, this.y + 94, 29, 24);
     this.updateHitBox();
   }
 
@@ -456,43 +461,43 @@ class Knight {
     if (this.state == 2) {
       if (current_frame == 0) {
         if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x + 0, this.y + 50, 48, 54);
+          this.hitBox = new BoundingBox(this.x + 0 + 37.5 - 10, this.y + 50, 48 + 15, 54);
         } else if (this.direction == 1) {
-          this.hitBox = new BoundingBox(this.x + 38, this.y + 50, 54, 56);
+          this.hitBox = new BoundingBox(this.x + 38 + 37.5, this.y + 50, 54, 56);
         } else if (this.direction == 2) {
-          this.hitBox = new BoundingBox(this.x + 10, this.y + 29, 52, 48);
+          this.hitBox = new BoundingBox(this.x + 10 + 37.5, this.y + 29, 52, 48);
         } else {
-          this.hitBox = new BoundingBox(this.x + 14, this.y + 84, 55, 50);
+          this.hitBox = new BoundingBox(this.x + 14 + 37.5, this.y + 84, 55, 50);
         }
       } else if (current_frame == 1) {
         if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x + 0, this.y + 80, 48, 24);
+          this.hitBox = new BoundingBox(this.x + 0 + 37.5 - 10, this.y + 80, 48 + 15, 24);
         } else if (this.direction == 1) {
-          this.hitBox = new BoundingBox(this.x + 38, this.y + 80, 48, 24);
+          this.hitBox = new BoundingBox(this.x + 38 + 37.5, this.y + 80, 48, 24);
         } else if (this.direction == 2) {
-          this.hitBox = new BoundingBox(this.x + 10, this.y + 32, 44, 48);
+          this.hitBox = new BoundingBox(this.x + 10 + 37.5, this.y + 32, 44, 48);
         } else {
-          this.hitBox = new BoundingBox(this.x + 14, this.y + 85, 36, 50);
+          this.hitBox = new BoundingBox(this.x + 14 + 37.5, this.y + 85, 36, 50);
         }
       } else if (current_frame == 4) {
         if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x + 0, this.y + 40, 42, 58);
+          this.hitBox = new BoundingBox(this.x + 0 + 37.5 - 10, this.y + 40, 42 + 15, 58);
         } else if (this.direction == 1) {
-          this.hitBox = new BoundingBox(this.x + 42, this.y + 40, 56, 58);
+          this.hitBox = new BoundingBox(this.x + 42 + 37.5, this.y + 40, 56, 58);
         } else if (this.direction == 2) {
-          this.hitBox = new BoundingBox(this.x + 17, this.y + 32, 53, 48);
+          this.hitBox = new BoundingBox(this.x + 17 + 37.5, this.y + 32, 53, 48);
         } else {
-          this.hitBox = new BoundingBox(this.x + 20, this.y + 76, 62, 54);
+          this.hitBox = new BoundingBox(this.x + 20 + 37.5, this.y + 76, 62, 54);
         }
       } else if (current_frame == 5) {
         if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x + 5, this.y + 40, 38, 24);
+          this.hitBox = new BoundingBox(this.x + 5 + 37.5 - 10, this.y + 40, 38 + 15, 24);
         } else if (this.direction == 1) {
-          this.hitBox = new BoundingBox(this.x + 42, this.y + 40, 38, 24);
+          this.hitBox = new BoundingBox(this.x + 42 + 37.5, this.y + 40, 38, 24);
         } else if (this.direction == 2) {
-          this.hitBox = new BoundingBox(this.x + 54, this.y + 32, 16, 42);
+          this.hitBox = new BoundingBox(this.x + 54 + 37.5, this.y + 32, 16, 42);
         } else {
-          this.hitBox = new BoundingBox(this.x + 54, this.y + 76, 28, 42);
+          this.hitBox = new BoundingBox(this.x + 54 + 37.5, this.y + 76, 28, 42);
         }
       } else {
         this.hitBox = null;
@@ -503,11 +508,67 @@ class Knight {
   }
 
   handleAttackCollision(attacker, attacked) {
-    this.game.camera.screenshake();
+    if (attacker.health <= 0 || attacked.health <= 0) return;
     if (attacked instanceof Knight && attacked.state == 5) return;
+
+    this.game.camera.screenshake();
 
     if (attacked instanceof Knight) {
       this.regenCooldown = 1;
+    }
+
+    if (attacker instanceof Knight) {
+      const dir = this.direction;
+      const knockback = 75;
+
+      const left = attacked.boundingBox.left;
+      const top = attacked.boundingBox.top;
+      const width = attacked.boundingBox.width;
+      const height = attacked.boundingBox.height;
+
+      var flag = false;
+      if (dir == 0) {
+        var horizontalBox = new BoundingBox(left - this.game.clockTick * knockback, top, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (horizontalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.x -= this.game.clockTick * knockback;
+      } else if (dir == 1) {
+        var horizontalBox = new BoundingBox(left + this.game.clockTick * knockback, top, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (horizontalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.x += this.game.clockTick * knockback;
+      } else if (dir == 2) {
+        var verticalBox = new BoundingBox(left, top - this.game.clockTick * knockback, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (verticalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.y -= this.game.clockTick * knockback;
+      } else {
+        var verticalBox = new BoundingBox(left, top + this.game.clockTick * knockback, width, height);
+        this.game.entities.forEach((entity) => {
+          if (entity instanceof Map) {
+            entity.bounding_boxes.forEach((box) => {
+              if (verticalBox.collide(box)) flag = true;
+            });
+          }
+        });
+        if (!flag) attacked.y += this.game.clockTick * knockback;
+      }
+      attacked.updateBoundingBox();
     }
 
     if (attacked.damageCooldown <= 0) {

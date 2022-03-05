@@ -32,6 +32,7 @@ ASSET_MANAGER.queueDownload("./sprites/entities/knight_dash.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/skeleton.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/eyeball.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/minotaur.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/spawnvfx.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/thunder_spell.png");
 
 // cursor downloads
@@ -46,11 +47,12 @@ ASSET_MANAGER.queueDownload("./sprites/items/goggles.png");
 
 // level downloads
 ASSET_MANAGER.queueDownload("./sprites/map/level_1.png");
+ASSET_MANAGER.queueDownload("./sprites/map/level_2.png");
 ASSET_MANAGER.queueDownload("./sprites/map/alt_hub.png");
 ASSET_MANAGER.queueDownload("./sprites/map/shop.png");
 ASSET_MANAGER.queueDownload("./sprites/map/teleporter.png");
 ASSET_MANAGER.queueDownload("./sprites/map/bossroom.png");
-
+ASSET_MANAGER.queueDownload("./sprites/map/bossroom2.png");
 // foilage + props
 ASSET_MANAGER.queueDownload("./sprites/map/foilage.png");
 ASSET_MANAGER.queueDownload("./sprites/map/foilage_shadows.png");

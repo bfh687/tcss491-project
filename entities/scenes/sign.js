@@ -181,8 +181,9 @@ class SignUI {
   updateText() {
     if (this.text_cooldown <= 0) {
       if (this.sound_cooldown <= 0 && this.text_index < this.dialogue[this.dialogue_index].length) {
-        ASSET_MANAGER.setVolume(0.5);
-        ASSET_MANAGER.playAudio("./sfx/text.wav");
+        var path = "./sfx/text.wav";
+        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        ASSET_MANAGER.playAudio(path);
         this.sound_cooldown = 0.05;
       }
       this.current_text += this.dialogue[this.dialogue_index].charAt(this.text_index);

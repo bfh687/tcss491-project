@@ -1,9 +1,15 @@
 class Skeleton {
   constructor(game, cluster, x, y) {
     Object.assign(this, { game, cluster, x, y });
+
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/skeleton.png");
     this.animations = [];
     this.loadAnimations();
+
+    this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
+    this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
+
+    this.healthAlpha = 1;
 
     this.scale = this.cluster.scale;
 
@@ -38,8 +44,13 @@ class Skeleton {
     this.isBleeding = false;
     this.bleedingCooldown = 1;
 
+    this.isStaggerable = true;
+    this.staggerCooldown = 3;
+    this.staggerDuration = 0.5;
+
     // information about skeleton movement
     this.aggroDist = 500;
+    // 125 + 25 * Math.random()
     this.minSpeed = 125 + 25 * Math.random();
     this.currSpeed = this.minSpeed;
 
@@ -73,6 +84,12 @@ class Skeleton {
   }
 
   update() {
+    // update healthbar alpha if skeleton is dead
+    if (this.state == 4) {
+      this.healthAlpha -= this.game.clockTick;
+      this.healthAlpha = Math.max(0, this.healthAlpha);
+    }
+
     // decrement cooldowns
     if (this.state != 2) {
       this.attackCooldown -= this.game.clockTick;
@@ -81,10 +98,19 @@ class Skeleton {
     if (this.bleedingCooldown > 0) this.bleedingCooldown -= this.game.clockTick;
     if (this.damageCooldown > 0) this.damageCooldown -= this.game.clockTick;
 
+    if (!this.isStaggerable) {
+      this.staggerDuration -= this.game.clockTick;
+      this.staggerCooldown -= this.game.clockTick;
+    }
+
+    if (this.staggerCooldown <= 0) {
+      this.isStaggerable = true;
+      this.staggerCooldown = 3;
+    }
+
     if (this.isBleeding) {
       if (this.bleedingCooldown <= 0) {
         this.bleed();
-        console.log("TICK");
         this.bleedingCooldown = 1;
       }
     }
@@ -111,7 +137,11 @@ class Skeleton {
 
     // handle damaged state + animation
     else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
-      return;
+      if (this.staggerDuration > 0) {
+        return;
+      } else {
+        this.staggerDuration = 0.5;
+      }
     } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
@@ -127,7 +157,7 @@ class Skeleton {
       var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
 
       // drop item on death
-      if (Math.floor(Math.random()) + 1 === 1) {
+      if (Math.floor(Math.random() * 5) === 1) {
         const item = new Item(this.game, center_x, center_y);
         this.game.addEntity(item);
       }
@@ -140,6 +170,70 @@ class Skeleton {
       return;
     }
 
+    const knightBB = this.game.knight.boundingBox;
+    const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
+    const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+    // calculate skeleton center
+    const skeleBB = this.boundingBox;
+    const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+    const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
+    var flag = false;
+    this.game.entities.forEach((entity) => {
+      if (entity instanceof Map) {
+        entity.bounding_boxes.forEach((box) => {
+          // check for line collision
+          if (box.collideLine(x1, y1, x2, y2)) flag = true;
+        });
+      } else if (entity instanceof Foilage || entity instanceof Prop) {
+        const box = entity.boundingBox;
+        if (box.collideLine(x1, y1, x2, y2)) flag = true;
+      }
+    });
+
+    // if line collides, pathfind
+    if (flag && getDistance(x1, y1, x2, y2) <= this.aggroDist) {
+      const bb = this.boundingBox;
+      const x = bb.left + (bb.right - bb.left) / 2;
+      const y = bb.top + (bb.bottom - bb.top) / 2;
+      this.pathfind(x, y);
+    }
+    // else do basic AI.
+    else {
+      this.basicAI();
+    }
+
+    this.updateBoundingBox();
+  }
+
+  pathfind(x, y) {
+    if (this.game.grid) {
+      const grid = this.game.grid.grid;
+
+      const location = getCurrentLocation(x, y, grid);
+      const dirs = aStar(location, grid);
+      const dir = dirs[0];
+      this.game.grid.init(true);
+
+      if (!dir) this.state = 0;
+      else this.state = 1;
+
+      if (dir == "West") {
+        this.direction = 0;
+        this.x -= this.currSpeed * engine.clockTick;
+      } else if (dir == "North") {
+        this.y -= this.currSpeed * engine.clockTick;
+      } else if (dir == "East") {
+        this.direction = 1;
+        this.x += this.currSpeed * engine.clockTick;
+      } else if (dir == "South") {
+        this.y += this.currSpeed * engine.clockTick;
+      }
+    }
+  }
+
+  basicAI() {
     var knight = this.game.knight;
 
     if (knight) {
@@ -229,7 +323,6 @@ class Skeleton {
 
     this.x += xVector * this.currSpeed * this.game.clockTick;
     this.y += yVector * this.currSpeed * this.game.clockTick;
-    this.updateBoundingBox();
   }
 
   bleed() {
@@ -284,10 +377,33 @@ class Skeleton {
   }
 
   draw(ctx) {
-    // draw shadows if not dying
-    if (this.state != 4) {
-      drawShadow(ctx, this.game, this);
+    if (params.DEBUG) {
+      // calculate knight center
+      const knightBB = this.game.knight.boundingBox;
+      const knightX = knightBB.left + (knightBB.right - knightBB.left) / 2;
+      const knightY = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+      // calculate skeleton center
+      const skeleBB = this.boundingBox;
+      const skeleX = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
+      const skeleY = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+
+      if (getDistance(knightX, knightY, skeleX, skeleY) < this.aggroDist) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.lineWidth = 2;
+        ctx.strokeStyle = "white";
+        ctx.globalAlpha = 0.2;
+        ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
+        ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
+        ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.restore();
+      }
     }
+
+    // draw shadows if not dying
+    if (this.state != 4) drawShadow(ctx, this.game, this);
 
     this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
 
@@ -303,6 +419,10 @@ class Skeleton {
       this.textAnimations[i].drawText(ctx);
     }
 
+    this.spawnAnimation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
+
+    ctx.globalAlpha = this.healthAlpha;
     drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    ctx.globalAlpha = 1;
   }
 }

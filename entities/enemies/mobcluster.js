@@ -5,7 +5,7 @@ class MobCluster {
     this.scale = 1;
     this.makeCluster(x, y, amount, type);
     this.aliveMobs = amount;
-    this.respawnCountdown = 15;
+    this.respawnCountdown = 10;
   }
 
   makeCluster(x, y, amount, type) {
@@ -15,7 +15,8 @@ class MobCluster {
         let r1 = radius * Math.max(Math.random() * 1.5, 0.5);
         let xRand = x + r1 * Math.cos(theta);
         let yRand = y + r1 * Math.sin(theta);
-        this.game.addEntity(new Skeleton(this.game, this, xRand, yRand));
+        const skeleton = new Skeleton(this.game, this, xRand, yRand);
+        this.game.addEntity(skeleton);
       }
     } else if (type == "eyeball") {
       for (let i = 0, theta = 0; i < amount; i++, theta += (2 * Math.PI) / amount) {
@@ -49,7 +50,7 @@ class MobCluster {
     if (this.respawnCountdown <= 0) {
       this.scale *= 1.1;
       this.makeCluster(this.x, this.y, this.amount, this.type);
-      this.respawnCountdown = 15;
+      this.respawnCountdown = 10;
       this.aliveMobs = this.amount;
     }
   }

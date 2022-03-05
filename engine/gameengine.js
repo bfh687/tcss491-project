@@ -102,10 +102,13 @@ class GameEngine {
     window.addEventListener("keydown", (e) => {
       if (e.key == " " || e.key == "Tab") e.preventDefault();
       this.keys[e.key] = true;
-      if (this.keys.c) { 
+      if (this.keys.c) {
         params.DEBUG = !params.DEBUG;
-        if (params.DEBUG == true) { document.getElementById("debug").checked = true; }
-        else if (params.DEBUG == false) { document.getElementById("debug").checked = false; }
+        if (params.DEBUG == true) {
+          document.getElementById("debug").checked = true;
+        } else if (params.DEBUG == false) {
+          document.getElementById("debug").checked = false;
+        }
       }
     });
     window.addEventListener("keyup", (e) => {

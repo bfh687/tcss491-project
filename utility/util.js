@@ -5,6 +5,19 @@ const params = {
   BITWIDTH: 16,
 };
 
+const volumes = {
+  MUSIC: 0.6,
+  DASH: 0.7,
+  KNIGHT_ATTACK: 0.4,
+  GRASS_RUNNING: 0.3,
+  SKELETON_HIT: 0.25,
+  SKELETON_CRIT: 0.2,
+  MENU_SELECT: 0.8,
+  MENU_HOVER: 0.4,
+  LIGHTNING: 1,
+  DIALOGUE: 0.9,
+};
+
 /** Easy access to math functions */
 const { pow, ceil, floor, round, log, log2: lg, max, min, random, sqrt, abs, PI, E, sin, cos, tan, asin, acos, atan, atan2 } = Math;
 

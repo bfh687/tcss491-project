@@ -213,7 +213,8 @@ class Minotaur {
 
         setTimeout(() => {
           var path = "./sfx/thunderfx" + this.fxcount + ".mp3";
-          ASSET_MANAGER.getAsset(path).volume = 0.07;
+          var volume = document.getElementById("volume").value;
+          ASSET_MANAGER.setVolume(path, volumes.LIGHTNING * volume);
           ASSET_MANAGER.playAudio(path);
           this.game.camera.screenshake();
         }, 380);

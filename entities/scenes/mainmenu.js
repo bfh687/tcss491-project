@@ -84,7 +84,8 @@ class MainMenu {
     if (this.game.keys[" "]) {
       this.state = 1;
       var path = "./sfx/menu_select.mp3";
-      ASSET_MANAGER.getAsset(path).volume = 0.5;
+      var volume = document.getElementById("volume").value;
+      ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
       ASSET_MANAGER.playAudio(path);
     }
     this.alpha += 2 * this.game.clockTick;
@@ -136,13 +137,15 @@ class MainMenu {
       if (this.game.left_click && this.game.camera.transition == null) {
         this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
         var path = "./sfx/menu_select.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
         ASSET_MANAGER.playAudio(path);
       }
       if (!this.playHover && this.game.camera.transition == null) {
         this.playHover = true;
         var path = "./sfx/menu_hover.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
         ASSET_MANAGER.playAudio(path);
       }
     } else {
@@ -155,14 +158,16 @@ class MainMenu {
       if (this.game.left_click) {
         this.state = 2;
         var path = "./sfx/menu_select.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
         ASSET_MANAGER.playAudio(path);
       }
 
       if (!this.controlsHover && this.game.camera.transition == null) {
         this.controlsHover = true;
         var path = "./sfx/menu_hover.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
         ASSET_MANAGER.playAudio(path);
       }
     } else {
@@ -175,14 +180,16 @@ class MainMenu {
       if (this.game.left_click) {
         this.state = 3;
         var path = "./sfx/menu_select.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
         ASSET_MANAGER.playAudio(path);
       }
 
       if (!this.creditsHover && this.game.camera.transition == null) {
         this.creditsHover = true;
         var path = "./sfx/menu_hover.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
         ASSET_MANAGER.playAudio(path);
       }
     } else {
@@ -421,14 +428,16 @@ class MainMenu {
         this.backButtonCooldown = 0.25;
 
         var path = "./sfx/menu_select.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
         ASSET_MANAGER.playAudio(path);
       }
 
       if (!this.backHover) {
         this.backHover = true;
         var path = "./sfx/menu_hover.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
         ASSET_MANAGER.playAudio(path);
       }
     } else {

@@ -148,6 +148,11 @@ class Knight {
   }
 
   update() {
+    if (this.state != 1) {
+      var path = "./sfx/running_grass.mp3";
+      ASSET_MANAGER.setVolume(path, 0);
+    }
+
     if (this.state != 4) {
       // update cooldowns
       if (this.slideCooldown > 0 && this.state != 5) this.slideCooldown -= this.game.clockTick;
@@ -210,7 +215,8 @@ class Knight {
     if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
       var path = "./sfx/woosh.mp3";
       if (ASSET_MANAGER.getAsset(path).currentTime == 0) {
-        ASSET_MANAGER.getAsset(path).volume = 0.7;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.DASH * volume);
         ASSET_MANAGER.playAudio(path);
       }
 
@@ -256,7 +262,8 @@ class Knight {
     // handle attack input
     else if (attack && this.attackCooldown <= 0) {
       var path = "./sfx/swish2.mp3";
-      ASSET_MANAGER.getAsset(path).volume = 0.25;
+      var volume = document.getElementById("volume").value;
+      ASSET_MANAGER.setVolume(path, volumes.KNIGHT_ATTACK * volume);
       ASSET_MANAGER.playAudio(path);
       setTimeout(() => {
         ASSET_MANAGER.playAudio(path);
@@ -269,7 +276,8 @@ class Knight {
       // if not already running, start playing grass
       if (this.state != 1) {
         var path = "./sfx/running_grass.mp3";
-        ASSET_MANAGER.getAsset(path).volume = 0.03;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.GRASS_RUNNING * volume);
         if (ASSET_MANAGER.getAsset(path).currentTime == 0) {
           ASSET_MANAGER.playAudio(path);
           ASSET_MANAGER.autoRepeat(path);
@@ -302,9 +310,6 @@ class Knight {
     else {
       this.state = 0;
       this.velocity.x = this.velocity.y = 0;
-
-      var path = "./sfx/running_grass.mp3";
-      ASSET_MANAGER.getAsset(path).volume = 0;
     }
 
     // check collisions then update velocity and bounding boxes
@@ -605,7 +610,8 @@ class Knight {
         if (frame == 0 || frame == 4) {
           var path = "./sfx/klang2.mp3";
           if (!(attacked instanceof Skeleton)) {
-            ASSET_MANAGER.getAsset(path).volume = 0.03;
+            var volume = document.getElementById("volume").value;
+            ASSET_MANAGER.setVolume(path, volumes.SKELETON_HIT * volume);
             ASSET_MANAGER.playAudio(path);
           }
         }
@@ -671,11 +677,15 @@ class Knight {
       }
 
       if (attacked instanceof Skeleton && color == "red") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_hit.mp3").volume = 0.1;
-        ASSET_MANAGER.playAudio("./sfx/skeleton_hit.mp3");
+        var path = "./sfx/skeleton_hit.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.SKELETON_HIT * volume);
+        ASSET_MANAGER.playAudio(path);
       } else if (attacked instanceof Skeleton && color == "yellow") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_crit.mp3").volume = 0.1;
-        ASSET_MANAGER.playAudio("./sfx/skeleton_crit.mp3");
+        var path = "./sfx/skeleton_crit.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.SKELETON_CRIT * volume);
+        ASSET_MANAGER.playAudio(path);
       }
     }
   }

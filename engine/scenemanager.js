@@ -243,6 +243,17 @@ class SceneManager {
     var volume = document.getElementById("volume").value;
 
     ASSET_MANAGER.muteAudio(mute);
-    ASSET_MANAGER.setVolume(volume);
+
+    var paths = [
+      "./music/Glitterglade_Grove.mp3",
+      "./music/Orchestral_RATM.mp3",
+      "./music/Charmsnow.mp3",
+      "./music/homescreen-loud.mp3",
+      "./music/Forgotten_Bramble.mp3",
+    ];
+
+    paths.forEach((path) => {
+      ASSET_MANAGER.setVolume(path, volumes.MUSIC * volume);
+    });
   }
 }

@@ -182,7 +182,8 @@ class SignUI {
     if (this.text_cooldown <= 0) {
       if (this.sound_cooldown <= 0 && this.text_index < this.dialogue[this.dialogue_index].length) {
         var path = "./sfx/text.wav";
-        ASSET_MANAGER.getAsset(path).volume = 0.5;
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.DIALOGUE * volume);
         ASSET_MANAGER.playAudio(path);
         this.sound_cooldown = 0.05;
       }

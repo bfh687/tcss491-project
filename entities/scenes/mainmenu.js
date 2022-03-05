@@ -1,7 +1,7 @@
 class MainMenu {
   constructor(game, x, y) {
     Object.assign(this, { game });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/level_1.png");
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/level_1_home.png");
 
     this.wKey = ASSET_MANAGER.getAsset("./sprites/controls/W.png");
     this.aKey = ASSET_MANAGER.getAsset("./sprites/controls/A.png");

@@ -88,7 +88,7 @@ class Victory {
     var restartBox = new BoundingBox(boxWidth, 235, optionWidth, optionHeight);
     if (mouseBox.collide(restartBox) && this.game.single_click) {
       this.selectedOption = this.selections[0];
-      this.game.camera.knight = new Knight(this.game, 800 - 64 / 1.5, 1100);
+      this.game.camera.knight = new Knight(this.game, 722, 250);
       this.game.camera.death_offset = 0;
       this.game.restart = false;
       this.game.boss = false;

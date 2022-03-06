@@ -24,8 +24,7 @@ class SceneManager {
 
     this.knight = new Knight(this.game, 722, 250);
     // load first level
-    //this.loadMainMenu();
-    this.loadLevel(1, true);
+    this.loadMainMenu();
   }
 
   // remove all entities from the game engine

@@ -26,6 +26,8 @@ class GameEngine {
     this.running = false;
     this.restart = false;
 
+    this.isShopActive = false;
+
     // Options and the Details
     this.options = options || {
       prevent: {

@@ -16,6 +16,13 @@ ASSET_MANAGER.queueDownload("./sfx/klang1.mp3");
 ASSET_MANAGER.queueDownload("./sfx/klang2.mp3");
 ASSET_MANAGER.queueDownload("./sfx/swish1.mp3");
 ASSET_MANAGER.queueDownload("./sfx/swish2.mp3");
+ASSET_MANAGER.queueDownload("./sfx/menu_select.mp3");
+ASSET_MANAGER.queueDownload("./sfx/menu_hover.mp3");
+ASSET_MANAGER.queueDownload("./sfx/menu_error.mp3");
+ASSET_MANAGER.queueDownload("./sfx/hurt_sound.mp3");
+
+ASSET_MANAGER.queueDownload("./sfx/running_grass.mp3");
+ASSET_MANAGER.queueDownload("./sfx/woosh.mp3");
 
 // music downloads
 ASSET_MANAGER.queueDownload("./music/homescreen-loud.mp3");
@@ -70,10 +77,6 @@ ASSET_MANAGER.queueDownload("./sprites/controls/E.png");
 ASSET_MANAGER.queueDownload("./sprites/controls/TAB.png");
 ASSET_MANAGER.queueDownload("./sprites/controls/SPACEALTERNATIVE.png");
 ASSET_MANAGER.queueDownload("./sprites/controls/ui_buttons.png");
-
-for (var i = 0; i <= 32; i++) {
-  ASSET_MANAGER.queueDownload("./sprites/death_transition/death_transition (" + i + ").png");
-}
 
 ASSET_MANAGER.queueDownload("./vignette.png");
 

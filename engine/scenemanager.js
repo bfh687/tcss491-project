@@ -78,7 +78,7 @@ class SceneManager {
         this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         // spawn path finding test skeleton
-        //this.game.addEntity(new MobCluster(this.game, 300, 700, 5, "skeleton"));
+        //this.game.addEntity(new MobCluster(this.game, 300, 700, 1, "skeleton"));
 
         this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
@@ -94,7 +94,6 @@ class SceneManager {
         this.maxY = 45 * 60;
         this.playMusic("./music/Glitterglade_Grove.mp3");
       } else {
-        console.log("HERE");
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
 
@@ -112,8 +111,6 @@ class SceneManager {
 
         this.maxX = 3216 + 32 * 57;
         this.maxY = 45 * 60;
-
-        this.game.addEntity(new Transition(this.game, true));
 
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1boss));
@@ -243,6 +240,17 @@ class SceneManager {
     var volume = document.getElementById("volume").value;
 
     ASSET_MANAGER.muteAudio(mute);
-    ASSET_MANAGER.setVolume(volume);
+
+    var paths = [
+      "./music/Glitterglade_Grove.mp3",
+      "./music/Orchestral_RATM.mp3",
+      "./music/Charmsnow.mp3",
+      "./music/homescreen-loud.mp3",
+      "./music/Forgotten_Bramble.mp3",
+    ];
+
+    paths.forEach((path) => {
+      ASSET_MANAGER.setVolume(path, volumes.MUSIC * volume);
+    });
   }
 }

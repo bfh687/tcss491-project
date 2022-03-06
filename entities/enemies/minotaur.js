@@ -212,8 +212,10 @@ class Minotaur {
         this.spellCooldown = 0.6;
 
         setTimeout(() => {
-          ASSET_MANAGER.setVolume(0.07);
-          ASSET_MANAGER.playAudio("./sfx/thunderfx" + this.fxcount + ".mp3");
+          var path = "./sfx/thunderfx" + this.fxcount + ".mp3";
+          var volume = document.getElementById("volume").value;
+          ASSET_MANAGER.setVolume(path, volumes.LIGHTNING * volume);
+          ASSET_MANAGER.playAudio(path);
           this.game.camera.screenshake();
         }, 380);
 

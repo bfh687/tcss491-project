@@ -37,6 +37,12 @@ class MainMenu {
     this.alpha = 1;
     this.xOffset = 0;
     this.yOffset = 0;
+
+    // hover booleans for sound
+    this.backHover = false;
+    this.playHover = false;
+    this.controlsHover = false;
+    this.creditsHover = false;
   }
 
   update() {
@@ -75,7 +81,13 @@ class MainMenu {
   }
 
   updateTitleScreen() {
-    if (this.game.keys[" "]) this.state = 1;
+    if (this.game.keys[" "]) {
+      this.state = 1;
+      var path = "./sfx/menu_select.mp3";
+      var volume = document.getElementById("volume").value;
+      ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
+      ASSET_MANAGER.playAudio(path);
+    }
     this.alpha += 2 * this.game.clockTick;
   }
 
@@ -120,21 +132,68 @@ class MainMenu {
 
     const playWidth = 56.25;
     this.playBox = new BoundingBox(this.game.width() / 2 - playWidth / 2, this.game.height() / 6 + 63 + 120, playWidth, 30);
-    if (mouseBox.collide(this.playBox) && this.game.left_click) {
-      // load game
-      this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
+    if (mouseBox.collide(this.playBox)) {
+      // load game on click
+      if (this.game.left_click && this.game.camera.transition == null) {
+        this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
+        var path = "./sfx/menu_select.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+      if (!this.playHover && this.game.camera.transition == null) {
+        this.playHover = true;
+        var path = "./sfx/menu_hover.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+    } else {
+      this.playHover = false;
     }
 
     const controlWidth = 119.25;
     this.controlBox = new BoundingBox(this.game.width() / 2 - controlWidth / 2, this.game.height() / 6 + 63 + 120 + 40, controlWidth, 30);
-    if (mouseBox.collide(this.controlBox) && this.game.left_click) {
-      this.state = 2;
+    if (mouseBox.collide(this.controlBox)) {
+      if (this.game.left_click) {
+        this.state = 2;
+        var path = "./sfx/menu_select.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+
+      if (!this.controlsHover && this.game.camera.transition == null) {
+        this.controlsHover = true;
+        var path = "./sfx/menu_hover.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+    } else {
+      this.controlsHover = false;
     }
 
     const creditsWidth = 90;
     this.creditsBox = new BoundingBox(this.game.width() / 2 - creditsWidth / 2, this.game.height() / 6 + 63 + 120 + 80, creditsWidth, 30);
-    if (mouseBox.collide(this.creditsBox) && this.game.left_click) {
-      this.state = 3;
+    if (mouseBox.collide(this.creditsBox)) {
+      if (this.game.left_click) {
+        this.state = 3;
+        var path = "./sfx/menu_select.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+
+      if (!this.creditsHover && this.game.camera.transition == null) {
+        this.creditsHover = true;
+        var path = "./sfx/menu_hover.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+    } else {
+      this.creditsHover = false;
     }
 
     ctx.restore();
@@ -156,8 +215,13 @@ class MainMenu {
     ctx.fillText(title, this.game.width() / 2 - width + 3, this.game.height() / 6 + 9 + 80 + 120 + 3);
 
     ctx.globalAlpha = 1;
+    var offset = 0;
+    if (this.playHover) {
+      offset = 1;
+    }
+
     ctx.fillStyle = "white";
-    ctx.fillText(title, this.game.width() / 2 - width, this.game.height() / 6 + 9 + 80 + 120);
+    ctx.fillText(title, this.game.width() / 2 - width + offset, this.game.height() / 6 + 9 + 80 + 120 + offset);
     ctx.restore();
 
     // draw controls
@@ -171,8 +235,14 @@ class MainMenu {
     ctx.fillText(title, this.game.width() / 2 - width + 3, this.game.height() / 6 + 9 + 80 + 120 + 40 + 3);
 
     ctx.globalAlpha = 1;
+    offset = 0;
+    if (this.controlsHover) {
+      offset = 1;
+    }
+
+    ctx.globalAlpha = 1;
     ctx.fillStyle = "white";
-    ctx.fillText(title, this.game.width() / 2 - width, this.game.height() / 6 + 9 + 80 + 120 + 40);
+    ctx.fillText(title, this.game.width() / 2 - width + offset, this.game.height() / 6 + 9 + 80 + 120 + 40 + offset);
     ctx.restore();
 
     // draw controls
@@ -186,8 +256,14 @@ class MainMenu {
     ctx.fillText(title, this.game.width() / 2 - width + 3, this.game.height() / 6 + 9 + 80 + 120 + 80 + 3);
 
     ctx.globalAlpha = 1;
+    offset = 0;
+    if (this.creditsHover) {
+      offset = 1;
+    }
+
+    ctx.globalAlpha = 1;
     ctx.fillStyle = "white";
-    ctx.fillText(title, this.game.width() / 2 - width, this.game.height() / 6 + 9 + 80 + 120 + 80);
+    ctx.fillText(title, this.game.width() / 2 - width + offset, this.game.height() / 6 + 9 + 80 + 120 + 80 + offset);
     ctx.restore();
   }
 
@@ -340,9 +416,9 @@ class MainMenu {
 
     if (this.mouseBB.collide(this.backBB)) {
       this.alpha = 0.8;
+      this.xOffset = 1;
+      this.yOffset = 1;
       if (this.game.left_click && this.backButtonCooldown <= 0) {
-        this.xOffset = 1;
-        this.yOffset = 1;
         if (this.state == 3) this.creditsOffset = 0;
         if (this.state != 1) {
           this.state = 1;
@@ -350,11 +426,25 @@ class MainMenu {
           this.state = 0;
         }
         this.backButtonCooldown = 0.25;
+
+        var path = "./sfx/menu_select.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+
+      if (!this.backHover) {
+        this.backHover = true;
+        var path = "./sfx/menu_hover.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
+        ASSET_MANAGER.playAudio(path);
       }
     } else {
       this.alpha = 1;
       this.xOffset = 0;
       this.yOffset = 0;
+      this.backHover = false;
     }
   }
 

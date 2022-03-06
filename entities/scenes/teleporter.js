@@ -9,15 +9,11 @@ class Teleporter {
 
   update() {
     if (!this.level || !this.boss) return;
-
     const knight = this.game.knight;
     if (this.interaction_box.collide(knight.hurtBox)) {
       // enter shop
-      if (this.game.keys.e && !this.isShopActive) {
-        this.game.addEntity(new Transition(this.game, false));
-        setTimeout(() => {
-          this.game.camera.loadLevel(this.level, this.boss);
-        }, 1100);
+      if (this.game.keys.e) {
+        this.game.camera.transition = new FadeTransition(this.game, 2.5, this.level, this.boss);
       }
     }
   }

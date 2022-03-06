@@ -43,7 +43,7 @@ class Knight {
     this.maxHealth = 100;
     this.armor = 1.0;
     this.regenRate = 2;
-    this.damageCooldown = 0.1;
+    this.damageCooldown = 0.3;
     // misc
     this.kills = 0;
     this.xpSystem = new XP(this.game);
@@ -148,6 +148,19 @@ class Knight {
   }
 
   update() {
+    if (this.game.camera.transition) {
+      var path = "./sfx/running_grass.mp3";
+      ASSET_MANAGER.setVolume(path, 0);
+      this.state = 0;
+      this.velocity.x = this.velocity.y = 0;
+      return;
+    }
+
+    if (this.state != 1) {
+      var path = "./sfx/running_grass.mp3";
+      ASSET_MANAGER.setVolume(path, 0);
+    }
+
     if (this.state != 4) {
       // update cooldowns
       if (this.slideCooldown > 0) this.slideCooldown -= this.game.clockTick;
@@ -208,6 +221,13 @@ class Knight {
 
     // handle sliding state + animations
     if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
+      var path = "./sfx/woosh.mp3";
+      if (ASSET_MANAGER.getAsset(path).currentTime == 0) {
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.DASH * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+
       this.checkCollisions();
 
       var slideMult = 3;
@@ -248,17 +268,31 @@ class Knight {
       this.slideCooldown = this.SLIDE_COOLDOWN;
     }
     // handle attack input
-    else if (attack && this.attackCooldown <= 0) {
-      ASSET_MANAGER.setVolume(0.25);
-      ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+    else if (attack && this.attackCooldown <= 0 && !this.game.isShopActive) {
+      var path = "./sfx/swish2.mp3";
+      var volume = document.getElementById("volume").value;
+      ASSET_MANAGER.setVolume(path, volumes.KNIGHT_ATTACK * volume);
+      ASSET_MANAGER.playAudio(path);
       setTimeout(() => {
-        ASSET_MANAGER.playAudio("./sfx/swish2.mp3");
+        ASSET_MANAGER.playAudio(path);
       }, 250);
       this.state = 2;
       this.attackCooldown = 0.25;
     }
     // handle movement input
     else if (left || right || up || down) {
+      // if not already running, start playing grass
+      if (this.state != 1) {
+        var path = "./sfx/running_grass.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.GRASS_RUNNING * volume);
+        if (ASSET_MANAGER.getAsset(path).currentTime == 0) {
+          ASSET_MANAGER.playAudio(path);
+          ASSET_MANAGER.autoRepeat(path);
+        }
+      }
+
+      // then set state to 1
       this.state = 1;
 
       if (left && !right) {
@@ -577,14 +611,22 @@ class Knight {
       // DAMAGE TO BE DEFLECTED
       var damage = attacker.attackDamage;
 
+      if (attacked instanceof Knight) {
+        var path = "./sfx/hurt_sound.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.HURT_SOUND * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+
       // calculate crit chance
       var color = "red";
       if (attacker instanceof Knight) {
         var frame = this.animations[this.state][this.direction].currentFrame();
         if (frame == 0 || frame == 4) {
-          var path = "./sfx/klang2.mp3";
+          var path = "./sfx/hurt_sound.mp3";
           if (!(attacked instanceof Skeleton)) {
-            ASSET_MANAGER.getAsset(path).volume = 0.03;
+            var volume = document.getElementById("volume").value;
+            ASSET_MANAGER.setVolume(path, volumes.HURT_SOUND * volume);
             ASSET_MANAGER.playAudio(path);
           }
         }
@@ -650,11 +692,15 @@ class Knight {
       }
 
       if (attacked instanceof Skeleton && color == "red") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_hit.mp3").volume = 0.1;
-        ASSET_MANAGER.playAudio("./sfx/skeleton_hit.mp3");
+        var path = "./sfx/skeleton_hit.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.SKELETON_HIT * volume);
+        ASSET_MANAGER.playAudio(path);
       } else if (attacked instanceof Skeleton && color == "yellow") {
-        ASSET_MANAGER.getAsset("./sfx/skeleton_crit.mp3").volume = 0.1;
-        ASSET_MANAGER.playAudio("./sfx/skeleton_crit.mp3");
+        var path = "./sfx/skeleton_crit.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.SKELETON_CRIT * volume);
+        ASSET_MANAGER.playAudio(path);
       }
     }
   }

@@ -97,12 +97,10 @@ class AssetManager {
     }
   }
 
-  setVolume(volume) {
-    for (var key in this.cache) {
-      let asset = this.cache[key];
-      if (asset instanceof Audio) {
-        asset.volume = volume;
-      }
+  setVolume(path, volume) {
+    let asset = this.cache[path];
+    if (asset instanceof Audio) {
+      asset.volume = volume;
     }
   }
 

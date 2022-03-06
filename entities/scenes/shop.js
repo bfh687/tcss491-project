@@ -83,9 +83,15 @@ class ShopUI {
     this.shopHeight = 500;
     this.bubblesStart = 1366 / 2 + 72;
     this.skillPointsHeight = 100;
+
+    this.menuHover = false;
+    this.game.isShopActive = true;
+    this.errorCooldown = 0.5;
   }
 
-  update() {}
+  update() {
+    this.errorCooldown -= this.game.clockTick;
+  }
 
   draw(ctx) {
     // refactor to draw shop item, where you pass sprite, x, y, item description, and item
@@ -116,13 +122,28 @@ class ShopUI {
       ctx.fillStyle = "white";
       ctx.font = "24px bitpap";
 
+      var hoverFlag = false;
+      var goggleHover = false;
+      var armorHover = false;
+      var potionHover = false;
+      var daggerHover = false;
+
       var mouseBox = new BoundingBox(this.game.mouse.x, this.game.mouse.y, 1, 1);
 
       // item 1
       ctx.drawImage(this.items, 0, 0, 32, 32, this.itemStartX + 2, 70 + 768 / 2 - 330, 32 * 2, 32 * 2);
       var itemBoxGoggles = new BoundingBox(850, 530 - 130 * 3, 55, 30);
-      if (mouseBox.collide(itemBoxGoggles) && this.game.single_click) {
-        this.levelGoggles();
+      if (mouseBox.collide(itemBoxGoggles) && this.game.knight.gogglesLevel + 1 < 5) {
+        if (this.game.single_click) {
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.gogglesLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelGoggles();
+            this.playSelectSound();
+          }
+        }
+        hoverFlag = true;
+        goggleHover = true;
       }
 
       // description text
@@ -163,8 +184,17 @@ class ShopUI {
       //item 2
       ctx.drawImage(this.items, 32, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125, 32 * 1.75, 32 * 1.75);
       var itemBoxArmor = new BoundingBox(850, 530 - 130 * 2, 55, 30);
-      if (mouseBox.collide(itemBoxArmor) && this.game.single_click) {
-        this.levelArmor();
+      if (mouseBox.collide(itemBoxArmor) && this.game.knight.armorLevel + 1 < 5) {
+        if (this.game.single_click) {
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.armorLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelArmor();
+            this.playSelectSound();
+          }
+        }
+        hoverFlag = true;
+        armorHover = true;
       }
 
       //text
@@ -203,8 +233,17 @@ class ShopUI {
 
       ctx.drawImage(this.items, 64, 0, 32, 32, this.itemStartX + 5, 70 + 768 / 2 - 323 + 125 * 2 + 5, 32 * 1.75, 32 * 1.75);
       var itemBoxPotion = new BoundingBox(850, 530 - 130, 55, 30);
-      if (mouseBox.collide(itemBoxPotion) && this.game.single_click) {
-        this.levelPotion();
+      if (mouseBox.collide(itemBoxPotion) && this.game.knight.potionLevel + 1 < 5) {
+        if (this.game.single_click) {
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.potionLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelPotion();
+            this.playSelectSound();
+          }
+        }
+        hoverFlag = true;
+        potionHover = true;
       }
 
       ctx.fillStyle = "red";
@@ -241,9 +280,28 @@ class ShopUI {
 
       ctx.drawImage(this.items, 96, 0, 32, 32, this.itemStartX, 70 + 768 / 2 - 323 + 125 * 3 + 10, 32 * 2, 32 * 2);
       var itemBoxDagger = new BoundingBox(850, 530, 55, 30);
-      if (mouseBox.collide(itemBoxDagger) && this.game.single_click) {
-        this.levelDagger();
+      if (mouseBox.collide(itemBoxDagger)) {
+        if (this.game.single_click) {
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.daggerLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelDagger();
+            this.playSelectSound();
+          }
+        }
+        hoverFlag = true;
+        daggerHover = true;
       }
+
+      if (hoverFlag && !this.menuHover) {
+        this.playHoverSound();
+        this.menuHover = true;
+      }
+
+      if (!hoverFlag) {
+        this.menuHover = false;
+      }
+
       // text
       ctx.fillStyle = "magenta";
       ctx.fillText("Arlo's Dagger", this.nameStartX, 70 + 768 / 2 - 325 + 125 * 3.2 - 23 + 22);
@@ -270,45 +328,83 @@ class ShopUI {
 
       ctx.globalAlpha = 0.7;
       ctx.fillStyle = "gray";
+
+      if (daggerHover) ctx.globalAlpha = 0.6;
+
       ctx.fillRect(850, 530, 55, 30);
+      ctx.globalAlpha = 0.7;
+
+      if (potionHover) ctx.globalAlpha = 0.6;
+
       ctx.fillRect(850, 530 - 130, 55, 30);
+      ctx.globalAlpha = 0.7;
+
+      if (armorHover) ctx.globalAlpha = 0.6;
+
       ctx.fillRect(850, 530 - 130 * 2, 55, 30);
+      ctx.globalAlpha = 0.7;
+
+      if (goggleHover) ctx.globalAlpha = 0.6;
       ctx.fillRect(850, 530 - 130 * 3, 55, 30);
 
       ctx.globalAlpha = 1;
       ctx.fillStyle = "white";
 
       // dagger skill point level
-      ctx.fillText(this.game.knight.daggerLevel + 1 + " SP", 850 + 55 / 2 - ctx.measureText(this.game.knight.daggerLevel + " SP").width / 2, 551);
+      var daggerText = this.game.knight.daggerLevel + 1 + " SP";
+      if (this.game.knight.daggerLevel + 1 > 4) daggerText = "MAX";
+      ctx.fillText(daggerText, 850 + 55 / 2 - ctx.measureText(daggerText).width / 2, 551);
 
       // potion level
-      ctx.fillText(
-        this.game.knight.potionLevel + 1 + " SP",
-        850 + 55 / 2 - ctx.measureText(this.game.knight.potionLevel + " SP").width / 2,
-        551 - 130
-      );
+      var potionText = this.game.knight.potionLevel + 1 + " SP";
+      if (this.game.knight.potionLevel + 1 > 4) potionText = "MAX";
+      ctx.fillText(potionText, 850 + 55 / 2 - ctx.measureText(potionText).width / 2, 551 - 130);
 
       // armor level
-      ctx.fillText(
-        this.game.knight.armorLevel + 1 + " SP",
-        850 + 55 / 2 - ctx.measureText(this.game.knight.armorLevel + " SP").width / 2,
-        551 - 130 * 2
-      );
+      var armorText = this.game.knight.armorLevel + 1 + " SP";
+      if (this.game.knight.armorLevel + 1 > 4) armorText = "MAX";
+      ctx.fillText(armorText, 850 + 55 / 2 - ctx.measureText(armorText).width / 2, 551 - 130 * 2);
 
       // goggles sp cost
-      ctx.fillText(
-        this.game.knight.gogglesLevel + 1 + " SP",
-        850 + 55 / 2 - ctx.measureText(this.game.knight.gogglesLevel + " SP").width / 2,
-        551 - 130 * 3
-      );
+      var gogglesText = this.game.knight.gogglesLevel + 1 + " SP";
+      if (this.game.knight.gogglesLevel + 1 > 4) gogglesText = "MAX";
+      ctx.fillText(gogglesText, 850 + 55 / 2 - ctx.measureText(gogglesText).width / 2, 551 - 130 * 3);
 
       ctx.restore();
 
       // // levels
     } else {
       // remove from world if associated shop isnt active
+      this.game.isShopActive = false;
       this.removeFromWorld = true;
     }
+
+    if (this.game.knight.state == 4) {
+      this.removeFromWorld = true;
+    }
+  }
+
+  playSelectSound() {
+    var path = "./sfx/menu_select.mp3";
+    var volume = document.getElementById("volume").value;
+    ASSET_MANAGER.setVolume(path, volumes.MENU_SELECT * volume);
+    ASSET_MANAGER.playAudio(path);
+  }
+
+  playHoverSound() {
+    var path = "./sfx/menu_hover.mp3";
+    var volume = document.getElementById("volume").value;
+    ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
+    ASSET_MANAGER.playAudio(path);
+  }
+
+  playErrorSound() {
+    if (this.errorCooldown > 0) return;
+    var path = "./sfx/menu_error.mp3";
+    var volume = document.getElementById("volume").value;
+    ASSET_MANAGER.setVolume(path, volumes.MENU_ERROR * volume);
+    ASSET_MANAGER.playAudio(path);
+    this.errorCooldown = 0.5;
   }
 
   levelGoggles() {

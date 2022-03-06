@@ -19,6 +19,7 @@ ASSET_MANAGER.queueDownload("./sfx/swish2.mp3");
 ASSET_MANAGER.queueDownload("./sfx/menu_select.mp3");
 ASSET_MANAGER.queueDownload("./sfx/menu_hover.mp3");
 ASSET_MANAGER.queueDownload("./sfx/menu_error.mp3");
+ASSET_MANAGER.queueDownload("./sfx/hurt_sound.mp3");
 
 ASSET_MANAGER.queueDownload("./sfx/running_grass.mp3");
 ASSET_MANAGER.queueDownload("./sfx/woosh.mp3");

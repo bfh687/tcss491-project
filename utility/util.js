@@ -9,6 +9,7 @@ const volumes = {
   MUSIC: 0.4,
   DASH: 0.7,
   KNIGHT_ATTACK: 0.35,
+  HURT_SOUND: 0.15,
   GRASS_RUNNING: 0.3,
   SKELETON_HIT: 0.18,
   SKELETON_CRIT: 0.17,

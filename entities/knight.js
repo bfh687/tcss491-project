@@ -43,7 +43,7 @@ class Knight {
     this.maxHealth = 100;
     this.armor = 1.0;
     this.regenRate = 2;
-    this.damageCooldown = 0.1;
+    this.damageCooldown = 0.3;
     // misc
     this.kills = 0;
     this.xpSystem = new XP(this.game);
@@ -611,15 +611,22 @@ class Knight {
       // DAMAGE TO BE DEFLECTED
       var damage = attacker.attackDamage;
 
+      if (attacked instanceof Knight) {
+        var path = "./sfx/hurt_sound.mp3";
+        var volume = document.getElementById("volume").value;
+        ASSET_MANAGER.setVolume(path, volumes.HURT_SOUND * volume);
+        ASSET_MANAGER.playAudio(path);
+      }
+
       // calculate crit chance
       var color = "red";
       if (attacker instanceof Knight) {
         var frame = this.animations[this.state][this.direction].currentFrame();
         if (frame == 0 || frame == 4) {
-          var path = "./sfx/klang2.mp3";
+          var path = "./sfx/hurt_sound.mp3";
           if (!(attacked instanceof Skeleton)) {
             var volume = document.getElementById("volume").value;
-            ASSET_MANAGER.setVolume(path, volumes.SKELETON_HIT * volume);
+            ASSET_MANAGER.setVolume(path, volumes.HURT_SOUND * volume);
             ASSET_MANAGER.playAudio(path);
           }
         }

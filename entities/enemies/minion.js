@@ -47,7 +47,7 @@ class Minion {
 
     // information about eyeball movement
     this.aggroDist = 500;
-    this.minSpeed = 220;
+    this.minSpeed = 150 + Math.random() * 70;
     this.currSpeed = this.minSpeed;
 
     // misc

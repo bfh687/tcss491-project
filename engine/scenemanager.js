@@ -79,15 +79,14 @@ class SceneManager {
         //this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         // spawn path finding test skeleton
-        this.game.addEntity(new Minion(this.game, 300, 700));
-        //this.game.addEntity(new MobCluster(this.game, 300, 700, 1, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 300, 700, 4, "minion"));
 
-        // this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
-        // this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
+        this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
 
         this.minX = 32;
         this.minY = 0;

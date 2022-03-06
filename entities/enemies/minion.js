@@ -1,6 +1,6 @@
 class Minion {
-  constructor(game, x, y) {
-    Object.assign(this, { game, x, y });
+  constructor(game, cluster, x, y) {
+    Object.assign(this, { game, cluster, x, y });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/minion.png");
 
     this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
@@ -8,7 +8,7 @@ class Minion {
 
     this.healthAlpha = 1;
 
-    this.scale = 1;
+    this.scale = this.cluster.scale;
 
     // eyeball spawn point
     this.originX = this.x;
@@ -32,8 +32,8 @@ class Minion {
     this.updateBoundingBox();
 
     // information about stats + attacking;
-    this.health = 400 * this.scale;
-    this.maxHealth = 400 * this.scale;
+    this.health = 500 * this.scale;
+    this.maxHealth = 500 * this.scale;
     this.attackDamage = 15 * this.scale;
     this.attackCooldown = 2;
     this.damageCooldown = 0.5;
@@ -157,7 +157,7 @@ class Minion {
 
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
       this.game.knight.kills += 1;
-      //this.cluster.aliveMobs--;
+      this.cluster.aliveMobs--;
     }
 
     const knightBB = this.game.knight.boundingBox;

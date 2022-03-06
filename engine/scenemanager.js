@@ -24,7 +24,8 @@ class SceneManager {
 
     this.knight = new Knight(this.game, 722, 250);
     // load first level
-    this.loadMainMenu();
+    //this.loadMainMenu();
+    this.loadLevel(1, true);
   }
 
   // remove all entities from the game engine
@@ -75,7 +76,7 @@ class SceneManager {
         this.game.addEntity(map);
         this.game.addEntity(new Grid(this.game, 200, 200, map));
 
-        //this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
+        this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         // spawn path finding test skeleton
         this.game.addEntity(new MobCluster(this.game, 300, 700, 2, "minion"));
@@ -106,19 +107,13 @@ class SceneManager {
         this.x = this.midpoint_x;
         this.y = this.midpoint_y;
 
-        this.minX = 32;
-        this.minY = 0;
-
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
-
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1boss));
 
         this.minX = 32;
         this.minY = 0;
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
+        this.maxX = 32 * 7;
+        this.maxY = 45 * 41;
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
         this.playMusic("./music/Orchestral_RATM.mp3");

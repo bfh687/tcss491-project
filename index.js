@@ -37,7 +37,7 @@ ASSET_MANAGER.queueDownload("./sprites/entities/knight_dash.png");
 
 // enemy-related downloads
 ASSET_MANAGER.queueDownload("./sprites/entities/skeleton.png");
-ASSET_MANAGER.queueDownload("./sprites/entities/eyeball.png");
+ASSET_MANAGER.queueDownload("./sprites/entities/minion.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/minotaur.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/spawnvfx.png");
 ASSET_MANAGER.queueDownload("./sprites/entities/thunder_spell.png");

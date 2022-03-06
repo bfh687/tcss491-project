@@ -24,8 +24,7 @@ class SceneManager {
 
     this.knight = new Knight(this.game, 722, 250);
     // load first level
-    //this.loadMainMenu();
-    this.loadLevel(1, false);
+    this.loadMainMenu();
   }
 
   // remove all entities from the game engine
@@ -79,7 +78,7 @@ class SceneManager {
         //this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
 
         // spawn path finding test skeleton
-        this.game.addEntity(new MobCluster(this.game, 300, 700, 4, "minion"));
+        this.game.addEntity(new MobCluster(this.game, 300, 700, 2, "minion"));
 
         this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));

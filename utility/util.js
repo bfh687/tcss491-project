@@ -14,6 +14,7 @@ const volumes = {
   SKELETON_CRIT: 0.17,
   MENU_SELECT: 0.8,
   MENU_HOVER: 0.4,
+  MENU_ERROR: 0.4,
   LIGHTNING: 0.12,
   DIALOGUE: 0.7,
 };

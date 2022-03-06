@@ -86,9 +86,12 @@ class ShopUI {
 
     this.menuHover = false;
     this.game.isShopActive = true;
+    this.errorCooldown = 0.5;
   }
 
-  update() {}
+  update() {
+    this.errorCooldown -= this.game.clockTick;
+  }
 
   draw(ctx) {
     // refactor to draw shop item, where you pass sprite, x, y, item description, and item
@@ -132,8 +135,12 @@ class ShopUI {
       var itemBoxGoggles = new BoundingBox(850, 530 - 130 * 3, 55, 30);
       if (mouseBox.collide(itemBoxGoggles) && this.game.knight.gogglesLevel + 1 < 5) {
         if (this.game.single_click) {
-          this.levelGoggles();
-          this.playSelectSound();
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.gogglesLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelGoggles();
+            this.playSelectSound();
+          }
         }
         hoverFlag = true;
         goggleHover = true;
@@ -179,8 +186,12 @@ class ShopUI {
       var itemBoxArmor = new BoundingBox(850, 530 - 130 * 2, 55, 30);
       if (mouseBox.collide(itemBoxArmor) && this.game.knight.armorLevel + 1 < 5) {
         if (this.game.single_click) {
-          this.levelArmor();
-          this.playSelectSound();
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.armorLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelArmor();
+            this.playSelectSound();
+          }
         }
         hoverFlag = true;
         armorHover = true;
@@ -224,8 +235,12 @@ class ShopUI {
       var itemBoxPotion = new BoundingBox(850, 530 - 130, 55, 30);
       if (mouseBox.collide(itemBoxPotion) && this.game.knight.potionLevel + 1 < 5) {
         if (this.game.single_click) {
-          this.levelPotion();
-          this.playSelectSound();
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.potionLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelPotion();
+            this.playSelectSound();
+          }
         }
         hoverFlag = true;
         potionHover = true;
@@ -265,10 +280,14 @@ class ShopUI {
 
       ctx.drawImage(this.items, 96, 0, 32, 32, this.itemStartX, 70 + 768 / 2 - 323 + 125 * 3 + 10, 32 * 2, 32 * 2);
       var itemBoxDagger = new BoundingBox(850, 530, 55, 30);
-      if (mouseBox.collide(itemBoxDagger) && this.game.knight.daggerLevel + 1 < 5) {
+      if (mouseBox.collide(itemBoxDagger)) {
         if (this.game.single_click) {
-          this.levelDagger();
-          this.playSelectSound();
+          if (this.game.knight.xpSystem.skillPoints < this.game.knight.daggerLevel + 1) {
+            this.playErrorSound();
+          } else {
+            this.levelDagger();
+            this.playSelectSound();
+          }
         }
         hoverFlag = true;
         daggerHover = true;
@@ -377,6 +396,15 @@ class ShopUI {
     var volume = document.getElementById("volume").value;
     ASSET_MANAGER.setVolume(path, volumes.MENU_HOVER * volume);
     ASSET_MANAGER.playAudio(path);
+  }
+
+  playErrorSound() {
+    if (this.errorCooldown > 0) return;
+    var path = "./sfx/menu_error.mp3";
+    var volume = document.getElementById("volume").value;
+    ASSET_MANAGER.setVolume(path, volumes.MENU_ERROR * volume);
+    ASSET_MANAGER.playAudio(path);
+    this.errorCooldown = 0.5;
   }
 
   levelGoggles() {

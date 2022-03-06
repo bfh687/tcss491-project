@@ -357,7 +357,11 @@ class Knight {
   checkCollisions() {
     this.game.entities.forEach((entity) => {
       // prevent entity pass through for alive enemies
-      if ((entity instanceof Skeleton || entity instanceof Eyeball || entity instanceof Minotaur) && entity.state != 4 && entity.state != 5) {
+      if (
+        (entity instanceof Skeleton || entity instanceof Eyeball || entity instanceof Minotaur || entity instanceof Minion) &&
+        entity.state != 4 &&
+        entity.state != 5
+      ) {
         if (!this.boundingBox.collide(entity.boundingBox)) {
           // handle sliding collisions
 
@@ -403,7 +407,7 @@ class Knight {
       }
 
       // handle eyeball collisions
-      else if (entity instanceof Eyeball) {
+      else if (entity instanceof Minion) {
         // handle case where player attacks the eyeball
         if (this.hitBox && this.hitBox.collide(entity.hurtBox)) {
           if (entity.state != 2 && entity.isStaggerable && entity.health > 0) {
@@ -657,7 +661,7 @@ class Knight {
 
         damage *= 1 - this.armorDeflect;
         damage -= this.armor;
-        if (attacker instanceof Skeleton) {
+        if (attacker instanceof Skeleton || attacker instanceof Minion) {
           dmgDeflected = dmgDeflected / 2;
           attacker.health -= dmgDeflected;
         } else {

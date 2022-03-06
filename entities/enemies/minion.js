@@ -1,10 +1,7 @@
-class Skeleton {
+class Minion {
   constructor(game, cluster, x, y) {
     Object.assign(this, { game, cluster, x, y });
-
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/skeleton.png");
-    this.animations = [];
-    this.loadAnimations();
+    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/minion.png");
 
     this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
     this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
@@ -13,32 +10,32 @@ class Skeleton {
 
     this.scale = this.cluster.scale;
 
-    // skeleton spawn point
+    // eyeball spawn point
     this.originX = this.x;
     this.originY = this.y;
 
-    // states: idle (0), walking (1), attack (2), damaged (3), dying (4)
+    // init + load animations
+    this.textAnimations = [];
+    this.animations = [];
+    this.loadAnimations();
+
+    // remove from world
+    this.removeFromWorld = false;
+
+    // states: idle (0), walking (1), attack (2), roll (3), damaged (4), dying (5)
     this.state = 0;
 
     // directions: left (0), right (1)
     this.direction = 1;
 
-    // damage number counters
-    this.textAnimations = [];
-
-    // bounding box for collisions
+    // init bounding boxes
     this.updateBoundingBox();
-    this.hitBox = null;
 
-    // remove from world
-    this.removeFromWorld = false;
-
-    // information about stats + attacking
-    this.maxHealth = 400 * this.scale;
-    this.health = 400 * this.scale;
-    this.attackDamage = 10 * this.scale;
-
-    this.attackCooldown = 1;
+    // information about stats + attacking;
+    this.health = 300 * this.scale;
+    this.maxHealth = 300 * this.scale;
+    this.attackDamage = 8 * this.scale;
+    this.attackCooldown = 2.5;
     this.damageCooldown = 0.5;
 
     this.isBleeding = false;
@@ -48,50 +45,45 @@ class Skeleton {
     this.staggerCooldown = 3;
     this.staggerDuration = 0.5;
 
-    // information about skeleton movement
+    // information about eyeball movement
     this.aggroDist = 500;
-    // 125 + 25 * Math.random()
-    this.minSpeed = 125 + 25 * Math.random();
+    this.minSpeed = 150 + Math.random() * 70;
     this.currSpeed = this.minSpeed;
 
     // misc
     this.alpha = 1;
-    this.xpDropped = 270 * this.scale;
+    this.xpDropped = 320 * this.scale;
   }
 
   loadAnimations() {
-    this.animations.push([], [], [], [], []);
+    this.animations.push([], [], [], [], [], []);
 
     // idle animations: left, right
-    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 64, 64, 4, 0.16, 0, 0, false, true));
-    this.animations[0].push(new Animator(this.spritesheet, 0, 320, 64, 64, 4, 0.16, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 110, 177, 22, 5, 0.1, 0, 0, false, true));
+    this.animations[0].push(new Animator(this.spritesheet, 0, 0, 177, 22, 5, 0.1, 0, 0, false, true));
 
     // walking animations: left, right
-    this.animations[1].push(new Animator(this.spritesheet, 0, 192, 64, 64, 12, 0.13, 0, 0, false, true));
-    this.animations[1].push(new Animator(this.spritesheet, 0, 512, 64, 64, 12, 0.13, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 0, 132, 177, 22, 8, 0.08, 0, 0, false, true));
+    this.animations[1].push(new Animator(this.spritesheet, 0, 22, 177, 22, 8, 0.08, 0, 0, false, true));
 
-    // attack animations: left, right
-    this.animations[2].push(new Animator(this.spritesheet, 0, 64, 64, 64, 13, 0.09, 0, 0, false, false));
-    this.animations[2].push(new Animator(this.spritesheet, 0, 384, 64, 64, 13, 0.09, 0, 0, false, false));
+    // attack animations: left, right CHANGE TO FALSE REPEAT
+    this.animations[2].push(new Animator(this.spritesheet, 0, 154, 177, 22, 11, 0.1, 0, 0, false, false));
+    this.animations[2].push(new Animator(this.spritesheet, 0, 44, 177, 22, 11, 0.1, 0, 0, false, false));
 
     // damaged animations: left, right
-    this.animations[3].push(new Animator(this.spritesheet, 0, 128, 64, 64, 3, 0.08, 0, 0, false, false));
-    this.animations[3].push(new Animator(this.spritesheet, 0, 448, 64, 64, 3, 0.08, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 172, 177, 22, 2, 0.1, 0, 0, false, false));
+    this.animations[4].push(new Animator(this.spritesheet, 0, 66, 177, 22, 2, 0.1, 0, 0, false, false));
 
     // death animations: left, right
-    this.animations[4].push(new Animator(this.spritesheet, 0, 256, 64, 64, 12, 0.12, 0, 0, false, false));
-    this.animations[4].push(new Animator(this.spritesheet, 0, 576, 64, 64, 12, 0.12, 0, 0, false, false));
+    this.animations[5].push(new Animator(this.spritesheet, 0, 194, 177, 22, 5, 0.1, 0, 0, false, false));
+    this.animations[5].push(new Animator(this.spritesheet, 0, 88, 177, 22, 5, 0.1, 0, 0, false, false));
   }
 
   update() {
-    // update healthbar alpha if skeleton is dead
-    if (this.state == 4) {
-      this.healthAlpha -= this.game.clockTick;
+    // update healthbar alpha if eyeball is dead
+    if (this.state == 5) {
+      this.healthAlpha -= this.game.clockTick * 3;
       this.healthAlpha = Math.max(0, this.healthAlpha);
-
-      var path = "./sfx/swish2.mp3";
-      var volume = document.getElementById("volume").value;
-      ASSET_MANAGER.setVolume(path, 0);
     }
 
     // decrement cooldowns
@@ -119,44 +111,41 @@ class Skeleton {
       }
     }
 
-    // enraged !
-    if (this.health <= 40) {
-      this.currSpeed = 175;
-    }
-
     // if dead, remove from world
     if (this.health <= 0) {
-      this.state = 4;
+      this.state = 5;
     }
 
-    // handle attacking state + animation
+    // handle attacking state + animations
     if (this.state == 2 && !this.animations[this.state][this.direction].isDone()) {
-      var curr_frame = this.animations[this.state][this.direction].currentFrame();
-      this.updateHitBox();
+      this.updateBoundingBox();
       return;
     } else if (this.state == 2 && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
     }
 
-    // handle damaged state + animation
-    else if (this.state == 3 && !this.animations[this.state][this.direction].isDone()) {
+    // handle damaged state + animations
+    else if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
+      this.updateBoundingBox();
       if (this.staggerDuration > 0) {
         return;
       } else {
         this.staggerDuration = 0.5;
       }
-    } else if (this.state == 3 && this.animations[this.state][this.direction].isDone()) {
+    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
       this.animations[this.state][this.direction].reset();
       this.state = 0;
     }
 
-    // if death animation is playing, let it play out, otherwise remove entity from world
-    if (this.state == 4 && !this.animations[this.state][this.direction].isDone()) {
-      this.updateHitBox();
+    // handle death state + animations
+    else if (this.state == 5 && !this.animations[this.state][this.direction].isDone()) {
       return;
-    } else if (this.state == 4 && this.animations[this.state][this.direction].isDone()) {
-      // calculate player center
+    } else if (this.state == 5 && this.animations[this.state][this.direction].isDone()) {
+      this.animations[this.state][this.direction].reset();
+      this.removeFromWorld = true;
+      this.state = 0;
+
       var center_x = this.boundingBox.left + Math.abs(this.boundingBox.right - this.boundingBox.left) / 2;
       var center_y = this.boundingBox.top + Math.abs(this.boundingBox.top - this.boundingBox.bottom) / 2;
 
@@ -166,22 +155,19 @@ class Skeleton {
         this.game.addEntity(item);
       }
 
-      // increment knight kills on death
-      this.game.knight.kills += 1;
       this.game.knight.xpSystem.incrementXP(this.xpDropped);
+      this.game.knight.kills += 1;
       this.cluster.aliveMobs--;
-      this.removeFromWorld = true;
-      return;
     }
 
     const knightBB = this.game.knight.boundingBox;
     const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
     const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
 
-    // calculate skeleton center
-    const skeleBB = this.boundingBox;
-    const x2 = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
-    const y2 = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+    // calculate eyeball center
+    const minionBB = this.boundingBox;
+    const x2 = minionBB.left + (minionBB.right - minionBB.left) / 2;
+    const y2 = minionBB.bottom + (minionBB.top - minionBB.bottom) / 2;
 
     var flag = false;
     this.game.entities.forEach((entity) => {
@@ -196,10 +182,10 @@ class Skeleton {
       }
     });
 
-    // if line collides, pathfind
+    //if line collides, pathfind
     if (flag && getDistance(x1, y1, x2, y2) <= this.aggroDist) {
       const bb = this.boundingBox;
-      const x = bb.left + (bb.right - bb.left) / 2;
+      const x = bb.left - 32 + (bb.right - bb.left) / 2;
       const y = bb.top + (bb.bottom - bb.top) / 2;
       this.pathfind(x, y);
     }
@@ -207,7 +193,6 @@ class Skeleton {
     else {
       this.basicAI();
     }
-
     this.updateBoundingBox();
   }
 
@@ -241,12 +226,22 @@ class Skeleton {
     var knight = this.game.knight;
 
     if (knight) {
+      const knightBB = this.game.knight.boundingBox;
+      const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
+      const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+
+      // calculate eyeball center
+      const minionBB = this.boundingBox;
+      const x2 = minionBB.left + (minionBB.right - minionBB.left) / 2;
+      const y2 = minionBB.bottom + (minionBB.top - minionBB.bottom) / 2;
+
       // calculate distance towards knight
-      var dist = getDistance(knight.x, knight.y, this.x, this.y);
+
+      var dist = getDistance(x1, y1, x2, y2);
 
       if (dist < this.aggroDist && this.game.knight.state != 4) {
-        var xVector = (knight.x - this.x) / dist;
-        var yVector = (knight.y - this.y) / dist;
+        var xVector = (x1 - x2) / dist;
+        var yVector = (y1 - y2) / dist;
 
         // set direction based on player location
         if (this.hurtBox.left >= knight.hurtBox.right) {
@@ -263,28 +258,25 @@ class Skeleton {
         }
 
         // set distance away from the player that the eyeball must be to begin attacking
-        var attackDist = 30;
-        if (xVector < 0) attackDist *= -1;
+        var attackDist = 75;
+        //if (xVector < 0) attackDist *= -1;
 
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
-        var horizontalBox = new BoundingBox(this.x + 54 + xVector * this.currSpeed * this.game.clockTick + attackDist, this.y + 80, 32, 24);
-        var verticalBox = new BoundingBox(this.x + 54, this.y + 80 + yVector * this.currSpeed * this.game.clockTick, 32, 24);
-
-        // check collisions and attack if there would be on on the vertical axis
-        if (verticalBox.collide(knight.hurtBox)) {
-          yVector = 0;
-          if (this.attackCooldown <= 0) {
-            this.state = 2;
-            this.attackCooldown = 1;
-          }
-        }
+        var horizontalBox = new BoundingBox(
+          this.x + xVector * this.currSpeed * this.game.clockTick + attackDist,
+          this.y + 15,
+          177 * 3 - Math.abs(2 * attackDist),
+          66 - 30
+        );
 
         // check collisions and attack if there would be on on the horizontal axis
-        if (horizontalBox.collide(knight.hurtBox)) {
+        if (horizontalBox.collide(knight.hurtBox) && this.game.knight.state != 4) {
           xVector = 0;
           if (this.attackCooldown <= 0) {
             this.state = 2;
             this.attackCooldown = 1;
+          } else if (Math.abs(yVector) <= 0.03) {
+            this.state = 0;
           }
         }
 
@@ -341,51 +333,34 @@ class Skeleton {
     this.y += yVector * this.currSpeed * this.game.clockTick;
   }
 
+  deflected(damage) {
+    this.textAnimations.push(new TextAnimator(damage, "cyan", this.game, this));
+  }
+
   bleed() {
     this.health = Math.max(this.health - this.bleedDamage, 0);
     this.textAnimations.push(new TextAnimator(this.bleedDamage, "black", this.game, this));
   }
 
-  deflected(damage) {
-    this.textAnimations.push(new TextAnimator(damage, "cyan", this.game, this));
-  }
-
   updateBoundingBox() {
-    // looking left
-    if (this.direction == 0) {
-      this.boundingBox = new BoundingBox(this.x + 54, this.y + 80, 32, 24);
-      this.hurtBox = new BoundingBox(this.x + 50, this.y + 32, 32, 66);
-    }
-    // looking right
-    else {
-      this.boundingBox = new BoundingBox(this.x + 42, this.y + 80, 32, 24);
-      this.hurtBox = new BoundingBox(this.x + 42, this.y + 32, 32, 66);
-    }
-
+    var current_frame = this.animations[this.state][this.direction].currentFrame();
+    this.boundingBox = new BoundingBox(this.x + (177 * 3) / 2 - 20, this.y + 40, 40, 20);
+    this.hurtBox = new BoundingBox(this.x + (177 * 3) / 2 - 20, this.y + 9, 40, 49);
     this.updateHitBox();
   }
 
   updateHitBox() {
     var current_frame = this.animations[this.state][this.direction].currentFrame();
-    if (this.state == 2) {
-      if (current_frame == 4) {
-        if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x, this.y + 15, 96, 56);
-        } else {
-          this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 96, 56);
-        }
-      } else if (current_frame == 5) {
-        this.hitBox = new BoundingBox(this.x + 32, this.y + 15, 64, 24);
-      } else if (current_frame == 8) {
-        this.hitBox = new BoundingBox(this.x, this.y + 32, 128, 48);
-      } else if (current_frame == 9) {
-        if (this.direction == 0) {
-          this.hitBox = new BoundingBox(this.x + 64, this.y + 32, 64, 32);
-        } else {
-          this.hitBox = new BoundingBox(this.x + 4, this.y + 32, 64, 36);
-        }
+
+    if (this.state != 2) {
+      this.hitBox = null;
+      return;
+    }
+    if (current_frame > 5 && current_frame < 9) {
+      if (this.direction == 0) {
+        this.hitBox = new BoundingBox(this.x + (177 * 3) / 2 + 30 - 91 * 3 - 19, this.y + 9, 235, 49);
       } else {
-        this.hitBox = null;
+        this.hitBox = new BoundingBox(this.x + (177 * 3) / 2 + 30, this.y + 9, 235, 49);
       }
     } else {
       this.hitBox = null;
@@ -393,52 +368,27 @@ class Skeleton {
   }
 
   draw(ctx) {
-    if (params.DEBUG) {
-      // calculate knight center
-      const knightBB = this.game.knight.boundingBox;
-      const knightX = knightBB.left + (knightBB.right - knightBB.left) / 2;
-      const knightY = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
+    // draw shadow
+    if (this.state != 5) drawShadow(ctx, this.game, this, 0.5);
 
-      // calculate skeleton center
-      const skeleBB = this.boundingBox;
-      const skeleX = skeleBB.left + (skeleBB.right - skeleBB.left) / 2;
-      const skeleY = skeleBB.bottom + (skeleBB.top - skeleBB.bottom) / 2;
+    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 3);
 
-      if (getDistance(knightX, knightY, skeleX, skeleY) < this.aggroDist) {
-        ctx.save();
-        ctx.beginPath();
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = "white";
-        ctx.globalAlpha = 0.2;
-        ctx.moveTo(skeleX - this.game.camera.x, skeleY - this.game.camera.y);
-        ctx.lineTo(knightX - this.game.camera.x, knightY - this.game.camera.y);
-        ctx.stroke();
-        ctx.globalAlpha = 1;
-        ctx.restore();
-      }
-    }
-
-    // draw shadows if not dying
-    if (this.state != 4) drawShadow(ctx, this.game, this);
-
-    this.animations[this.state][this.direction].drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
-
-    // draw hurt box and bounding box if parameter is on
-    if (params.DEBUG) {
-      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
-      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
-      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "blue");
-    }
-
-    // loop through and print all damage animations
     for (var i = 0; i < this.textAnimations.length; i++) {
       this.textAnimations[i].drawText(ctx);
     }
 
-    this.spawnAnimation.drawFrame(this.game.clockTick, ctx, this.x - this.game.camera.x, this.y - this.game.camera.y, 2);
+    this.spawnAnimation.drawFrame(this.game.clockTick, ctx, this.x + 107 - this.game.camera.x, this.y - 7 - this.game.camera.y, 1.25);
 
     ctx.globalAlpha = this.healthAlpha;
-    drawHealthBar(ctx, this.game, this.hurtBox, this.constructor.name, this.health, this.maxHealth);
+    drawHealthBar(ctx, this.game, this.boundingBox, this.constructor.name, this.health, this.maxHealth, -33);
     ctx.globalAlpha = 1;
+
+    // draw hurt box and bounding box if parameter is on
+    if (params.DEBUG) {
+      drawBoundingBox(new BoundingBox(this.x, this.y, 177 * 3, 66), ctx, this.game, "pink");
+      drawBoundingBox(this.boundingBox, ctx, this.game, "white");
+      drawBoundingBox(this.hurtBox, ctx, this.game, "red");
+      if (this.hitBox) drawBoundingBox(this.hitBox, ctx, this.game, "blue");
+    }
   }
 }

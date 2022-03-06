@@ -32,10 +32,10 @@ class Minion {
     this.updateBoundingBox();
 
     // information about stats + attacking;
-    this.health = 500 * this.scale;
-    this.maxHealth = 500 * this.scale;
-    this.attackDamage = 15 * this.scale;
-    this.attackCooldown = 2;
+    this.health = 300 * this.scale;
+    this.maxHealth = 300 * this.scale;
+    this.attackDamage = 8 * this.scale;
+    this.attackCooldown = 2.5;
     this.damageCooldown = 0.5;
 
     this.isBleeding = false;

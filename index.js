@@ -67,6 +67,8 @@ ASSET_MANAGER.queueDownload("./sprites/map/foilage_shadows.png");
 
 ASSET_MANAGER.queueDownload("./sprites/map/props.png");
 ASSET_MANAGER.queueDownload("./sprites/map/prop_shadows.png");
+ASSET_MANAGER.queueDownload("./sprites/map/main_props_2.png");
+ASSET_MANAGER.queueDownload("./sprites/map/decorative_props_2.png");
 
 // control keys
 ASSET_MANAGER.queueDownload("./sprites/controls/W.png");

@@ -24,7 +24,8 @@ class SceneManager {
 
     this.knight = new Knight(this.game, 722, 250);
     // load first level
-    this.loadMainMenu();
+    //this.loadMainMenu();
+    this.loadLevel(2, false);
   }
 
   // remove all entities from the game engine
@@ -127,8 +128,8 @@ class SceneManager {
 
         // this.knight.x = 1736 * 2;
         // this.knight.y = 800 * 2;
-        this.knight.x = 970 * 2;
-        this.knight.y = 920 * 2;
+        this.knight.x = 1922 * 2;
+        this.knight.y = 922 * 2;
 
         this.game.addEntity(new Map(this.game, 0, 0, level2));
 

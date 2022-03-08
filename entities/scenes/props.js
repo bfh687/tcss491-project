@@ -2,6 +2,8 @@ class Prop {
   constructor(game, x, y, code) {
     Object.assign(this, { game, x, y, code });
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/props.png");
+    this.spritesheet2 = ASSET_MANAGER.getAsset("./sprites/map/main_props_2.png");
+    this.spritesheet3 = ASSET_MANAGER.getAsset("./sprites/map/decorative_props_2.png");
     this.shadow_spritesheet = ASSET_MANAGER.getAsset("./sprites/map/prop_shadows.png");
     this.init(code);
   }
@@ -37,7 +39,6 @@ class Prop {
       this.sprite_width * 2,
       this.sprite_height * 2
     );
-
     // draw bounding boxes
     if (params.DEBUG) {
       drawBoundingBox(this.boundingBox, ctx, this.game, "red");
@@ -193,6 +194,166 @@ class Prop {
         this.sprite_height = 64;
         this.boundingBox = new BoundingBox(this.x + 7, this.y + 22, 110, 86);
         break;
+      case "horizontaltomb1":
+        this.spritesheet = this.spritesheet3;
+        this.sprite_x = 0;
+        this.sprite_y = 32 * 2;
+        this.sprite_width = 48;
+        this.sprite_height = 32;
+        this.boundingBox = new BoundingBox(this.x + 12, this.y + 22, 72, 38);
+        break;
+      case "horizontaltomb2":
+        this.spritesheet = this.spritesheet3;
+        this.sprite_x = 0;
+        this.sprite_y = 32 * 3;
+        this.sprite_width = 48;
+        this.sprite_height = 32;
+        this.boundingBox = new BoundingBox(this.x + 12, this.y + 22, 72, 38);
+        break;
+      case "horizontaltomb3":
+        this.spritesheet = this.spritesheet3;
+        this.sprite_x = 0;
+        this.sprite_y = 32 * 4;
+        this.sprite_width = 48;
+        this.sprite_height = 32;
+        this.boundingBox = new BoundingBox(this.x + 12, this.y + 22, 72, 38);
+        break;
+      case "horizontaltomb4":
+        this.spritesheet = this.spritesheet3;
+        this.sprite_x = 0;
+        this.sprite_y = 32 * 5;
+        this.sprite_width = 48;
+        this.sprite_height = 32;
+        this.boundingBox = new BoundingBox(this.x + 12, this.y + 22, 72, 38);
+        break;
+      case "horizontaltomb5":
+        this.spritesheet = this.spritesheet3;
+        this.sprite_x = 0;
+        this.sprite_y = 32 * 7;
+        this.sprite_width = 48;
+        this.sprite_height = 32;
+        this.boundingBox = new BoundingBox(this.x + 12, this.y + 22, 72, 38);
+        break;
+      case "stonepillar1":
+        this.spritesheet = this.spritesheet2;
+        this.sprite_x = 32 * 21;
+        this.sprite_y = 32 * 4;
+        this.sprite_width = 32;
+        this.sprite_height = 128;
+        this.boundingBox = new BoundingBox(this.x + 2, this.y + 86, 30, 38);
+        break;
+      case "stonepillar2":
+        this.spritesheet = this.spritesheet2;
+        this.sprite_x = 32 * 22;
+        this.sprite_y = 32 * 4;
+        this.sprite_width = 32;
+        this.sprite_height = 128;
+        this.boundingBox = new BoundingBox(this.x + 2, this.y + 86, 62, 38);
+        break;
+      case "pole":
+          this.spritesheet = this.spritesheet2;
+          this.sprite_x = 0;
+          this.sprite_y = 0;
+          this.sprite_width = 0;
+          this.sprite_height = 0;
+          this.boundingBox = new BoundingBox(this.x, this.y, 18, 20);
+          break;
+        case "fence":
+          this.spritesheet = this.spritesheet2;
+          this.sprite_x = 32 * 16;
+          this.sprite_y = 32 * 1;
+          this.sprite_width = 64;
+          this.sprite_height = 84;
+          this.boundingBox = new BoundingBox(this.x, this.y + 120, 126, 20);
+          break;
+      case "verticaltomb1":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 1.5;
+          this.sprite_y = 32 * 2;
+          this.sprite_width = 32;
+          this.sprite_height = 48;
+          this.boundingBox = new BoundingBox(this.x + 14, this.y + 26, 34, 70);
+          break;
+      case "verticaltomb2":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 2.5;
+          this.sprite_y = 32 * 2;
+          this.sprite_width = 32;
+          this.sprite_height = 48;
+          this.boundingBox = new BoundingBox(this.x + 14, this.y + 26, 34, 70);
+          break;
+      case "verticaltomb3":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 2.5;
+          this.sprite_y = 32 * 3.5;
+          this.sprite_width = 32;
+          this.sprite_height = 48;
+          this.boundingBox = new BoundingBox(this.x + 14, this.y + 26, 34, 70);
+          break;
+      case "crate1":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 4;
+          this.sprite_y = 32 * 2;
+          this.sprite_width = 16;
+          this.sprite_height = 32;
+          this.boundingBox = new BoundingBox(this.x + 4, this.y + 36, 24, 28);
+          break;
+      case "crate2":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 6;
+          this.sprite_y = 32 * 2;
+          this.sprite_width = 32;
+          this.sprite_height = 32;
+          this.boundingBox = new BoundingBox(this.x + 16, this.y + 36, 32, 28);
+          break;
+      case "crate3":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 6;
+          this.sprite_y = 32 * 3;
+          this.sprite_width = 32;
+          this.sprite_height = 32;
+          this.boundingBox = new BoundingBox(this.x + 16, this.y + 16, 32, 18);
+          break;
+      case "crate4":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 5;
+          this.sprite_y = 32 * 3;
+          this.sprite_width = 32;
+          this.sprite_height = 32;
+          this.boundingBox = new BoundingBox(this.x + 20, this.y + 20, 24, 14);
+          break;
+      case "purplepot1":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 4;
+          this.sprite_y = 32 * 3.5;
+          this.sprite_width = 32;
+          this.sprite_height = 32;
+          this.boundingBox = new BoundingBox(this.x + 36, this.y + 42, 24, 20);
+          break;
+      case "purplepot2":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 5;
+          this.sprite_y = 32 * 3.5;
+          this.sprite_width = 16;
+          this.sprite_height = 32;
+          this.boundingBox = new BoundingBox(this.x + 8, this.y + 42, 16, 20);
+          break;
+      case "greenpot1":
+          this.spritesheet = this.spritesheet3;
+          this.sprite_x = 32 * 4;
+          this.sprite_y = 32 * 5;
+          this.sprite_width = 32;
+          this.sprite_height = 32;
+          this.boundingBox = new BoundingBox(this.x + 36, this.y + 42, 24, 20);
+          break;
+      case "greenpot2":
+        this.spritesheet = this.spritesheet3;
+        this.sprite_x = 32 * 5;
+        this.sprite_y = 32 * 5;
+        this.sprite_width = 16;
+        this.sprite_height = 32;
+        this.boundingBox = new BoundingBox(this.x + 8, this.y + 42, 16, 20);
+          break;
       default:
         console.log("invalid prop code");
     }

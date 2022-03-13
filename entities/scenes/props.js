@@ -98,7 +98,7 @@ class Prop {
       case "pillar1":
         this.sprite_x = 32 * 11;
         this.sprite_y = 32 * 5;
-        this.sprite_width = 32;
+        this.sprite_width = 32 + 32;
         this.sprite_height = 96;
         this.boundingBox = new BoundingBox(this.x, this.y + 128, 64, 54);
         break;
@@ -112,7 +112,7 @@ class Prop {
       case "grave":
         this.sprite_x = 32 * 9;
         this.sprite_y = 4 * 32;
-        this.sprite_width = 32;
+        this.sprite_width = 64;
         this.sprite_height = 96;
         this.boundingBox = new BoundingBox(this.x, this.y + 80, 64, 96);
         break;
@@ -168,14 +168,14 @@ class Prop {
       case "tombstone1":
         this.sprite_x = 32 * 7;
         this.sprite_y = 7 * 32;
-        this.sprite_width = 32;
+        this.sprite_width = 64;
         this.sprite_height = 64;
         this.boundingBox = new BoundingBox(this.x, this.y + 78, 64, 32);
         break;
       case "tombstone2":
         this.sprite_x = 32 * 7;
         this.sprite_y = 9 * 32;
-        this.sprite_width = 32;
+        this.sprite_width = 64;
         this.sprite_height = 96;
         this.boundingBox = new BoundingBox(this.x + 16, this.y + 78, 32, 32);
         break;

@@ -3,6 +3,7 @@ class Sign {
     Object.assign(this, { game, x, y, code, dialogue });
 
     this.spritesheet = ASSET_MANAGER.getAsset("./sprites/map/props.png");
+    this.shadow_spritesheet = ASSET_MANAGER.getAsset("./sprites/map/prop_shadows.png");
     this.icons = ASSET_MANAGER.getAsset("./sprites/hud/icons.png");
     this.init(code);
 
@@ -91,7 +92,25 @@ class Sign {
   }
 
   draw(ctx) {
-    // draw sign shadow
+    //draw sign shadow
+    ctx.save();
+    ctx.globalAlpha = 0.35;
+    ctx.drawImage(
+      this.shadow_spritesheet,
+      this.sprite_x,
+      this.sprite_y,
+      this.sprite_width + 32,
+      this.sprite_height,
+      this.x - this.game.camera.x,
+      this.y - this.game.camera.y,
+      (this.sprite_width + 32) * 2,
+      this.sprite_height * 2
+    );
+    ctx.restore();
+
+    // draw sign
+    ctx.save();
+    ctx.globalAlpha = 1;
     ctx.drawImage(
       this.spritesheet,
       this.sprite_x,
@@ -103,8 +122,10 @@ class Sign {
       this.sprite_width * 2,
       this.sprite_height * 2
     );
+    ctx.restore();
 
-    // draw sign
+    ctx.save();
+    ctx.globalAlpha = 1;
     ctx.drawImage(
       this.spritesheet,
       this.sprite_x + 32,
@@ -116,6 +137,7 @@ class Sign {
       this.sprite_width * 2,
       this.sprite_height * 2
     );
+    ctx.restore();
 
     // draw info text
     ctx.save();

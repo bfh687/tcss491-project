@@ -2,11 +2,11 @@ class Skeleton {
   constructor(game, cluster, x, y) {
     Object.assign(this, { game, cluster, x, y });
 
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/skeleton.png");
+    this.spritesheet = ASSET_MANAGER.getAsset(sprites.skeleton);
     this.animations = [];
     this.loadAnimations();
 
-    this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
+    this.spawnfx = ASSET_MANAGER.getAsset(sprites.spawn_vfx);
     this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
 
     this.healthAlpha = 1;
@@ -88,10 +88,7 @@ class Skeleton {
     if (this.state == 4) {
       this.healthAlpha -= this.game.clockTick;
       this.healthAlpha = Math.max(0, this.healthAlpha);
-
-      var path = "./sfx/swish2.mp3";
-      var volume = document.getElementById("volume").value;
-      ASSET_MANAGER.setVolume(path, 0);
+      ASSET_MANAGER.setVolume(sfx.swish2.path, 0);
     }
 
     // decrement cooldowns
@@ -168,7 +165,7 @@ class Skeleton {
 
       // increment knight kills on death
       this.game.knight.kills += 1;
-      this.game.knight.xpSystem.incrementXP(this.xpDropped);
+      this.game.knight.xp.incrementXP(this.xpDropped);
       this.cluster.aliveMobs--;
       this.removeFromWorld = true;
       return;
@@ -262,7 +259,7 @@ class Skeleton {
           this.state = 0;
         }
 
-        // set distance away from the player that the eyeball must be to begin attacking
+        // set distance away from the player that the skeleton must be to begin attacking
         var attackDist = 30;
         if (xVector < 0) attackDist *= -1;
 
@@ -292,14 +289,11 @@ class Skeleton {
         if (xVector == 0 && yVector == 0) this.state = 0;
 
         if (this.state == 2) {
-          var path = "./sfx/swish2.mp3";
-          var volume = document.getElementById("volume").value;
-          ASSET_MANAGER.setVolume(path, (volumes.KNIGHT_ATTACK / 1.6) * volume);
           setTimeout(() => {
-            ASSET_MANAGER.playAudio(path);
+            ASSET_MANAGER.playAudio(sfx.swish2);
           }, 320);
           setTimeout(() => {
-            ASSET_MANAGER.playAudio(path);
+            ASSET_MANAGER.playAudio(sfx.swish2);
           }, 730);
         }
       }

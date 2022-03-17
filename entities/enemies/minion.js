@@ -1,16 +1,16 @@
 class Minion {
   constructor(game, cluster, x, y) {
     Object.assign(this, { game, cluster, x, y });
-    this.spritesheet = ASSET_MANAGER.getAsset("./sprites/entities/minion.png");
+    this.spritesheet = ASSET_MANAGER.getAsset(sprites.minion);
 
-    this.spawnfx = ASSET_MANAGER.getAsset("./sprites/entities/spawnvfx.png");
+    this.spawnfx = ASSET_MANAGER.getAsset(sprites.spawn_vfx);
     this.spawnAnimation = new Animator(this.spawnfx, 0, 0, 64, 64, 12, 0.06, 0, 0, false, false);
 
     this.healthAlpha = 1;
 
     this.scale = this.cluster.scale;
 
-    // eyeball spawn point
+    // minion spawn point
     this.originX = this.x;
     this.originY = this.y;
 
@@ -45,7 +45,7 @@ class Minion {
     this.staggerCooldown = 3;
     this.staggerDuration = 0.5;
 
-    // information about eyeball movement
+    // information about minion movement
     this.aggroDist = 500;
     this.minSpeed = 150 + Math.random() * 70;
     this.currSpeed = this.minSpeed;
@@ -80,7 +80,7 @@ class Minion {
   }
 
   update() {
-    // update healthbar alpha if eyeball is dead
+    // update healthbar alpha if minion is dead
     if (this.state == 5) {
       this.healthAlpha -= this.game.clockTick * 3;
       this.healthAlpha = Math.max(0, this.healthAlpha);
@@ -155,7 +155,7 @@ class Minion {
         this.game.addEntity(item);
       }
 
-      this.game.knight.xpSystem.incrementXP(this.xpDropped);
+      this.game.knight.xp.incrementXP(this.xpDropped);
       this.game.knight.kills += 1;
       this.cluster.aliveMobs--;
     }
@@ -164,7 +164,7 @@ class Minion {
     const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
     const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
 
-    // calculate eyeball center
+    // calculate minion center
     const minionBB = this.boundingBox;
     const x2 = minionBB.left + (minionBB.right - minionBB.left) / 2;
     const y2 = minionBB.bottom + (minionBB.top - minionBB.bottom) / 2;
@@ -230,7 +230,7 @@ class Minion {
       const x1 = knightBB.left + (knightBB.right - knightBB.left) / 2;
       const y1 = knightBB.bottom + (knightBB.top - knightBB.bottom) / 2;
 
-      // calculate eyeball center
+      // calculate minion center
       const minionBB = this.boundingBox;
       const x2 = minionBB.left + (minionBB.right - minionBB.left) / 2;
       const y2 = minionBB.bottom + (minionBB.top - minionBB.bottom) / 2;
@@ -257,9 +257,8 @@ class Minion {
           this.state = 0;
         }
 
-        // set distance away from the player that the eyeball must be to begin attacking
+        // set distance away from the player that the minion must be to begin attacking
         var attackDist = 75;
-        //if (xVector < 0) attackDist *= -1;
 
         // get bounding boxes of NEXT tick (assuming no major changes in fps)
         var horizontalBox = new BoundingBox(
@@ -282,18 +281,6 @@ class Minion {
 
         // if not moving, set state to idle
         if (xVector == 0 && yVector == 0) this.state = 0;
-
-        // if (this.state == 2) {
-        //   var path = "./sfx/swish2.mp3";
-        //   var volume = document.getElementById("volume").value;
-        //   ASSET_MANAGER.setVolume(path, (volumes.KNIGHT_ATTACK / 1.6) * volume);
-        //   setTimeout(() => {
-        //     ASSET_MANAGER.playAudio(path);
-        //   }, 320);
-        //   setTimeout(() => {
-        //     ASSET_MANAGER.playAudio(path);
-        //   }, 730);
-        // }
       }
 
       // path towards origin/spawn point

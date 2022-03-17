@@ -3,15 +3,13 @@ class SceneManager {
     this.game = game;
     this.game.camera = this;
 
-    this.vignette = ASSET_MANAGER.getAsset("./vignette.png");
+    this.vignette = ASSET_MANAGER.getAsset(sprites.vignette);
 
     // initialize camera coords
     this.midpoint_x = 1366 / 2 - 44;
     this.midpoint_y = 768 / 2 - (62 * 2.5) / 2 - 12;
     this.x = this.midpoint_x;
     this.y = this.midpoint_y;
-
-    this.death_offset = 0;
 
     // screenshake details
     this.shakeDuration = -0.01;
@@ -45,7 +43,6 @@ class SceneManager {
     this.clearEntities();
     this.boss = null;
 
-    // if an x/y value is provied, initialize the credits with that position
     if (x && y) this.game.addEntity(new Credits(this.game, x, y));
     else this.game.addEntity(new Credits(this.game));
 
@@ -92,7 +89,7 @@ class SceneManager {
 
         this.maxX = 3216 + 32 * 57;
         this.maxY = 45 * 60;
-        this.playMusic("./music/Glitterglade_Grove.mp3");
+        ASSET_MANAGER.playMusic(music.level1);
       } else {
         this.knight.direction = 2;
         this.knight.currSpeed = this.knight.minSpeed;
@@ -113,53 +110,10 @@ class SceneManager {
         this.minY = 0;
         this.maxX = 32 * 7;
         this.maxY = 45 * 41;
+
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
-        this.playMusic("./music/Orchestral_RATM.mp3");
-      }
-    } else if (level == 2) {
-      if (!boss) {
-        this.knight.direction = 3;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-        // add map and teleporter
-
-        // this.knight.x = 1736 * 2;
-        // this.knight.y = 800 * 2;
-        this.knight.x = 970 * 2;
-        this.knight.y = 920 * 2;
-
-        this.game.addEntity(new Map(this.game, 0, 0, level2));
-
-        this.minX = -320;
-        this.minY = 0;
-
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
-        this.playMusic("./music/Charmsnow.mp3");
-      } else {
-        this.knight.direction = 2;
-        this.knight.currSpeed = this.knight.minSpeed;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
-        this.knight.x = 1271 * 2;
-        this.knight.y = 1210 * 2;
-
-        this.game.addEntity(new Transition(this.game, true));
-
-        // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0, level2boss));
-
-        this.minX = 32;
-        this.minY = 0;
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
-        // add boss
-        this.game.addEntity(new Minotaur(this.game, 1500 * 2, 550 * 2));
-        this.playMusic("./music/Orchestral_RATM.mp3");
+        ASSET_MANAGER.playMusic(music.boss);
       }
     }
   }
@@ -185,10 +139,10 @@ class SceneManager {
     this.x = Math.min(Math.max(this.minX, this.x), this.maxX);
     this.y = Math.min(Math.max(this.minY, this.y), this.maxY);
 
-    this.updateAudio();
+    ASSET_MANAGER.updateMusic();
     if (this.game.camera.transition) this.game.camera.transition.update();
 
-    // Adds functionality to the debug button.
+    // update debug param
     params.DEBUG = document.getElementById("debug").checked;
   }
 
@@ -196,7 +150,7 @@ class SceneManager {
     const lerp_value = 0.05;
 
     const position_x = this.x;
-    const target_x = this.game.knight.x - this.death_offset + 40;
+    const target_x = this.game.knight.x + 40;
 
     const position_y = this.y;
     const target_y = this.game.knight.y;
@@ -221,30 +175,5 @@ class SceneManager {
       this.shakeDuration = 0.05;
       this.shakeCooldown = 0.2;
     }
-  }
-
-  playMusic(path) {
-    ASSET_MANAGER.pauseAudio();
-    ASSET_MANAGER.playAudio(path);
-    ASSET_MANAGER.autoRepeat(path);
-  }
-
-  updateAudio() {
-    var mute = document.getElementById("mute").checked;
-    var volume = document.getElementById("volume").value;
-
-    ASSET_MANAGER.muteAudio(mute);
-
-    var paths = [
-      "./music/Glitterglade_Grove.mp3",
-      "./music/Orchestral_RATM.mp3",
-      "./music/Charmsnow.mp3",
-      "./music/homescreen-loud.mp3",
-      "./music/Forgotten_Bramble.mp3",
-    ];
-
-    paths.forEach((path) => {
-      ASSET_MANAGER.setVolume(path, volumes.MUSIC * volume);
-    });
   }
 }

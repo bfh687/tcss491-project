@@ -1,23 +1,7 @@
-/** Global Parameters Object */
 const params = {
   DEBUG: true,
   SCALE: 3,
   BITWIDTH: 16,
-};
-
-const volumes = {
-  MUSIC: 0.4,
-  DASH: 0.7,
-  KNIGHT_ATTACK: 0.35,
-  HURT_SOUND: 0.15,
-  GRASS_RUNNING: 0.3,
-  SKELETON_HIT: 0.18,
-  SKELETON_CRIT: 0.17,
-  MENU_SELECT: 0.8,
-  MENU_HOVER: 0.4,
-  MENU_ERROR: 0.4,
-  LIGHTNING: 0.12,
-  DIALOGUE: 0.7,
 };
 
 /** Easy access to math functions */

@@ -22,6 +22,7 @@ class Animator {
   pause() {
     this.paused = true;
   }
+
   drawFrame(tick, ctx, x, y, scale) {
     if (!this.paused) {
       this.elapsedTime += tick;

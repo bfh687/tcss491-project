@@ -72,10 +72,41 @@ class AssetManager {
     return this.cache[path];
   }
 
-  playAudio(path) {
-    let audio = this.cache[path];
+  playAudio(track) {
+    const path = track.path;
+    const volume = track.volume;
+    const global_volume = document.getElementById("volume").value;
+
+    const audio = this.cache[path];
     audio.currentTime = 0;
+
+    this.setVolume(path, volume * global_volume);
     audio.play();
+  }
+
+  playMusic(track) {
+    const path = track.path;
+    this.pauseAudio();
+    this.playAudio(track);
+    this.autoRepeat(path);
+  }
+
+  updateMusic() {
+    const mute = document.getElementById("mute").checked;
+    const volume = document.getElementById("volume").value;
+
+    this.muteAudio(mute);
+
+    music.paths.forEach((path) => {
+      this.setVolume(path.path, volume * music.volume);
+    });
+  }
+
+  setVolume(path, volume) {
+    let asset = this.cache[path];
+    if (asset instanceof Audio) {
+      asset.volume = volume;
+    }
   }
 
   pauseAudio() {
@@ -94,13 +125,6 @@ class AssetManager {
       if (asset instanceof Audio) {
         asset.muted = mute;
       }
-    }
-  }
-
-  setVolume(path, volume) {
-    let asset = this.cache[path];
-    if (asset instanceof Audio) {
-      asset.volume = volume;
     }
   }
 

@@ -5,8 +5,7 @@
     <title>TCSS 491 Project</title>
 
     <!-- fonts, etc. -->
-    <link rel="stylesheet" href="fonts.css" type="text/css" charset="utf-8" />
-    <link rel="stylesheet" href="vignette.css" type="text/css" charset="utf-8" />
+    <link rel="stylesheet" href="./fonts/fonts.css" type="text/css" charset="utf-8" />
 
     <style>
       body {
@@ -16,7 +15,7 @@
     </style>
 
     <!-- engine -->
-    <script type="text/javascript" src="./engine/gameengine.js"></script>
+    <script type="text/javascript" src="./engine/engine.js"></script>
     <script type="text/javascript" src="./engine/assetmanager.js"></script>
     <script type="text/javascript" src="./engine/animator.js"></script>
     <script type="text/javascript" src="./engine/textanimator.js"></script>
@@ -25,59 +24,78 @@
 
     <!-- scene -->
     <script type="text/javascript" src="./engine/scenemanager.js"></script>
-    <script type="text/javascript" src="./engine/levels.js"></script>
 
-    <!-- entities go here -->
-    <script type="text/javascript" src="./entities/knight.js"></script>
+    <!-- knight -->
+    <script type="text/javascript" src="./entities/knight/knight.js"></script>
+    <script type="text/javascript" src="./entities/knight/xp.js"></script>
+
+    <!-- enemies -->
     <script type="text/javascript" src="./entities/enemies/skeleton.js"></script>
     <script type="text/javascript" src="./entities/enemies/minion.js"></script>
-    <script type="text/javascript" src="./entities/enemies/minotaur.js"></script>
-    <script type="text/javascript" src="./entities/enemies/eyeball.js"></script>
-    <script type="text/javascript" src="./entities/enemies/mobcluster.js"></script>
 
-    <script type="text/javascript" src="./entities/scenes/map.js"></script>
-    <script type="text/javascript" src="./entities/scenes/sign.js"></script>
-    <script type="text/javascript" src="./entities/scenes/foilage.js"></script>
-    <script type="text/javascript" src="./entities/scenes/levels.js"></script>
+    <!-- enemy spawning utility -->
+    <script type="text/javascript" src="./entities/enemies/utility/mobcluster.js"></script>
 
-    <script type="text/javascript" src="./entities/scenes/props.js"></script>
-    <script type="text/javascript" src="./entities/scenes/teleporter.js"></script>
-    <script type="text/javascript" src="./entities/scenes/shop.js"></script>
-    <script type="text/javascript" src="./entities/scenes/restart.js"></script>
-    <script type="text/javascript" src="./entities/scenes/victory.js"></script>
+    <!-- bosses -->
+    <script type="text/javascript" src="./entities/bosses/minotaur.js"></script>
+
+    <!-- map + levels -->
+    <script type="text/javascript" src="./entities/map/map.js"></script>
+    <script type="text/javascript" src="./entities/map/level_1/level/level1.js"></script>
+
+    <!-- props -->
+    <script type="text/javascript" src="./entities/map/level_1/props/props.js"></script>
+    <script type="text/javascript" src="./entities/map/level_1/props/foilage.js"></script>
+
+    <script type="text/javascript" src="./entities/map/level_1/props/shop.js"></script>
+    <script type="text/javascript" src="./entities/map/level_1/props/sign.js"></script>
+    <script type="text/javascript" src="./entities/map/level_1/props/teleporter.js"></script>
+
+    <!-- menus -->
+    <script type="text/javascript" src="./entities/menus/mainmenu.js"></script>
+
+    <!-- screens -->
+    <script type="text/javascript" src="./entities/screens/restart.js"></script>
+    <script type="text/javascript" src="./entities/screens/victory.js"></script>
+
+    <!-- items-->
     <script type="text/javascript" src="./entities/drops/item.js"></script>
-    <script type="text/javascript" src="./entities/scenes/mainmenu.js"></script>
 
     <!-- a* -->
-    <script type="text/javascript" src="./astar/grid.js"></script>
-    <script type="text/javascript" src="./astar/astar.js"></script>
-    <script type="text/javascript" src="./astar/mob.js"></script>
-    <script type="text/javascript" src="./astar/target.js"></script>
+    <script type="text/javascript" src="./utility/astar/grid.js"></script>
+    <script type="text/javascript" src="./utility/astar/astar.js"></script>
 
     <!-- HUD -->
-    <script type="text/javascript" src="./entities/overlays/cursor.js"></script>
-    <script type="text/javascript" src="./entities/overlays/hud.js"></script>
-    <script type="text/javascript" src="./entities/overlays/transition.js"></script>
-    <script type="text/javascript" src="./entities/scenes/fadetoblack.js"></script>
+    <script type="text/javascript" src="./entities/ui/cursor.js"></script>
+    <script type="text/javascript" src="./entities/ui/hud.js"></script>
+
+    <!-- transitions -->
+    <script type="text/javascript" src="./entities/transitions/transition.js"></script>
 
     <!-- utility -->
-    <script type="text/javascript" src="./entities/knight/xp.js"></script>
     <script type="text/javascript" src="./utility/util.js"></script>
     <script type="text/javascript" src="./utility/drawing.js"></script>
+
+    <!-- paths -->
+    <script type="text/javascript" src="./sprites/sprites.js"></script>
+    <script type="text/javascript" src="./music/music.js"></script>
+    <script type="text/javascript" src="./sfx/sfx.js"></script>
 
     <!-- driver -->
     <script type="text/javascript" src="./index.js"></script>
   </head>
   <body style="background: rgb(36, 35, 35, 0.993)">
     <div style="text-align: center; padding-top: 70px">
-      <canvas class="overlay" id="gameWorld" width="1366" height="768" style="background: rgb(36, 35, 35)" />
+      <canvas id="gameWorld" width="1366" height="768" style="background: rgb(36, 35, 35)" />
     </div>
     <div style="text-align: center">
       <br />
-      <input type="checkbox" id="debug" />
       <span style="color: #fff">Debug</span>
-      <input type="checkbox" id="mute" /> <span style="color: #fff">Mute</span>
-      <input type="range" id="volume" min="0" max="1" value=".2" step="0.05" /> <span style="color: #fff">Volume</span>
+      <input type="checkbox" id="debug" />
+      <span style="color: #fff">Mute</span>
+      <input type="checkbox" id="mute" />
+      <span style="color: #fff">Volume</span>
+      <input type="range" id="volume" min="0" max="1" value=".2" step="0.05" />
     </div>
   </body>
 </html>

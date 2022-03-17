@@ -6,8 +6,12 @@ class SceneManager {
     this.vignette = ASSET_MANAGER.getAsset(sprites.vignette);
 
     // initialize camera coords
-    this.midpoint_x = 1366 / 2 - 44;
-    this.midpoint_y = 768 / 2 - (62 * 2.5) / 2 - 12;
+    const x_offset = -44;
+    this.midpoint_x = engine.width() / 2 + x_offset;
+
+    const y_offset = -65.5;
+    this.midpoint_y = engine.height() / 2 + y_offset;
+
     this.x = this.midpoint_x;
     this.y = this.midpoint_y;
 
@@ -17,10 +21,9 @@ class SceneManager {
     this.x_offset = 0;
     this.y_offset = 0;
 
-    this.title = true;
-    this.level = null;
+    // spawn knight
+    this.knight = new Knight(this.game, level1.knight.x_spawn, level1.knight.y_spawn);
 
-    this.knight = new Knight(this.game, 722, 250);
     // load first level
     this.loadMainMenu();
   }
@@ -34,22 +37,12 @@ class SceneManager {
     this.clearEntities();
     this.boss = null;
 
-    // if an x/y value is provied, initialize the main menu with that position
     this.game.addEntity(new MainMenu(this.game));
     this.game.addEntity(new Cursor(this.game));
   }
 
-  loadCredits(x, y) {
-    this.clearEntities();
-    this.boss = null;
-
-    if (x && y) this.game.addEntity(new Credits(this.game, x, y));
-    else this.game.addEntity(new Credits(this.game));
-
-    this.game.addEntity(new Cursor(this.game));
-  }
-
-  loadLevel(level, boss) {
+  loadLevel(level) {
+    // clear entities and remove boss (if any)
     this.clearEntities();
     this.boss = null;
 
@@ -59,14 +52,35 @@ class SceneManager {
 
     // add knight
     this.game.addEntity(this.knight);
+
+    ///// NEW /////
+
+    // reset timer if no boss, and specify knight start direction
+    if (!level.boss) {
+      this.game.timer.reset();
+      this.knight.direction = 3;
+    } else {
+      this.knight.direction = 2;
+    }
+
+    // reset camera location
+    this.x = this.midpoint_x;
+    this.y = this.midpoint_y;
+
+    // set camera bounds
+    this.min_x = level.min_x;
+    this.min_y = level.min_y;
+
+    this.max_x = level.max_x;
+    this.max_y = level.max_y;
+
+    // set knight spawn
+    this.knight.x = level.knight.x_spawn;
+    this.knight.y = level.knight.y_spawn;
+
+    ///////////////
     if (level == 1) {
       if (!boss) {
-        this.game.timer.gameTime = 0;
-        this.knight.direction = 3;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
         // add map and teleporter
         const map = new Map(this.game, 0, 0, level1);
         this.game.addEntity(map);
@@ -83,33 +97,10 @@ class SceneManager {
         this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
         this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
-
-        this.minX = 32;
-        this.minY = 0;
-
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
         ASSET_MANAGER.playMusic(music.level1);
       } else {
-        this.knight.direction = 2;
-        this.knight.currSpeed = this.knight.minSpeed;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
-        this.knight.x = 750;
-        this.knight.y = 2200;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
         // add map and teleporter
         this.game.addEntity(new Map(this.game, 0, 0, level1boss));
-
-        this.minX = 32;
-        this.minY = 0;
-        this.maxX = 32 * 7;
-        this.maxY = 45 * 41;
 
         // add boss
         this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
@@ -128,7 +119,7 @@ class SceneManager {
       this.x_offset = this.y_offset = 0;
     }
 
-    // smooth camera
+    // smooth camera if not currently screenshaking
     if (this.x_offset == 0 && this.y_offset == 0) this.lerp();
 
     // add shake
@@ -136,14 +127,19 @@ class SceneManager {
     this.y += this.y_offset;
 
     // restrict to scene bounds
-    this.x = Math.min(Math.max(this.minX, this.x), this.maxX);
-    this.y = Math.min(Math.max(this.minY, this.y), this.maxY);
+    this.x = Math.min(Math.max(this.min_x, this.x), this.max_x);
+    this.y = Math.min(Math.max(this.min_y, this.y), this.max_y);
 
     ASSET_MANAGER.updateMusic();
     if (this.game.camera.transition) this.game.camera.transition.update();
+  }
 
-    // update debug param
-    params.DEBUG = document.getElementById("debug").checked;
+  draw(ctx) {
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.drawImage(this.vignette, 0, 0, 1366, 768);
+    ctx.restore();
+    if (this.game.camera.transition) this.game.camera.transition.draw(ctx);
   }
 
   lerp() {
@@ -160,14 +156,6 @@ class SceneManager {
 
     this.x += velocity_x;
     this.y += velocity_y;
-  }
-
-  draw(ctx) {
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    ctx.drawImage(this.vignette, 0, 0, 1366, 768);
-    ctx.restore();
-    if (this.game.camera.transition) this.game.camera.transition.draw(ctx);
   }
 
   screenshake() {

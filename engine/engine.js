@@ -111,9 +111,6 @@ class GameEngine {
 
     // click listeners
     this.ctx.canvas.addEventListener("click", (e) => {
-      if (this.options.debugging) {
-        console.log("CLICK", getXandY(e));
-      }
       this.click = getXandY(e);
     });
 
@@ -174,6 +171,9 @@ class GameEngine {
         e1.priority - e2.priority;
       }
     });
+
+    // update debug param
+    params.DEBUG = document.getElementById("debug").checked;
   }
 
   loop() {
@@ -183,10 +183,6 @@ class GameEngine {
 
     this.camera.update();
     this.camera.draw(this.ctx);
-  }
-
-  get ["deltaTime"]() {
-    return this.clockTick;
   }
 
   width() {

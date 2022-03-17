@@ -26,13 +26,11 @@ class AssetManager {
         case "png":
           const img = new Image();
           img.addEventListener("load", () => {
-            //.log("Loaded " + img.src);
             self.successCount++;
             if (self.isDone()) callback();
           });
 
           img.addEventListener("error", () => {
-            console.log("error loading " + img.src);
             self.errorCount++;
             if (self.isDone()) callback();
           });
@@ -46,7 +44,6 @@ class AssetManager {
           const audio = new Audio();
           audio.addEventListener("loadeddata", () => {
             self.successCount++;
-            //console.log(self.cache);
             if (self.isDone()) callback();
           });
 
@@ -84,6 +81,25 @@ class AssetManager {
     audio.play();
   }
 
+  pauseAudio() {
+    for (var key in this.cache) {
+      let asset = this.cache[key];
+      if (asset instanceof Audio) {
+        asset.pause();
+        asset.currentTime = 0;
+      }
+    }
+  }
+
+  muteAudio(mute) {
+    for (var key in this.cache) {
+      let asset = this.cache[key];
+      if (asset instanceof Audio) {
+        asset.muted = mute;
+      }
+    }
+  }
+
   playMusic(track) {
     const path = track.path;
     this.pauseAudio();
@@ -106,25 +122,6 @@ class AssetManager {
     let asset = this.cache[path];
     if (asset instanceof Audio) {
       asset.volume = volume;
-    }
-  }
-
-  pauseAudio() {
-    for (var key in this.cache) {
-      let asset = this.cache[key];
-      if (asset instanceof Audio) {
-        asset.pause();
-        asset.currentTime = 0;
-      }
-    }
-  }
-
-  muteAudio(mute) {
-    for (var key in this.cache) {
-      let asset = this.cache[key];
-      if (asset instanceof Audio) {
-        asset.muted = mute;
-      }
     }
   }
 

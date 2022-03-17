@@ -1,5 +1,6 @@
 const level1 = {
-  map: { path: "./sprites/map/level_1/level/level_1.png", width: 3216, height: 1760 },
+  map: { path: "./sprites/map/level_1/level/level_1.png", width: 3216, height: 1760, min_x: 32, max_x: 5040, min_y: 0, max_y: 2700 },
+  knight: { x_spawn: 722, y_spawn: 250 },
   props: [
     { x: 608, y: 128, type: "pillar1" },
     { x: 5216, y: 512, type: "pillar1" },
@@ -525,7 +526,8 @@ const level1 = {
 };
 
 const level1boss = {
-  map: { path: "./sprites/map/level_1/bossroom/level_1_bossroom.png", width: 800, height: 1312 },
+  map: { path: "./sprites/map/level_1/bossroom/level_1_bossroom.png", width: 800, height: 1312, min_x: 32, max_x: 224, min_y: 0, max_y: 1845 },
+  knight: { x_spawn: 750, y_spawn: 2200 },
   props: [
     { x: 256, y: 1088, type: "bigrock" },
     { x: 1088, y: 1216, type: "bigrock" },

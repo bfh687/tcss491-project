@@ -36,7 +36,7 @@ class Animator {
       }
     }
 
-    let frame = this.currentFrame();
+    var frame = this.currentFrame();
     if (this.reverse) frame = this.frameCount - frame - 1;
 
     ctx.drawImage(
@@ -54,10 +54,6 @@ class Animator {
 
   currentFrame() {
     return Math.floor(this.elapsedTime / this.frameDuration);
-  }
-
-  setFrameDuration(duration) {
-    this.frameDuration = duration;
   }
 
   reset() {

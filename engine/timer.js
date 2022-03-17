@@ -16,4 +16,8 @@ class Timer {
     }
     return gameDelta;
   }
+
+  reset() {
+    this.gameTime = 0;
+  }
 }

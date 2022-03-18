@@ -97,7 +97,7 @@ class Restart {
       this.game.camera.death_offset = 0;
       this.game.restart = false;
       this.game.boss = false;
-      this.game.camera.loadLevel(1, false);
+      this.game.camera.loadLevel(level1);
     }
 
     ctx.fillStyle = "white";

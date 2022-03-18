@@ -8,7 +8,6 @@ sfx.paths.forEach((path) => {
 
 // music downloads
 music.paths.forEach((path) => {
-  console.log(path.path);
   ASSET_MANAGER.queueDownload(path.path);
 });
 

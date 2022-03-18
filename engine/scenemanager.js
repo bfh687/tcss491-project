@@ -53,8 +53,6 @@ class SceneManager {
     // add knight
     this.game.addEntity(this.knight);
 
-    ///// NEW /////
-
     // reset timer if no boss, and specify knight start direction
     if (!level.boss) {
       this.game.timer.reset();
@@ -68,45 +66,42 @@ class SceneManager {
     this.y = this.midpoint_y;
 
     // set camera bounds
-    this.min_x = level.min_x;
-    this.min_y = level.min_y;
+    this.min_x = level.map.min_x;
+    this.min_y = level.map.min_y;
 
-    this.max_x = level.max_x;
-    this.max_y = level.max_y;
+    this.max_x = level.map.max_x;
+    this.max_y = level.map.max_y;
 
     // set knight spawn
     this.knight.x = level.knight.x_spawn;
     this.knight.y = level.knight.y_spawn;
 
-    ///////////////
-    if (level == 1) {
-      if (!boss) {
-        // add map and teleporter
-        const map = new Map(this.game, 0, 0, level1);
-        this.game.addEntity(map);
-        this.game.addEntity(new Grid(this.game, 200, 200, map));
+    // initialize and add map entity
+    const map = new Map(this.game, level.map.origin_x, level.map.origin_y, level);
+    this.game.addEntity(map);
 
-        this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
-
-        // spawn path finding test skeleton
-        this.game.addEntity(new MobCluster(this.game, 300, 900, 2, "minion"));
-
-        this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
-        ASSET_MANAGER.playMusic(music.level1);
-      } else {
-        // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0, level1boss));
-
-        // add boss
-        this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
-        ASSET_MANAGER.playMusic(music.boss);
-      }
+    // if this isn't a boss level, create an a* grid from the map
+    if (!level.boss) {
+      const grid_width = 200;
+      const grid_height = 200;
+      this.game.addEntity(new Grid(this.game, grid_width, grid_height, map));
     }
+
+    // add all enemies to the level
+    level.clusters.forEach((cluster) => {
+      this.game.addEntity(new MobCluster(this.game, cluster.x, cluster.y, cluster.amount, cluster.type));
+    });
+
+    // add all teleporters to the level
+    level.teleporters.forEach((teleporter) => {
+      this.game.addEntity(new Teleporter(this.game, teleporter.x, teleporter.y, teleporter.level));
+    });
+
+    // add boss if applicable
+    if (level.boss) this.game.addEntity(new Minotaur(this.game, level.boss.x_spawn, level.boss.y_spawn));
+
+    // play the level's music
+    ASSET_MANAGER.playMusic(level.music);
   }
 
   update() {

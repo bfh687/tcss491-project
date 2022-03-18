@@ -1,6 +1,6 @@
 class Teleporter {
-  constructor(game, x, y, level, boss) {
-    Object.assign(this, { game, x, y, level, boss });
+  constructor(game, x, y, level) {
+    Object.assign(this, { game, x, y, level });
 
     this.spritesheet = ASSET_MANAGER.getAsset(sprites.teleporter);
     this.interaction_box = new BoundingBox(this.x + 48, this.y + 48, 96, 96);
@@ -8,11 +8,12 @@ class Teleporter {
   }
 
   update() {
-    if (!this.level || !this.boss) return;
+    if (!this.level) return;
     const knight = this.game.knight;
     if (this.interaction_box.collide(knight.hurtBox)) {
       if (this.game.keys.e) {
-        this.game.camera.transition = new FadeTransition(this.game, 2.5, this.level, this.boss);
+        const duration = 2.5;
+        this.game.camera.transition = new FadeTransition(this.game, duration, this.level);
       }
     }
   }

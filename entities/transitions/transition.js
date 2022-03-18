@@ -1,6 +1,6 @@
 class FadeTransition {
-  constructor(game, duration, level, boss) {
-    Object.assign(this, { game, duration, level, boss });
+  constructor(game, duration, level) {
+    Object.assign(this, { game, duration, level });
     this.alpha = 0;
     this.fadeInDuration = duration / 2;
     this.fadeOutDuration = duration / 2;
@@ -14,7 +14,8 @@ class FadeTransition {
       this.fadeInDuration -= this.game.clockTick;
     } else if (this.fadeOutDuration >= 0) {
       if (!this.loaded) {
-        this.game.camera.loadLevel(this.level, this.boss);
+        console.log(this.level);
+        this.game.camera.loadLevel(this.level);
         this.loaded = true;
       }
       this.alpha -= this.game.clockTick / (this.duration / 2);

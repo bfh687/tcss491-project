@@ -132,7 +132,8 @@ class MainMenu {
     if (mouseBox.collide(this.playBox)) {
       // load game on click
       if (this.game.left_click && this.game.camera.transition == null) {
-        this.game.camera.transition = new FadeTransition(this.game, 2.5, 1, false);
+        const duration = 2.5;
+        this.game.camera.transition = new FadeTransition(this.game, duration, level1);
         ASSET_MANAGER.playAudio(sfx.menu_select);
       }
       if (!this.playHover && this.game.camera.transition == null) {

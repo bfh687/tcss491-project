@@ -52,10 +52,6 @@ class Victory {
     ctx.restore();
 
     ctx.save();
-    // ctx.fillStyle = "black";
-    // ctx.globalAlpha = 1;
-
-    // ctx.fillRect(0, 0, 1366 / 2 + 100, 1000);
     ctx.globalAlpha = 1;
 
     ctx.font = "30px bitpap";
@@ -92,7 +88,7 @@ class Victory {
       this.game.camera.death_offset = 0;
       this.game.restart = false;
       this.game.boss = false;
-      this.game.camera.loadLevel(1, false);
+      this.game.camera.loadLevel(level1);
     }
 
     if (mouseBox.collide(restartBox) && !this.game.single_click) {

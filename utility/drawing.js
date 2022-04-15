@@ -23,15 +23,14 @@ const drawShadow = (ctx, game, entity, scale) => {
   ctx.globalAlpha = 0.125;
   ctx.fillStyle = "black";
 
-  var x_center = entity.boundingBox.right;
-  var y_center = entity.boundingBox.top;
-  if (entity instanceof Eyeball) {
-    x_center = entity.hurtBox.right;
-    y_center = entity.hurtBox.top;
-  }
+  const x_center = entity.boundingBox.right;
+  const y_center = entity.boundingBox.top;
+
+  const width = 12.5;
+  const height = 25;
 
   ctx.beginPath();
-  ctx.ellipse(x_center - game.camera.x, y_center - game.camera.y, (25 / 2) * scale, (50 / 2) * scale, Math.PI / 4, 0, 2 * Math.PI);
+  ctx.ellipse(x_center - game.camera.x, y_center - game.camera.y, width * scale, height * scale, Math.PI / 4, 0, 2 * Math.PI);
   ctx.fill();
   ctx.restore();
 };

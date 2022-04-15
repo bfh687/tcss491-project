@@ -1,6 +1,6 @@
 class XP {
   constructor(game) {
-    this.knight = game.knight;
+    this.game = game;
     this.baseXP = 1000;
     this.currLevel = 1;
     this.currXP = 0;
@@ -22,7 +22,7 @@ class XP {
     this.xpNeeded = Math.pow(1.4, this.currLevel - 1) * this.baseXP;
 
     // testing hp scaling by level
-    this.knight.levelUp();
+    this.game.knight.levelUp();
   }
 
   purchaseSkill(levels) {

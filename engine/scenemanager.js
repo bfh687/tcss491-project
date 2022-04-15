@@ -3,15 +3,17 @@ class SceneManager {
     this.game = game;
     this.game.camera = this;
 
-    this.vignette = ASSET_MANAGER.getAsset("./vignette.png");
+    this.vignette = ASSET_MANAGER.getAsset(sprites.vignette);
 
     // initialize camera coords
-    this.midpoint_x = 1366 / 2 - 44;
-    this.midpoint_y = 768 / 2 - (62 * 2.5) / 2 - 12;
+    const x_offset = -44;
+    this.midpoint_x = engine.width() / 2 + x_offset;
+
+    const y_offset = -65.5;
+    this.midpoint_y = engine.height() / 2 + y_offset;
+
     this.x = this.midpoint_x;
     this.y = this.midpoint_y;
-
-    this.death_offset = 0;
 
     // screenshake details
     this.shakeDuration = -0.01;
@@ -19,10 +21,9 @@ class SceneManager {
     this.x_offset = 0;
     this.y_offset = 0;
 
-    this.title = true;
-    this.level = null;
+    // spawn knight
+    this.knight = new Knight(this.game, level1.knight.x_spawn, level1.knight.y_spawn);
 
-    this.knight = new Knight(this.game, 722, 250);
     // load first level
     this.loadMainMenu();
   }
@@ -36,23 +37,12 @@ class SceneManager {
     this.clearEntities();
     this.boss = null;
 
-    // if an x/y value is provied, initialize the main menu with that position
     this.game.addEntity(new MainMenu(this.game));
     this.game.addEntity(new Cursor(this.game));
   }
 
-  loadCredits(x, y) {
-    this.clearEntities();
-    this.boss = null;
-
-    // if an x/y value is provied, initialize the credits with that position
-    if (x && y) this.game.addEntity(new Credits(this.game, x, y));
-    else this.game.addEntity(new Credits(this.game));
-
-    this.game.addEntity(new Cursor(this.game));
-  }
-
-  loadLevel(level, boss) {
+  loadLevel(level) {
+    // clear entities and remove boss (if any)
     this.clearEntities();
     this.boss = null;
 
@@ -62,106 +52,56 @@ class SceneManager {
 
     // add knight
     this.game.addEntity(this.knight);
-    if (level == 1) {
-      if (!boss) {
-        this.game.timer.gameTime = 0;
-        this.knight.direction = 3;
 
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
-        // add map and teleporter
-        const map = new Map(this.game, 0, 0, level1);
-        this.game.addEntity(map);
-        this.game.addEntity(new Grid(this.game, 200, 200, map));
-
-        this.game.addEntity(new Teleporter(this.game, 168 * 32, 32 * 6, 1, true));
-
-        // spawn path finding test skeleton
-        this.game.addEntity(new MobCluster(this.game, 300, 900, 2, "minion"));
-
-        this.game.addEntity(new MobCluster(this.game, 600, 1350, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1730, 2130, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 1696, 3008, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 2336, 704, 4, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 3616, 896, 3, "skeleton"));
-        this.game.addEntity(new MobCluster(this.game, 5536, 1280, 2, "skeleton"));
-
-        this.minX = 32;
-        this.minY = 0;
-
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
-        this.playMusic("./music/Glitterglade_Grove.mp3");
-      } else {
-        this.knight.direction = 2;
-        this.knight.currSpeed = this.knight.minSpeed;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
-        this.knight.x = 750;
-        this.knight.y = 2200;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
-        // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0, level1boss));
-
-        this.minX = 32;
-        this.minY = 0;
-        this.maxX = 32 * 7;
-        this.maxY = 45 * 41;
-        // add boss
-        this.game.addEntity(new Minotaur(this.game, 800 - (96 * 3) / 1.9, 550));
-        this.playMusic("./music/Orchestral_RATM.mp3");
-      }
-    } else if (level == 2) {
-      if (!boss) {
-        this.knight.direction = 3;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-        // add map and teleporter
-
-        // this.knight.x = 1736 * 2;
-        // this.knight.y = 800 * 2;
-        this.knight.x = 970 * 2;
-        this.knight.y = 920 * 2;
-
-        this.game.addEntity(new Map(this.game, 0, 0, level2));
-
-        this.minX = -320;
-        this.minY = 0;
-
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
-        this.playMusic("./music/Charmsnow.mp3");
-      } else {
-        this.knight.direction = 2;
-        this.knight.currSpeed = this.knight.minSpeed;
-
-        this.x = this.midpoint_x;
-        this.y = this.midpoint_y;
-
-        this.knight.x = 1271 * 2;
-        this.knight.y = 1210 * 2;
-
-        this.game.addEntity(new Transition(this.game, true));
-
-        // add map and teleporter
-        this.game.addEntity(new Map(this.game, 0, 0, level2boss));
-
-        this.minX = 32;
-        this.minY = 0;
-        this.maxX = 3216 + 32 * 57;
-        this.maxY = 45 * 60;
-        // add boss
-        this.game.addEntity(new Minotaur(this.game, 1500 * 2, 550 * 2));
-        this.playMusic("./music/Orchestral_RATM.mp3");
-      }
+    // reset timer if no boss, and specify knight start direction
+    if (!level.boss) {
+      this.game.timer.reset();
+      this.knight.direction = 3;
+    } else {
+      this.knight.direction = 2;
     }
+
+    // reset camera location
+    this.x = this.midpoint_x;
+    this.y = this.midpoint_y;
+
+    // set camera bounds
+    this.min_x = level.map.min_x;
+    this.min_y = level.map.min_y;
+
+    this.max_x = level.map.max_x;
+    this.max_y = level.map.max_y;
+
+    // set knight spawn
+    this.knight.x = level.knight.x_spawn;
+    this.knight.y = level.knight.y_spawn;
+
+    // initialize and add map entity
+    const map = new Map(this.game, level.map.origin_x, level.map.origin_y, level);
+    this.game.addEntity(map);
+
+    // if this isn't a boss level, create an a* grid from the map
+    if (!level.boss) {
+      const grid_width = 200;
+      const grid_height = 200;
+      this.game.addEntity(new Grid(this.game, grid_width, grid_height, map));
+    }
+
+    // add all enemies to the level
+    level.clusters.forEach((cluster) => {
+      this.game.addEntity(new MobCluster(this.game, cluster.x, cluster.y, cluster.amount, cluster.type));
+    });
+
+    // add all teleporters to the level
+    level.teleporters.forEach((teleporter) => {
+      this.game.addEntity(new Teleporter(this.game, teleporter.x, teleporter.y, teleporter.level));
+    });
+
+    // add boss if applicable
+    if (level.boss) this.game.addEntity(new Minotaur(this.game, level.boss.x_spawn, level.boss.y_spawn));
+
+    // play the level's music
+    ASSET_MANAGER.playMusic(level.music);
   }
 
   update() {
@@ -174,7 +114,7 @@ class SceneManager {
       this.x_offset = this.y_offset = 0;
     }
 
-    // smooth camera
+    // smooth camera if not currently screenshaking
     if (this.x_offset == 0 && this.y_offset == 0) this.lerp();
 
     // add shake
@@ -182,21 +122,26 @@ class SceneManager {
     this.y += this.y_offset;
 
     // restrict to scene bounds
-    this.x = Math.min(Math.max(this.minX, this.x), this.maxX);
-    this.y = Math.min(Math.max(this.minY, this.y), this.maxY);
+    this.x = Math.min(Math.max(this.min_x, this.x), this.max_x);
+    this.y = Math.min(Math.max(this.min_y, this.y), this.max_y);
 
-    this.updateAudio();
+    ASSET_MANAGER.updateMusic();
     if (this.game.camera.transition) this.game.camera.transition.update();
+  }
 
-    // Adds functionality to the debug button.
-    params.DEBUG = document.getElementById("debug").checked;
+  draw(ctx) {
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.drawImage(this.vignette, 0, 0, 1366, 768);
+    ctx.restore();
+    if (this.game.camera.transition) this.game.camera.transition.draw(ctx);
   }
 
   lerp() {
     const lerp_value = 0.05;
 
     const position_x = this.x;
-    const target_x = this.game.knight.x - this.death_offset + 40;
+    const target_x = this.game.knight.x + 40;
 
     const position_y = this.y;
     const target_y = this.game.knight.y;
@@ -208,43 +153,10 @@ class SceneManager {
     this.y += velocity_y;
   }
 
-  draw(ctx) {
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    ctx.drawImage(this.vignette, 0, 0, 1366, 768);
-    ctx.restore();
-    if (this.game.camera.transition) this.game.camera.transition.draw(ctx);
-  }
-
   screenshake() {
     if (this.shakeDuration <= 0 && this.shakeCooldown <= 0) {
       this.shakeDuration = 0.05;
       this.shakeCooldown = 0.2;
     }
-  }
-
-  playMusic(path) {
-    ASSET_MANAGER.pauseAudio();
-    ASSET_MANAGER.playAudio(path);
-    ASSET_MANAGER.autoRepeat(path);
-  }
-
-  updateAudio() {
-    var mute = document.getElementById("mute").checked;
-    var volume = document.getElementById("volume").value;
-
-    ASSET_MANAGER.muteAudio(mute);
-
-    var paths = [
-      "./music/Glitterglade_Grove.mp3",
-      "./music/Orchestral_RATM.mp3",
-      "./music/Charmsnow.mp3",
-      "./music/homescreen-loud.mp3",
-      "./music/Forgotten_Bramble.mp3",
-    ];
-
-    paths.forEach((path) => {
-      ASSET_MANAGER.setVolume(path, volumes.MUSIC * volume);
-    });
   }
 }

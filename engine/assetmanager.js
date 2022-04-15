@@ -26,13 +26,11 @@ class AssetManager {
         case "png":
           const img = new Image();
           img.addEventListener("load", () => {
-            //.log("Loaded " + img.src);
             self.successCount++;
             if (self.isDone()) callback();
           });
 
           img.addEventListener("error", () => {
-            console.log("error loading " + img.src);
             self.errorCount++;
             if (self.isDone()) callback();
           });
@@ -46,7 +44,6 @@ class AssetManager {
           const audio = new Audio();
           audio.addEventListener("loadeddata", () => {
             self.successCount++;
-            //console.log(self.cache);
             if (self.isDone()) callback();
           });
 
@@ -72,9 +69,15 @@ class AssetManager {
     return this.cache[path];
   }
 
-  playAudio(path) {
-    let audio = this.cache[path];
+  playAudio(track) {
+    const path = track.path;
+    const volume = track.volume;
+    const global_volume = document.getElementById("volume").value;
+
+    const audio = this.cache[path];
     audio.currentTime = 0;
+
+    this.setVolume(path, volume * global_volume);
     audio.play();
   }
 
@@ -95,6 +98,24 @@ class AssetManager {
         asset.muted = mute;
       }
     }
+  }
+
+  playMusic(track) {
+    const path = track.path;
+    this.pauseAudio();
+    this.playAudio(track);
+    this.autoRepeat(path);
+  }
+
+  updateMusic() {
+    const mute = document.getElementById("mute").checked;
+    const volume = document.getElementById("volume").value;
+
+    this.muteAudio(mute);
+
+    music.paths.forEach((path) => {
+      this.setVolume(path.path, volume * music.volume);
+    });
   }
 
   setVolume(path, volume) {

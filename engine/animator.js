@@ -22,6 +22,7 @@ class Animator {
   pause() {
     this.paused = true;
   }
+
   drawFrame(tick, ctx, x, y, scale) {
     if (!this.paused) {
       this.elapsedTime += tick;
@@ -35,7 +36,7 @@ class Animator {
       }
     }
 
-    let frame = this.currentFrame();
+    var frame = this.currentFrame();
     if (this.reverse) frame = this.frameCount - frame - 1;
 
     ctx.drawImage(
@@ -53,10 +54,6 @@ class Animator {
 
   currentFrame() {
     return Math.floor(this.elapsedTime / this.frameDuration);
-  }
-
-  setFrameDuration(duration) {
-    this.frameDuration = duration;
   }
 
   reset() {
